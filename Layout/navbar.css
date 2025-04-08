@@ -1,0 +1,21 @@
+.bar {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    padding-bottom: 5px; /* Gives space for the underline */
+}
+
+.bar::after {
+    content: '';
+    position: absolute;
+    background-color: #0A65CC;
+    height: 3px;
+    width: 0;
+    left: 0;
+    bottom: -5px;
+    transition: width 0.3s ease-in-out;
+}
+
+.bar:hover::after {
+    width: 100%;
+}

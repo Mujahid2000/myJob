@@ -1,0 +1,45 @@
+.custom-swiper {
+    padding-bottom: 50px !important; /* Adds space for pagination */
+    overflow: hidden !important; /* Ensures pagination is visible */
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
+  
+  .swiper-pagination {
+    position: absolute;
+    bottom: -10px !important; /* Moves pagination below cards */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  
+  .swiper-pagination-bullet {
+    background: #06F !important; /* Custom bullet color (blue) */
+    width: 12px !important;
+    height: 12px !important;
+    opacity: 0.7 !important;
+  }
+  
+  .swiper-pagination-bullet-active {
+    background: #06F !important; /* Darker blue for active bullet */
+    opacity: 1 !important;
+  }
+  
+  .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: var(--swiper-pagination-bottom, 8px);
+    top: var(--swiper-pagination-top, 260px);
+    left: 50%;
+    width: 100%;
+}
+
+
+.swiper-pagination-bullet-active{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-radius: 10px 10px 10px 10px;
+    transition-duration: calc(auto);
+    width: 1.5rem;
+}
