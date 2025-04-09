@@ -131,3 +131,27 @@
 input[type= "radio"] {
   accent-color: #0066FF
 }
+
+.bg-primary{
+  background-color: #0066FF;
+}
+
+
+.custom-slider {
+  & [data-slider-track] {
+    @apply h-2; /* Increase height (default is ~h-1 or h-2, try h-3, h-4, etc.) */
+  }
+
+  & [data-slider-range] {
+    @apply h-2; /* Match track height */
+  }
+
+  & [data-slider-thumb] {
+    @apply h-6 w-6; /* Increase thumb size (default is ~h-4 w-4 or h-5 w-5) */
+  }
+}
+
+.fill-primary {
+  fill: oklch(0.51 0.29 261.96);
+  border-color: #0066FF;
+}

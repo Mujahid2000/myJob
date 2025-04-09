@@ -21,6 +21,13 @@ import { redirect } from 'next/navigation';
 
 
 
+interface Inputs {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+}
   
 export default function page() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
@@ -36,13 +43,6 @@ export default function page() {
   const {currentUser, signup } = authContext;
 
 
-  interface Inputs {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-  }
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     if (data.password !== data.confirm_password) {

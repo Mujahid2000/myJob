@@ -1,5 +1,5 @@
 'use client';
-
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,8 +7,39 @@ import { Eye } from "lucide-react";
 import Image from "next/image";
 import './signin.css'
 import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/Authentication/AuthContext";
+import { redirect } from "next/navigation";
+type Inputs = {
+  email: string,
+  password: string,
+};
 
 export default function page() {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+  const [password , setPassword] = useState<string | undefined>()
+    const [error, setError] = useState<string | undefined>()
+    const [showPassword, setShowpassword] = useState<boolean | undefined>()
+    const authContext = useContext<AuthContextType | undefined>(AuthContext);
+  
+    if (!authContext) {
+      throw new Error("AuthContext is undefined. Ensure it is properly provided.");
+    }
+  
+    const {currentUser, login } = authContext;
+  const onSubmit: SubmitHandler<Inputs> =async (data: Inputs) => {
+    setError(undefined); // Clear any previous errors
+    await login(data.email, data.password)
+
+  };
+
+
+  useEffect(() => {
+    if (currentUser) {
+      redirect('/');
+    }
+  }, [currentUser]);
+
   
   return (
     <div className="flex h-screen">
@@ -25,11 +56,11 @@ export default function page() {
           Don’t have an account? <Link href="/register" className="text-[#0A65CC]">Create Account</Link>
         </p>
 
-        <form className="space-y-4">
-          <Input required type="email" placeholder="Email address" className="rounded-sm"/>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Input {...register("email")} required type="email" placeholder="Email address" className="rounded-sm"/>
           <div className="relative">
-            <Input required type="password" placeholder="Password" className="rounded-sm"/>
-            <Eye className="absolute right-3 top-3 text-gray-400" size={18} />
+            <Input type={showPassword ? "text" : "password"}  {...register("password")} required  placeholder="Password" className="rounded-sm"/>
+            <Eye onClick={() => setShowpassword(!showPassword)} className="absolute cursor-pointer right-3 top-3 text-gray-400" size={18} />
           </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">

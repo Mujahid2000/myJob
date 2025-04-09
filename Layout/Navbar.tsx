@@ -1,6 +1,7 @@
 'use client'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CountryDropDown } from '@/Component/HomeComponent/CountryDropDown';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FiPhoneCall, FiSearch } from "react-icons/fi";
 import './navbar.css';
 import Link from 'next/link';
@@ -12,6 +13,8 @@ import ButtonCommon from '@/Component/HomeComponent/Button';
 import { disableNavWithFooter } from '@/Hooks/disableNavWithFooter';
 import { usePathname } from 'next/navigation';
 import { AuthContext } from '@/Authentication/AuthContext';
+import { useRouter } from "next/router";
+
 
 
 const list = [
@@ -27,7 +30,34 @@ const Navbar = () => {
     const path = usePathname()
     const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
-    
+    const logOut = authContext?.logout
+    const [isOpen, setIsOpen] = useState(false);
+  
+ 
+  const menuRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
     
     return (
         <>
@@ -92,9 +122,54 @@ const Navbar = () => {
 
                 {/* Right Side - Buttons */}
                 <div className='flex gap-4'>
-                <Link href="/signin" className="">
+                {
+                    currentUser? 
+                    
+                    <div className="relative" ref={menuRef}>
+                    {/* Profile button */}
+                    <button
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+                    >
+                      <span>{currentUser.displayName || currentUser.email}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+              
+                    {/* Dropdown menu */}
+                    {isOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+                        <Link
+                          href="/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Profile
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  
+        
+     
+:
+<Link href="/signin" className="">
                     <Button variant="outline" className="px-6 py-4  border-gray-300 rounded-sm text-gray-700">Sign In</Button>
                 </Link>
+                }
                 <Link href='/'>
                 
                     <ButtonCommon name='Post A Post' />

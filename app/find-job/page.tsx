@@ -15,7 +15,7 @@ const page = () => {
     const [selectedSalary, setSelectedSalary] = useState<string>("");
     const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
     const [selectedEducation, setSelectedEducation] = useState<string[]>([]);
-    const [selectedLevel, setSelectedLevel] = useState<string[]>();
+    const [selectedLevel, setSelectedLevel] = useState<string>("");
 
 
   const handleCheckboxChange = (type: string) => {

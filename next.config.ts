@@ -17,6 +17,20 @@ const nextConfig: NextConfig = {
         pathname: '/**/*',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 't3.ftcdn.net',
+        port: '',
+        pathname: '/**/*',
+        search: '',
+      },
+      {
+        protocol: 'https',
+        hostname: "images.pexels.com",
+        port: '',
+        pathname: '/**/*',
+        search: '',
+      },
     ],
   },
 };

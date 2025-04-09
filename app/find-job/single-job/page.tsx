@@ -4,18 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FaFacebook, FaTwitter, FaPinterest } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Bookmark, Calendar, Mail, MapPin,Phone, DollarSign, GraduationCap, Link, Briefcase, Users } from "lucide-react";
-import {RxCross1} from "react-icons/rx";
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import { Dialog, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import { DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+
 import { Textarea } from '@/components/ui/textarea';
 const page = () => {
   const [open, setOpen] = useState(false);
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log("Form submitted!");
     setOpen(false); // Close modal after submission
@@ -29,6 +26,7 @@ const page = () => {
                     <p className='text-gray-500'>Home / Find Job/ Job Details</p>
                 </div>
             </div>
+            
             <div className="max-w-7xl mx-auto gap-6">
       {/* Left Section */}
       <div className=" space-y-6">
