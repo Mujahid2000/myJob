@@ -16,23 +16,19 @@ type Inputs = {
 };
 
 export default function page() {
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
-  const [password , setPassword] = useState<string | undefined>()
-    const [error, setError] = useState<string | undefined>()
-    const [showPassword, setShowpassword] = useState<boolean | undefined>()
-    const authContext = useContext<AuthContextType | undefined>(AuthContext);
-  
-    if (!authContext) {
-      throw new Error("AuthContext is undefined. Ensure it is properly provided.");
-    }
-  
-    const {currentUser, login } = authContext;
-  const onSubmit: SubmitHandler<Inputs> =async (data: Inputs) => {
-    setError(undefined); // Clear any previous errors
-    await login(data.email, data.password)
+  const { register, handleSubmit } = useForm<Inputs>();
+  const [showPassword, setShowpassword] = useState(false);
+  const authContext = useContext(AuthContext);
 
+  if (!authContext) {
+    throw new Error("AuthContext is undefined. Ensure it is properly provided.");
+  }
+
+  const { currentUser, login } = authContext;
+
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    await login(data.email, data.password);
   };
-
 
   useEffect(() => {
     if (currentUser) {
