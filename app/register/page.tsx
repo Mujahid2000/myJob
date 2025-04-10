@@ -1,68 +1,98 @@
 'use client';
-import { useForm } from 'react-hook-form';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Eye } from "lucide-react";
-import Image from "next/image";
-import '../signin/signin.css'
-import Link from "next/link";
+
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useState, useContext } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AuthContext } from '@/Authentication/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Eye } from 'lucide-react';
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-import { useContext, useState } from 'react';
-import { AuthContext, AuthContextType } from '@/Authentication/AuthContext';
-import { redirect } from 'next/navigation';
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import '../signin/signin.css';
 
-
-
-interface Inputs {
+// Type definitions
+interface FormInputs {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  confirm_password: string;
+  confirmPassword: string;
+  role: 'Employee' | 'Applicant';
 }
+
+// Custom error type
+interface FormError {
+  message: string;
+}
+
+export default function SignUpPage() {
+  const router = useRouter();
+  const authContext = useContext(AuthContext);
   
-export default function Page() {
-  const { register, handleSubmit,  formState: { errors } } = useForm<Inputs>();
-  // Removed unused password state
-  const [error, setError] = useState<string | undefined>()
-  const [password, setShowpassword] = useState<boolean | undefined>()
-  const [confirmPassword, setConfirmPassword] = useState<boolean | undefined>()
-  const authContext = useContext<AuthContextType | undefined>(AuthContext);
-
   if (!authContext) {
-    throw new Error("AuthContext is undefined. Ensure it is properly provided.");
+    throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const {currentUser, signup } = authContext;
+  const { currentUser, signup } = authContext;
 
+  // Form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>({
+    mode: 'onBlur',
+    defaultValues: {
+      role: 'Applicant',
+    },
+  });
 
+  // State management
+  const [formError, setFormError] = useState<FormError | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    if (data.password !== data.confirm_password) {
-      setError('Passwords do not match. Please try again.');
-      return;
+  // Form submission handler
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      // Validation
+      if (data.password !== data.confirmPassword) {
+        setFormError({ message: 'Passwords do not match' });
+        return;
+      }
+
+      if (data.password.length < 8) {
+        setFormError({ message: 'Password must be at least 8 characters long' });
+        return;
+      }
+
+      setFormError(null);
+      
+      // Perform signup
+      await signup(
+        `${data.firstName} ${data.lastName}`,
+        data.email,
+        data.password
+      );
+
+      // Redirect on successful signup
+      if (currentUser) {
+        router.push('/');
+      }
+    } catch (error) {
+      setFormError({ message: 'An error occurred during signup' });
+      console.error('Signup error:', error);
     }
-
-    if (data.password.length < 8) {
-      setError('Password must be at least 8 characters long.');
-      return;
-    }
-
-    setError(undefined); // Clear any previous errors
-    setPassword(data.password);
-    
-    signup(data.firstName + ' ' + data.lastName, data.email, data.confirm_password)
-  if(currentUser){
-    redirect('/')
-  }
   };
 
   return (
@@ -98,43 +128,77 @@ export default function Page() {
 
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex gap-8">
-                <div>
-            <Input {...register('firstName')}  required type="text" placeholder="First Name" className="rounded-sm w-[13rem] "/>
-                </div>
-          <div className="relative">
-          <Input {...register('lastName', { required: true })} required type="text" placeholder="Last Name" className="rounded-sm w-[13rem] "/>
+                <div className='flex gap-8'>
+                <Input
+                {...register('firstName', { required: 'First name is required' })}
+                type="text"
+                placeholder="First Name"
+                className="w-[13rem] rounded-sm"
+                aria-invalid={errors.firstName ? 'true' : 'false'}
+              />
+               
+          <Input
+                {...register('lastName', { required: 'Last name is required' })}
+                type="text"
+                placeholder="Last Name"
+                className="w-[13rem] rounded-sm"
+                aria-invalid={errors.lastName ? 'true' : 'false'}
+              />
           </div>
-          {errors.lastName && <p>Last name is required.</p>}
+          {(errors.firstName || errors.lastName) && (
+              <p className="text-sm text-red-500">
+                {errors.firstName?.message || errors.lastName?.message}
+              </p>
+            )}
             </div>
-          <Input {...register('email', { required: true })} required type="email" placeholder="Email address" className="rounded-sm"/>
+            <Input
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              })}
+              type="email"
+              placeholder="Email address"
+              className="rounded-sm"
+              aria-invalid={errors.email ? 'true' : 'false'}
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
             <div className="relative">
             <Input
               {...register('password')}
               required
-              type={password ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               className="rounded-sm"
             />
             <Eye
-              onClick={() => setShowpassword(!password)}
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-3 text-gray-400 cursor-pointer"
               size={18}
             />
             </div>
             <div className="relative">
             <Input
-              {...register('confirm_password')}
+              {...register('confirmPassword', {
+                required: 'Please confirm your password',
+              })}
               required
-              type={confirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Confirm Password"
               className="rounded-sm"
             />
             <Eye
-              onClick={() => setConfirmPassword(!confirmPassword)}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-3 top-3 text-gray-400 cursor-pointer"
               size={18}
             />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {formError && (
+              <p className="text-sm text-red-500">{formError.message}</p>
+            )}
             </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
