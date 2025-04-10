@@ -16,7 +16,7 @@ type Inputs = {
 };
 
 export default function page() {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
   const [password , setPassword] = useState<string | undefined>()
     const [error, setError] = useState<string | undefined>()
     const [showPassword, setShowpassword] = useState<boolean | undefined>()
