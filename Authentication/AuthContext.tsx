@@ -12,9 +12,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Props type for AuthProvider
-interface AuthProviderProps {
-    children: ReactNode;
-  }
+
 
 const AuthProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
