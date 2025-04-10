@@ -15,7 +15,7 @@ type Inputs = {
   password: string,
 };
 
-export default function page() {
+export default function Page() {
   const { register, handleSubmit } = useForm<Inputs>();
   const [showPassword, setShowpassword] = useState(false);
   const authContext = useContext(AuthContext);

@@ -29,8 +29,8 @@ interface Inputs {
   confirm_password: string;
 }
   
-export default function page() {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+export default function Page() {
+  const { register, handleSubmit,  formState: { errors } } = useForm<Inputs>();
   const [password , setPassword] = useState<string | undefined>()
   const [error, setError] = useState<string | undefined>()
   const [showPassword, setShowpassword] = useState<boolean | undefined>()

@@ -7,7 +7,7 @@ import Image from "next/image";
 import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
 
-const page = ({ params }) => {
+const Page = ({ params }) => {
     return (
         <div className="pt-35">
             <div className="border-2 bg-[#F1F2F4]">
@@ -54,7 +54,7 @@ const page = ({ params }) => {
                                             className="rounded-lg border-2 border-white"
                                         />
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Twitter</h2>
+                                            <h2 className="text-xl font-bold text-gray-900">Twitter{params.id}</h2>
                                             <p className="text-sm text-gray-500">Information Technology (IT)</p>
                                         </div>
                                     </div>
@@ -191,4 +191,4 @@ const page = ({ params }) => {
     );
 };
 
-export default page;
+export default Page;
