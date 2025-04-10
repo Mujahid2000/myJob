@@ -9,7 +9,8 @@ import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } f
 
 
 
-const Page = ({ params }: { params: Promise<{ id: number }> }) => {
+const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
+    const resolvedParams = await params;
     
     return (
         <div className="pt-35">
@@ -57,7 +58,7 @@ const Page = ({ params }: { params: Promise<{ id: number }> }) => {
                                             className="rounded-lg border-2 border-white"
                                         />
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Twitter{params.id}</h2>
+                                            <h2 className="text-xl font-bold text-gray-900">Twitter {resolvedParams.id}</h2>
                                             <p className="text-sm text-gray-500">Information Technology (IT)</p>
                                         </div>
                                     </div>
