@@ -31,9 +31,10 @@ interface Inputs {
   
 export default function Page() {
   const { register, handleSubmit,  formState: { errors } } = useForm<Inputs>();
-  const [password , setPassword] = useState<string | undefined>()
+  // Removed unused password state
   const [error, setError] = useState<string | undefined>()
-  const [showPassword, setShowpassword] = useState<boolean | undefined>()
+  const [password, setShowpassword] = useState<boolean | undefined>()
+  const [confirmPassword, setConfirmPassword] = useState<boolean | undefined>()
   const authContext = useContext<AuthContextType | undefined>(AuthContext);
 
   if (!authContext) {
@@ -110,12 +111,12 @@ export default function Page() {
             <Input
               {...register('password')}
               required
-              type={showPassword ? "text" : "password"}
+              type={password ? "text" : "password"}
               placeholder="Password"
               className="rounded-sm"
             />
             <Eye
-              onClick={() => setShowpassword(!showPassword)}
+              onClick={() => setShowpassword(!password)}
               className="absolute right-3 top-3 text-gray-400 cursor-pointer"
               size={18}
             />
@@ -124,12 +125,12 @@ export default function Page() {
             <Input
               {...register('confirm_password')}
               required
-              type={showPassword ? "text" : "password"}
+              type={confirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
               className="rounded-sm"
             />
             <Eye
-              onClick={() => setShowpassword(!showPassword)}
+              onClick={() => setConfirmPassword(!confirmPassword)}
               className="absolute right-3 top-3 text-gray-400 cursor-pointer"
               size={18}
             />
