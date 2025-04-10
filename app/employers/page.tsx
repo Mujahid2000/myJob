@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@radix-ui/react-slider";
 import {
   Bookmark, 
   CalendarMinus2,
@@ -26,7 +25,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-type SliderProps = React.ComponentProps<typeof Slider>;
 import { FiSearch } from "react-icons/fi";
 import { SlLocationPin } from "react-icons/sl";
 
@@ -83,11 +81,6 @@ const jobListings = [
   },
 ];
 
-interface ViewModeData {
-  name: string;
-}
-
-type ViewMode = "grid" | "list";
 
 const FindJobPage = () => {
   const [jobTitle, setJobTitle] = useState("");
