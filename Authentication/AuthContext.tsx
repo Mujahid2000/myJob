@@ -14,7 +14,9 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 // Props type for AuthProvider
 
 
-const AuthProvider = ({children}) => {
+import { ReactNode } from 'react';
+
+const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
