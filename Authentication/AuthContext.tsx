@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, UserCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, UserCredential, User } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react';
 import { auth } from './firebase';
 
