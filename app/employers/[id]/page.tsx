@@ -8,13 +8,8 @@ import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
 
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-}
 
-const Page = ({ params }: PageProps) => {
+const Page = ({ params }) => {
     return (
         <div className="pt-35">
             <div className="border-2 bg-[#F1F2F4]">
