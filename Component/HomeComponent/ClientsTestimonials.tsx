@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
 import Image from 'next/image';
 
 const ClientsTestimonials = () => {
-  const swiperRef = useRef(null);
+  const swiperRef = useRef<typeof Swiper | null>(null);
 
   return (
    <div className='bg-[#F1F2F4]'>
@@ -55,7 +55,7 @@ const ClientsTestimonials = () => {
 
               {/* Testimonial Text */}
               <p className="text-gray-700 text-lg italic mb-4">
-                "Ut ullamcorper hendrerit tempor. Aliquam in rutrum dui. Maecenas ac placerat metus, in faucibus est."
+                &quot;Ut ullamcorper hendrerit tempor. Aliquam in rutrum dui. Maecenas ac placerat metus, in faucibus est.&quot;
               </p>
 
               {/* User Info */}
