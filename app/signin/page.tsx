@@ -49,7 +49,7 @@ export default function Page() {
         <div>
         <h1 className="text-[2rem] text-[#18191C] font-bold mb-2">Sign in</h1>
         <p className="text-gray-500 mb-6">
-          Don’t have an account? <Link href="/register" className="text-[#0A65CC]">Create Account</Link>
+          Don’t have an account? <Link href="/register" className="text-[#0A65CC]">Create New Account</Link>
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

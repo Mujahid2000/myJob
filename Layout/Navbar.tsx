@@ -1,5 +1,4 @@
 'use client'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CountryDropDown } from '@/Component/HomeComponent/CountryDropDown';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FiPhoneCall, FiSearch } from "react-icons/fi";
@@ -13,7 +12,7 @@ import ButtonCommon from '@/Component/HomeComponent/Button';
 import { disableNavWithFooter } from '@/Hooks/disableNavWithFooter';
 import { usePathname } from 'next/navigation';
 import { AuthContext } from '@/Authentication/AuthContext';
-import { useRouter } from "next/router";
+
 
 
 
@@ -30,7 +29,7 @@ const Navbar = () => {
     const path = usePathname()
     const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
-    const logOut = authContext?.logout
+    const logOut: (() => Promise<void>) | undefined = authContext?.logout;
     const [isOpen, setIsOpen] = useState(false);
   
  
@@ -52,7 +51,11 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await logOut();
+      if (logOut) {
+        await logOut();
+      } else {
+        console.error('Logout function is not defined.');
+      }
       setIsOpen(false);
     } catch (error) {
       console.error('Failed to logout:', error);
