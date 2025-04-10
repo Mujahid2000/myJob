@@ -2,6 +2,7 @@
 import React, { useRef } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -13,7 +14,7 @@ import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
 import Image from 'next/image';
 
 const ClientsTestimonials = () => {
-  const swiperRef = useRef<typeof Swiper | null>(null);
+  const swiperRef = useRef<SwiperCore | null>(null);
 
   return (
    <div className='bg-[#F1F2F4]'>
