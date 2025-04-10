@@ -32,17 +32,17 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         }
     }
 
-    async function sendEmailVerification(): Promise<void> {
-        if (auth.currentUser) {
-            try {
-                await auth.currentUser.sendEmailVerification();
-            } catch (error) {
-                throw error;
-            }
-        } else {
-            throw new Error("No user is currently signed in.");
-        }
-    }
+    // async function sendEmailVerification(): Promise<void> {
+    //     if (auth.currentUser) {
+    //         try {
+    //             await auth.currentUser.sendEmailVerification();
+    //         } catch (error) {
+    //             throw error;
+    //         }
+    //     } else {
+    //         throw new Error("No user is currently signed in.");
+    //     }
+    // }
     
     async function login (email:string, password:string):Promise<UserCredential>{
         try {
