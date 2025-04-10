@@ -9,7 +9,7 @@ import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } f
 
 
 
-const Page = ({ params }: { params: Promise<{ id: string }> }) => {
+const Page = ({ params }: { params: Promise<{ id: number }> }) => {
     
     return (
         <div className="pt-35">
