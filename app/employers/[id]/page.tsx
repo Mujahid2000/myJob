@@ -7,7 +7,14 @@ import Image from "next/image";
 import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
 
-const Page = ({ params }) => {
+
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
+
+const Page = ({ params }: PageProps) => {
     return (
         <div className="pt-35">
             <div className="border-2 bg-[#F1F2F4]">
