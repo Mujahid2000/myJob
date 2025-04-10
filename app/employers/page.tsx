@@ -274,7 +274,7 @@ const FindJobPage = () => {
             Location Radius: <span className="text-blue-600">{values} miles</span>
           </h2>
 
-          <SliderDemo onValueChange={(newValue) => setValues(newValue)} />
+          <SliderDemo onValueChange={(newValue) => setValues(newValue[0])} />
           <RadioGroupItems />
         </div>
 
