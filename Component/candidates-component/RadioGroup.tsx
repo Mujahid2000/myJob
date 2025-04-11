@@ -3,9 +3,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+  interface RadioGroupDemo {
+    title: string;
+    list: string[];
+    onValueChange?: (value: string) => void; // Optional callback for value changes
+  }
+  
 
-export function RadioGroupItems({...props}) {
-    const [arrow, SelectArrow] = useState(true);
+export function RadioGroupItems({...props}: RadioGroupDemo) {
+    const [open, setOpen] = useState(true);
 
     return (
         <div className="">
@@ -13,14 +19,14 @@ export function RadioGroupItems({...props}) {
                 {props.title}
                 <span
                     className="cursor-pointer"
-                    onClick={() => SelectArrow(!arrow)}
+                    onClick={() => setOpen(!open)}
                 >
-                    <ChevronDown className={`${arrow== true? 'rotate-180 duration-400' :"duration-400"}`} size={20} />
+                    <ChevronDown className={`${open== true? 'rotate-180 duration-400' :"duration-400"}`} size={20} />
                 </span>
             </h2>
             <div
                 className={`transition-all duration-500 ${
-                    arrow== true ? "max-h-full opacity-100" : "h-0 opacity-0"
+                    open== true ? "max-h-full duration-500 opacity-100" : "h-0 opacity-0"
                 } overflow-hidden`}
             >
                 <RadioGroup className="">

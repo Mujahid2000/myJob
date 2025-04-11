@@ -7,7 +7,7 @@ import { useState } from "react";
 export function CheckboxDemo({...props}) {
     const [arrow, SelectArrow] = useState(true);
    
-    console.log('he',props)
+
   return (
     <div className="flex flex-col gap-3 ">
         <h2 className="flex justify-between">
