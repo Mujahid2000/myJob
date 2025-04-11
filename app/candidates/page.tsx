@@ -4,16 +4,8 @@ import { PaginationDemo } from "@/Component/candidates-component/Pagination";
 import { RadioGroupItems } from "@/Component/candidates-component/RadioGroup";
 import { SliderDemo } from "@/Component/candidates-component/RangeSlider";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+
 
 import { Input } from "@/components/ui/input";
 import {
@@ -24,22 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@radix-ui/react-select";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   Bookmark,
-  Briefcase,
+
   BriefcaseConveyorBelt,
   Cake,
-  Calendar,
+
   CircleUserRound,
   ClipboardList,
-  DollarSign,
   Download,
   FileText,
-  Globe,
-  Globe2,
   GraduationCap,
   Grid,
   Layers,
@@ -49,8 +36,7 @@ import {
   MapPin,
   Phone,
   SlidersHorizontal,
-  Users,
-  X,
+
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -351,6 +337,7 @@ const FindJobPage = () => {
             <RadioGroupItems
               title={"Gender"}
               list={["Male", "Female", "Others"]}
+              
             />
           </div>
         </div>
