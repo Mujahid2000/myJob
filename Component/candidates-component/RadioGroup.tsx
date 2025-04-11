@@ -2,9 +2,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+interface RadioGroupDemo {
+    title: string; // Title is a string
+    list: string[]; // List is an array of strings
+  }
 
-
-export function RadioGroupItems({...props}) {
+export function RadioGroupItems({...props}: RadioGroupDemo) {
     const [arrow, SelectArrow] = useState(true);
 
     return (
