@@ -482,7 +482,7 @@ const FindJobPage = () => {
                 {/* this is header */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-4">
-                    <image className="w-16 h-16 bg-gray-400 rounded-full" />
+                    <img src='https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?t=st=1744370221~exp=1744373821~hmac=bf9f0c7b9e4a2b2b0886b2278f2d6c5b8dcd60f7c3a72a3d4d2ba9f68c486866&w=996' className="w-16 h-16  rounded-full object-cover" />
                     <div>
                       <h1 className="text-xl font-bold text-gray-800">
                         Esther Howard
