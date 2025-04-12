@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ButtonCommon from '@/Component/HomeComponent/Button';
 import { disableNavWithFooter } from '@/Hooks/disableNavWithFooter';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { AuthContext } from '@/Authentication/AuthContext';
 
 
@@ -31,7 +31,7 @@ const Navbar = () => {
     const currentUser = authContext?.currentUser;
     const logOut: (() => Promise<void>) | undefined = authContext?.logout;
     const [isOpen, setIsOpen] = useState(false);
-  
+    
  
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +53,7 @@ const Navbar = () => {
     try {
       if (logOut) {
         await logOut();
+        
       } else {
         console.error('Logout function is not defined.');
       }

@@ -6,31 +6,39 @@ interface AuthContextType {
     currentUser: User | null;
     signup : (name: string, email: string, password: string) => Promise<UserCredential>;
     login: (email: string, password: string) => Promise<UserCredential>;
-    logout: () => Promise<void>
+    logout: () => Promise<void>;
+    loading: boolean,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Props type for AuthProvider
-
+interface AuthProviderProps {
+    children: ReactNode;
+  }
 
 import { ReactNode } from 'react';
 
-const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<AuthProviderProps> =  ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    async function signup (name:string, email:string, password:string): Promise<UserCredential>{
+    async function signup(name: string, email: string, password: string): Promise<UserCredential> {
         try {
-            const UserCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await updateProfile(UserCredential.user,{
-                displayName: name
-            })
-            return UserCredential
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          await updateProfile(userCredential.user, {
+            displayName: name,
+          });
+          return userCredential;
         } catch (error) {
-           throw error 
+          if (error instanceof Error) {
+            throw new Error(`Failed to sign up: ${error.message}`);
+          } else {
+            throw new Error('Failed to sign up: An unknown error occurred.');
+          }
         }
-    }
+      }
 
     // async function sendEmailVerification(): Promise<void> {
     //     if (auth.currentUser) {
@@ -55,6 +63,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
      async function logout (): Promise<void> {
         try {
             await signOut(auth)
+            setCurrentUser(null)
         } catch (error) {
             throw error
         }
@@ -69,12 +78,14 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         return () => unsubscribe()
     }, [])
 
-const value = {
-currentUser,
-signup,
-login,
-logout
-}
+    const value: AuthContextType = {
+        currentUser,
+        signup,
+        login,
+        logout,
+        loading,
+        setLoading,
+      };
     
 return (
     <AuthContext.Provider value={value}>

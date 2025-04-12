@@ -9,13 +9,14 @@ import LaunchUI from "../../logos/launch-ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { disableNavWithFooter } from "@/Hooks/disableNavWithFooter";
+import { disableFooter } from "@/Hooks/DisableFooterDashbaord";
 
 export default function FooterSection() {
   const path = usePathname();
   return (
     <>
     {
-      !disableNavWithFooter.includes(path) && (
+      !disableNavWithFooter.includes(path) || !disableFooter && (
         <footer className="w-full bg-[#18191C] px-4">
       <div className="mx-auto bg-[#18191C] max-w-7xl">
         <Footer className="bg-[#18191C] text-white">
