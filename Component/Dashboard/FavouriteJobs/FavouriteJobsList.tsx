@@ -154,7 +154,7 @@ const FavoriteJobsList: React.FC = () => {
       <h2 className="text-lg font-semibold mb-4">
         Favorite Jobs ({favoriteJobsData.length})
       </h2>
-      <div className=" grid grid-cols-1 gap-3 rounded-lg overflow-hidden">
+      <div className=" grid grid-cols-1 gap-2 rounded-lg overflow-hidden">
         {favoriteJobsData.map((job) => (
           <div
             key={job.id}
