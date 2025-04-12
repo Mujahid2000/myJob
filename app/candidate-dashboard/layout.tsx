@@ -19,7 +19,11 @@ console.log(loadingUser)
 
 const handleLogout = async () => {
   try {
-    await logOut();
+    if (logOut) {
+      await logOut();
+    } else {
+      console.error("Logout function is undefined.");
+    }
     router.push("/signin");
   } catch (error) {
     console.error("Failed to logout:", error);
