@@ -9,20 +9,27 @@ interface AuthContextType {
     logout: () => Promise<void>;
     loading: boolean,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    tabloading: boolean,
+    setTabLoading: React.Dispatch<React.SetStateAction<boolean>>
+    activeTab: string,
+    setActiveTab: React.Dispatch<React.SetStateAction<string>>
+    handleTab: (param: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Props type for AuthProvider
 interface AuthProviderProps {
-    children: ReactNode;
-  }
+  children: ReactNode;
+}
 
 import { ReactNode } from 'react';
 
 const AuthProvider: React.FC<AuthProviderProps> =  ({ children }) => {
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState("Personal");
+  const [tabloading, setTabLoading] = useState(true)
 
     async function signup(name: string, email: string, password: string): Promise<UserCredential> {
         try {
@@ -69,6 +76,12 @@ const AuthProvider: React.FC<AuthProviderProps> =  ({ children }) => {
         }
      }
 
+     const handleTab = (param: string) => {
+       setActiveTab(param);
+       setTabLoading(false)
+     };
+
+     
     useEffect(() =>{
         const unsubscribe = auth.onAuthStateChanged((user: User | null) =>{
             setCurrentUser(user);
@@ -78,6 +91,9 @@ const AuthProvider: React.FC<AuthProviderProps> =  ({ children }) => {
         return () => unsubscribe()
     }, [])
 
+
+    
+
     const value: AuthContextType = {
         currentUser,
         signup,
@@ -85,6 +101,11 @@ const AuthProvider: React.FC<AuthProviderProps> =  ({ children }) => {
         logout,
         loading,
         setLoading,
+        tabloading,
+        setTabLoading,
+        setActiveTab,
+        activeTab,
+        handleTab
       };
     
 return (
@@ -95,3 +116,11 @@ return (
 };
 
 export default AuthProvider;
+
+export const useAuth = (): AuthContextType => {
+  const context = React.useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
