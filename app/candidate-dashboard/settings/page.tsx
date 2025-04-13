@@ -37,8 +37,8 @@ const Settings:React.FC = () => {
         return null;
       }
     return (
-        <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="min-h-screen bg-gray-100 ">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
         {/* Tab Navigation */}
         <div className="flex border-b border-gray-200">
           {tabs.map((tab) => (
@@ -56,9 +56,9 @@ const Settings:React.FC = () => {
           ))}
         </div>
         {/* Tab Content */}
-        <div className="p-6">
-          {activeTab === "Personal" && <Personal />}
-          {activeTab === "Profile" && <Profile />}
+        <div className="">
+          {activeTab === "Personal" && <Profile />}
+          {activeTab === "Profile" && <Personal />}
           {activeTab === "Social Links" && <SocialLinks />}
           {activeTab === "Account Setting" && <AccountSetting />}
         </div>
