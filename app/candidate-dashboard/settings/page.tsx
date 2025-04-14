@@ -39,6 +39,7 @@ const Settings:React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-100 ">
       <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
+          <h1 className='text-2xl font-medium pt-7 pb-4'>Settings</h1>
         {/* Tab Navigation */}
         <div className="flex border-b border-gray-200">
           {tabs.map((tab) => (
