@@ -34,28 +34,28 @@ const Settings = () => {
   });
 
   // Handlers
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Contact Info:', contactInfo);
   };
 
-  const handleNotificationsSubmit = (e) => {
+  const handleNotificationsSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Notifications:', notifications);
   };
 
-  const handleJobAlertsSubmit = (e) => {
+  const handleJobAlertsSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Job Alerts:', jobAlerts);
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Passwords:', passwords);
   };
 
-  const togglePasswordVisibility = (field) => {
-    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
+  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
+      setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
   return (
