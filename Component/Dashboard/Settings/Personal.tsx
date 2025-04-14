@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-
+import "react-day-picker/style.css";
 import React, { useState } from "react";
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -10,10 +10,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { DayPicker } from "react-day-picker";
 
 // components/settings/Personal.tsx
 const Personal: React.FC = () => {
   const [date, setDate] = React.useState<Date>()
+  const [selected, setSelected] = useState<Date>();
 
     return (
       <div className="space-y-9 py-6 bg-white h-screen">
@@ -39,17 +41,18 @@ const Personal: React.FC = () => {
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon />
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
+      <DayPicker
+      animate
+      mode="single"
+      selected={selected}
+      onSelect={setSelected}
+      className={`p-4 `}
+    />
       </PopoverContent>
     </Popover>
           </div>
