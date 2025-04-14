@@ -1,16 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { format } from "date-fns";
+
+import React, { useState } from "react";
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 // components/settings/Personal.tsx
 const Personal: React.FC = () => {
-  const [date, setDate] = useState<Date>()
-  function cn(...classes: (string | boolean | undefined)[]): string {
-    return classes.filter(Boolean).join(" ");
-  }
+  const [date, setDate] = React.useState<Date>()
 
     return (
       <div className="space-y-9 py-6 bg-white h-screen">
@@ -32,11 +35,11 @@ const Personal: React.FC = () => {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full py-5 justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon />
+          <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
