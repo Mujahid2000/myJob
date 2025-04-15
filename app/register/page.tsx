@@ -129,27 +129,42 @@ export default function SignUpPage() {
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex gap-8">
                 <div className='flex gap-8'>
-                <Input
+                <div>
+            <Input
                 {...register('firstName', { required: 'First name is required' })}
                 type="text"
                 placeholder="First Name"
                 className="w-[13rem] rounded-sm"
                 aria-invalid={errors.firstName ? 'true' : 'false'}
-              />
-               
-          <Input
+                />
+
+                {(errors.firstName || errors.lastName) && (
+              <p className="text-sm text-red-500">
+                {errors.firstName?.message || errors.lastName?.message}
+              </p>
+            )}
+
+                </div>
+                <div>
+                   <Input
                 {...register('lastName', { required: 'Last name is required' })}
                 type="text"
                 placeholder="Last Name"
                 className="w-[13rem] rounded-sm"
                 aria-invalid={errors.lastName ? 'true' : 'false'}
-              />
-          </div>
-          {(errors.firstName || errors.lastName) && (
+                />
+                {(errors.firstName || errors.lastName) && (
               <p className="text-sm text-red-500">
                 {errors.firstName?.message || errors.lastName?.message}
               </p>
             )}
+
+                </div>
+               
+         
+              
+          </div>
+          
             </div>
             <Input
               {...register('email', {
@@ -216,11 +231,11 @@ export default function SignUpPage() {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <div className="flex gap-4">
-          <Button  className="w-[33rem] hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
+        <div className="flex justify-between gap-4">
+          <Button  className=" hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
             <Image src='https://res.cloudinary.com/diez3alve/image/upload/v1740758529/Employers_Logo_2_eyvdlw.png' alt="google"  width={18}  height={18}className="text-blue-500 hover:text-white"/> Sign in with Facebook
           </Button>
-          <Button className="w-[33rem] hover:text-white bg-white flex text-[#474C54] cursor-pointer rounded-sm items-center gap-2 border border-gray-300">
+          <Button className=" hover:text-white bg-white flex text-[#474C54] cursor-pointer rounded-sm items-center gap-2 border border-gray-300">
             <Image src="https://res.cloudinary.com/diez3alve/image/upload/v1740756553/google_g2hwru.png" alt="fb" width={18} height={18}/> Sign in with Google
           </Button>
         </div>

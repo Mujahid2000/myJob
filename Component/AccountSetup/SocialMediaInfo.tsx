@@ -11,7 +11,7 @@ interface SocialLink {
   url: string;
 }
 
-const SocialLink = () => {
+const SocialMediaInfo = () => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([
     { id: 1, platform: 'Facebook', url: '' },
     { id: 2, platform: 'Twitter', url: '' },
@@ -47,7 +47,7 @@ const SocialLink = () => {
   };
 
   return (
-    <div className="py-6 px-3 h-screen bg-white rounded-lg shadow-md max-w-7xl mx-auto">
+    <div className="py-6 px-3  bg-white rounded-lg  max-w-7xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
         {socialLinks.map((link, index) => (
           <div key={link.id} className=" items-center ">
@@ -132,17 +132,10 @@ const SocialLink = () => {
         </div>
 
         {/* Save Changes Button */}
-        <div className="mt-6">
-        <button
-            type="submit"
-            className="text-base bg-[#0A65CC] text-white px-5 py-3 rounded-xs hover:bg-gray-100 hover:text-[#0A65CC] font-medium cursor-pointer transition-colors"
-          >
-            SAVE CHANGES
-          </button>
-        </div>
+        
       </form>
     </div>
   );
 };
 
-export default SocialLink;
+export default SocialMediaInfo;
