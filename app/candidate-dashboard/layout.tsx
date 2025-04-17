@@ -2,9 +2,7 @@ import TestComponent from "@/Hooks/DashboardClientLayoutCandidate";
 
 
 
-export default function DashboardLayout({
-  children,
-}: {
+export default function DashboardLayout({children}: {
   children: React.ReactNode;
 }) {
 
