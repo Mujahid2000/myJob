@@ -155,3 +155,12 @@ input[type= "radio"] {
   fill: oklch(0.51 0.29 261.96);
   border-color: #0066FF;
 }
+
+.active{
+  @apply bg-[#0A65CC]
+  text-white
+}
+
+.active{
+  @apply text-white
+}
