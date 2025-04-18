@@ -1,3 +1,4 @@
+import JobApplicationReceiveList from '@/Component/Employee-Dashboard/OverView/JobApplicationReceiveList';
 import { MoveRight } from 'lucide-react';
 import React from 'react';
 
@@ -45,7 +46,7 @@ const page = () => {
          
           
         </div>
-       
+       <JobApplicationReceiveList/>
         </div>
     );
 };

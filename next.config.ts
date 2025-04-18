@@ -34,6 +34,13 @@ const nextConfig: NextConfig = {
         pathname: '/**/*',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: "static-00.iconduck.com",
+        port: '',
+        pathname: '/**/*',
+        search: '',
+      },
     ],
   },
 };

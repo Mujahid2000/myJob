@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: {children: any}) {
         <DashboardClientLayoutCompany>
         {children}
         </DashboardClientLayoutCompany>
-        <footer>Dashboard Footer</footer>
+        
       </div>
     );
   }
