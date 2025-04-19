@@ -158,7 +158,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                 <span>$59</span>
               </div>
               <Link href={'/company-dashboard/post-job'}>
-              <button className="mt-6 flex items-center justify-evenly w-full bg-[#0A65CC] text-white py-3 rounded-sm font-semibold hover:bg-blue-600">
+              <button className="mt-6 flex cursor-pointer items-center justify-evenly w-full bg-[#0A65CC] text-white py-3 rounded-sm font-semibold hover:bg-blue-600">
                 Choose Plan <MoveRight/>
               </button>
               </Link>

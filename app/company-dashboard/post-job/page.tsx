@@ -1,4 +1,5 @@
 'use client';
+import SuccessModal from '@/Component/Employee-Dashboard/postajob/SuccessModal';
 import { useState } from 'react';
 
 interface JobFormData {
@@ -38,6 +39,7 @@ const PostAJob: React.FC = () => {
     responsibilities: '',
   });
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -49,6 +51,31 @@ const PostAJob: React.FC = () => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     // Add API call or further logic here
+  };
+
+  const handleOpenModal = (): void => {
+   setTimeout(() => {
+    setIsModalOpen(true);
+   }, 500);
+  };
+
+  // Handle closing the modal
+  const handleCloseModal = (): void => {
+    setIsModalOpen(false);
+  };
+
+  // Handle "View Jobs" action
+  const handleViewJobs = (): void => {
+    console.log('Navigating to view jobs...');
+    setIsModalOpen(false);
+    // Add navigation logic here, e.g., using Next.js router
+  };
+
+  // Handle "Promote Job" action
+  const handlePromoteJob = (): void => {
+    console.log('Promoting job...');
+    setIsModalOpen(false);
+    // Add promotion logic here
   };
 
   return (
@@ -376,7 +403,8 @@ const PostAJob: React.FC = () => {
         <div className="flex justify-start">
           <button
             type="submit"
-            className="bg-[#0A65CC] text-white px-6 py-3 rounded-sm font-semibold hover:bg-blue-600 flex items-center gap-2"
+            className="bg-[#0A65CC] text-white px-6 py-3 rounded-sm font-semibold cursor-pointer hover:bg-blue-600 flex items-center gap-2"
+            onClick={handleOpenModal}
           >
             Post Job
             <svg
@@ -396,6 +424,12 @@ const PostAJob: React.FC = () => {
           </button>
         </div>
       </form>
+      <SuccessModal 
+      isOpen={isModalOpen}
+      onClose={handleCloseModal}
+      onViewJobs={handleViewJobs}
+      onPromoteJob={handlePromoteJob}
+      />
     </div>
   );
 };

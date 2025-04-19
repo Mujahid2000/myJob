@@ -74,12 +74,12 @@ if(!currentUser){
                  
                 </nav>
               </div>
-              <Button
+              <button
                onClick={handleLogout}
-                className="mt-6 cursor-pointer w-full flex text-left text-white hover:bg-[#9199A3]"
+                className="mt-6 p-3 cursor-pointer w-full flex text-left text-white bg-[#0A65CC] font-semibold hover:bg-gray-100 hover:text-[#0A65CC] rounded-sm"
               >
                 <LogOut /> Logout
-              </Button>
+              </button>
             </div>
             <div className="flex-1 bg-white p-6 shadow">{children}</div>
           </div>
