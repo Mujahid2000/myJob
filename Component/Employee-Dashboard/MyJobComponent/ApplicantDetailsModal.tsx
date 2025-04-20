@@ -37,7 +37,7 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <Button variant="transparent" className="cursor-pointer">
+                    <Button  className="cursor-pointer">
                     <Star className='text-[#0A65CC]'/>
                     </Button>
 
