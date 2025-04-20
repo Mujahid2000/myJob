@@ -4,7 +4,7 @@ import { Bookmark, Cake, CircleArrowRight, CircleUserRound, ClipboardList, Downl
 import React from 'react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube } from 'react-icons/fa';
 
-const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setopen:any}) => {
+const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:any}) => {
     return (
         <div>
              <div

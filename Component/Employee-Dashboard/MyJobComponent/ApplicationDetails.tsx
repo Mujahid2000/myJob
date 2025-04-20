@@ -127,8 +127,8 @@ const ApplicationDetails: React.FC = () => {
 
   // Render an applicant card
   const renderApplicantCard = (applicant: Applicant) => (
-    <div  className="bg-white cursor-pointer rounded-lg shadow-md px-4 py-3 mb-4">
-      <div onClick={handleApplicationDetails} className="flex justify-start border-b pb-4 items-center gap-5">
+    <div  className="bg-white  rounded-lg shadow-md px-4 py-3 mb-4">
+      <div onClick={handleApplicationDetails} className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer">
         <img
           src="https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png"
           alt=""
