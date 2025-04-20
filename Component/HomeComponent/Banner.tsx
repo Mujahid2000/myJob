@@ -22,7 +22,7 @@ const Banner = () => {
             <SlLocationPin className="text-blue-500 text-2xl" />
             <Input type="text" placeholder="Your Location" className='border-none shadow-none h-[3rem] '/>
             </div>
-            <Button className='bg-blue-600 h-[3rem] w-[8rem] hover:bg-blue-700'>Find Job</Button>
+            <Button className='bg-[#0A65CC] h-[3rem] w-[8rem] hover:bg-blue-500'>Find Job</Button>
             </div>
 
             <h1 className='text-[#474C54] text-base py-5'>Suggestions: Designer, Programming, <span className='text-blue-600'>Digital Marketing,</span> Video, Animation</h1>

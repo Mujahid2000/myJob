@@ -83,7 +83,7 @@ const page: React.FC = () => {
             <br />
             We have to pay this payment every month.
           </p>
-          <button className="px-4 flex items-center justify-center gap-5  w-full py-3 bg-[#0A65CC] text-white rounded-sm hover:bg-blue-700 transition">
+          <button className="px-4 flex text-base items-center justify-center gap-5  w-full py-3 bg-[#0A65CC] text-white rounded-sm hover:bg-blue-700 transition">
             Pay Now <MoveRight />
           </button>
         </div>
@@ -141,9 +141,9 @@ const page: React.FC = () => {
         <div className="bg-white rounded-lg border p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-800">Payment Card</h2>
-            <button className="text-blue-600 flex items-center text-base"><LiaEditSolid />   Edit Card</button>
+            <button className="text-gray-600 flex items-center text-base"><LiaEditSolid />   Edit Card</button>
           </div>
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex  border-b py-2 justify-between items-center mb-2">
             <div className='flex'>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
@@ -151,8 +151,8 @@ const page: React.FC = () => {
               className="w-12 h-8 mr-4"
             />
             <div>
-              <p className="text-sm text-gray-600">Ether Howard</p>
-              <p className="text-sm text-gray-800">6714 **** **** ****</p>
+              <p className="text-sm text-gray-600">Name on card</p>
+              <p className="text-base font-bold text-gray-800">Esther Howard</p>
             </div>
                 
             </div>
@@ -163,6 +163,7 @@ const page: React.FC = () => {
           </div>
             </div>
           </div>
+          <h2 className='text-2xl font-semibold'>6714 **** **** ****</h2>
         </div>
       </div>
       </div>

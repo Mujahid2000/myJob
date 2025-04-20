@@ -65,7 +65,7 @@ export default function JobPilotSteps() {
       <div className="flex justify-center items-center space-x-6 max-w-7xl mx-auto">
         {steps.map((step, index) => (
           <div key={index} className="text-center hover:bg-white rounded-sm duration-500 cursor-pointer p-6 relative flex flex-col items-center">
-            <div className={`w-16 h-16 flex items-center justify-center rounded-full ${step.highlight ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} shadow-md`}>
+            <div className={`w-16 h-16 flex items-center justify-center rounded-full ${step.highlight ? 'bg-[#0A65CC] text-white' : 'bg-white text-blue-600'} shadow-md`}>
               <span className="text-2xl">{step.icon}</span>
             </div>
             <h3 className="mt-4 text-xl font-medium">{step.title}</h3>

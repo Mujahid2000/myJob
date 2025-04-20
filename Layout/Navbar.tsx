@@ -174,7 +174,7 @@ const Navbar = () => {
                     <Button variant="outline" className="px-6 py-4  border-gray-300 rounded-sm text-gray-700">Sign In</Button>
                 </Link>
                 }
-                <Link href='/'>
+                <Link href='/company-dashboard/Post-a-Job'>
                 
                     <ButtonCommon name='Post A Post' />
                 </Link>
