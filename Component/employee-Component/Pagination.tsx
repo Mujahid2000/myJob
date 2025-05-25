@@ -8,7 +8,7 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
   
-  export function PaginationDemo() {
+  export function PaginationDemo({currentPage, totalPages}: {currentPage:number, totalPages: number}) {
     return (
       <Pagination className="py-7">
         <PaginationContent>
