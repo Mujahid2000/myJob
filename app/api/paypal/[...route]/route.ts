@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // POST handler for /api/paypal/* routes
 export async function POST(req: NextRequest, { params }: { params: { route: string[] } }): Promise<NextResponse> {
-  // Join route segments into a single string (e.g., ['create-order'] -> 'create-order')
+
+  try {
+      // Join route segments into a single string (e.g., ['create-order'] -> 'create-order')
   const route = params.route.join('/');
   console.log('Received route:', route); // Debug log
   const body = await req.json();
   console.log('Request body:', body); // Debug log
-
-  try {
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     console.log('Forwarding to backend:', `${backendUrl}/api/paypal/${route}`); // Debug log
     const response = await fetch(`${backendUrl}/api/paypal/${route}`, {
