@@ -1,4 +1,4 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import axios from 'axios';
 
 interface orderApiResponse {
@@ -24,29 +24,31 @@ interface captureOrderData {
 
 
 
-const axiosBaseQuery = async ({ url, method, body }: { url: string; method: string; body?: any }) => {
-  try {
-    const response = await axios({
-      url: `/api/paypal/${url}`,
-      method,
-      data: body,
-      headers: { 'Content-Type': 'application/json' },
-    });
-    return { data: response.data };
-  } catch (error: any) {
-    return {
-      error: {
-        status: error.response?.status,
-        data: error.response?.data || { message: error.message },
-      },
-    };
-  }
-};
+// const axiosBaseQuery = async ({ url, method, body }: { url: string; method: string; body?: any }) => {
+//   try {
+//     const response = await axios({
+//       url: `/api/paypal/${url}`,
+//       method,
+//       data: body,
+//       headers: { 'Content-Type': 'application/json' },
+//     });
+//     return { data: response.data };
+//   } catch (error: any) {
+//     return {
+//       error: {
+//         status: error.response?.status,
+//         data: error.response?.data || { message: error.message },
+//       },
+//     };
+//   }
+// };
 
 
 export const paymentApi = createApi({
     reducerPath: 'paymentApi',
-    baseQuery: axiosBaseQuery,
+    baseQuery: fetchBaseQuery({
+      baseUrl: 'http://localhost:5000/api/paypal'
+    }),
     endpoints: (builder) =>({
         createOrder: builder.mutation<orderApiResponse ,orderData >({
             query: ({price, userId, packageName, duration}) =>({
