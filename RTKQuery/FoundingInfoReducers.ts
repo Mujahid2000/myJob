@@ -23,7 +23,7 @@ interface FoundingInfoResponse {
 
 export const foundingInfoApi = createApi({
   reducerPath: 'foundingInfoApi', 
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://serverjob.vercel.app/' }),
   tagTypes: ['FoundingInfo'],
   endpoints: (builder) => ({
     postFounderInfo: builder.mutation<FoundingInfoResponse, FoundingInfoRequest>({

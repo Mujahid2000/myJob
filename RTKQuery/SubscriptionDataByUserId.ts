@@ -16,7 +16,7 @@ interface paymentsDataByUserId {
 
 export const SubscriptionDataByUserId = createApi({
     reducerPath: 'subscriptionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://serverjob.vercel.app/' }),
   tagTypes: ['SubscriptionDataByUserId'],
     endpoints: builder =>({
         getSubscriptionDataByUserId: builder.query<paymentsDataByUserId[], string>({

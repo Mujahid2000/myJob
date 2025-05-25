@@ -12,7 +12,7 @@ import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } f
 
 export default async function Page  ({ params, }: {params:Promise< { id: string }>}) {
     const { id } = await params;
-    const response = await fetch(`http://localhost:5000/jobs/getSingleCompanyData/${id}`);
+    const response = await fetch(`https://serverjob.vercel.app//jobs/getSingleCompanyData/${id}`);
     const data = await response.json();
     const singleCompany = data.data
     const yearOfEstablishment = singleCompany.yearEstablished.split('T');

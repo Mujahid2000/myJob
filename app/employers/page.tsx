@@ -63,7 +63,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   // Fetch job data
   let jobListings: JobApiResponse;
   try {
-    const response = await fetch('http://localhost:5000/jobs/getCompanyData', {
+    const response = await fetch('https://serverjob.vercel.app//jobs/getCompanyData', {
       cache: 'no-store', // Disable caching for fresh data
     });
     if (!response.ok) {

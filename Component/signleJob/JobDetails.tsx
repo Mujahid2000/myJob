@@ -12,7 +12,7 @@ import ApplyNowButton from "./ApplyNowButton"
 export default async function JobDetails ({id}: {id:string}) {
 
   
-  const data = await fetch(`http://localhost:5000/jobs/jobPost/${id}`);
+  const data = await fetch(`https://serverjob.vercel.app//jobs/jobPost/${id}`);
   const posts = await data.json();
   const singlePost = posts?.data
 
