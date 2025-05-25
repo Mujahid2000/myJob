@@ -48,7 +48,7 @@ export interface JobApiResponse {
 }
 
 
-const page = async ({ searchParams = {} }: { searchParams?: PageProps }) => { //Type '{}' is missing the following properties from type 'PageProps': companyName, organizationType, jobTitle, tagsts(2739)
+export default async function page ({ searchParams = {} }: { searchParams?: PageProps }) { //Type '{}' is missing the following properties from type 'PageProps': companyName, organizationType, jobTitle, tagsts(2739)
   const viewMode = searchParams.viewMode || "grid";
   const data = await fetch('http://localhost:5000/jobs/getCompanyData');
   const jobListings: JobApiResponse = await data.json();
@@ -215,4 +215,4 @@ const filteredJobs = companyList.filter((job) => {
   );
 };
 
-export default page;
+

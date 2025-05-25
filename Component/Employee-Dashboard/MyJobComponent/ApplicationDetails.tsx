@@ -24,7 +24,10 @@ interface Applicant {
   userId: string;
   resume_Id: string;
   profilePicture?: string;
+  // applicantId is optional if not always present in allApplicants
+  applicantId?: string;
 }
+
 interface SortApplicant {
   _id: string;
   fullName: string;
@@ -36,7 +39,7 @@ interface SortApplicant {
   userId: string;
   resume_Id: string;
   profilePicture?: string;
-applicantId: string
+  applicantId: string;
 }
 
 // Define the interface for the modal state
@@ -47,9 +50,7 @@ interface Modal {
   jobId: string;
 }
 
-// Define props for the component
-
-const ApplicationDetails = ({ jobId }: {jobId: string}) => {
+const ApplicationDetails = ({ jobId }: { jobId: string }) => {
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('Newest');
   const [applicantDetails, setApplicantDetails] = useState<Modal>({
@@ -59,11 +60,11 @@ const ApplicationDetails = ({ jobId }: {jobId: string}) => {
     jobId: '',
   });
   const [sortedApplicantDetails, setSortedApplicantDetails] = useState<Modal>({
-  modalValue: false,
-  userId: '',
-  resume_Id: '',
-  jobId: '',
-});
+    modalValue: false,
+    userId: '',
+    resume_Id: '',
+    jobId: '',
+  });
   const [shortlistedData, setShortlistedData] = useState<SortApplicant[]>([]);
 
   const authContext = useContext(AuthContext);
@@ -84,10 +85,9 @@ const ApplicationDetails = ({ jobId }: {jobId: string}) => {
     isError: shortError,
     refetch,
   } = useGetShortListedDataQuery(jobId, {
-    pollingInterval: 5000, // Refetch every 5 seconds to check for updates
+    pollingInterval: 5000,
   });
 
-  // Update shortlistedData when shortlistedApplicants changes
   useEffect(() => {
     if (shortlistedApplicants?.data) {
       setShortlistedData(
@@ -97,80 +97,73 @@ const ApplicationDetails = ({ jobId }: {jobId: string}) => {
           title: item.title,
           experience: item.experience,
           education: item.education,
-          date: item.date || '', // Provide a fallback if date is missing
+          date: item.date || '',
           resumeLink: item.resumeLink,
           userId: item.userId,
           resume_Id: item.resume_Id,
           profilePicture: item.profilePicture,
-          applicantId: item.applicantId || ''
+          applicantId: item.applicantId || '',
         }))
       );
     }
   }, [shortlistedApplicants]);
 
-  // Sort applicants based on the selected sort option
-  const sortApplicants = (applicants: SortApplicant[]): SortApplicant[] => {
-    return [...applicants].sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return sortOption === 'Newest' ? dateB - dateA : dateA - dateB;
-    });
+  const sortApplicants = (applicants: Applicant[]): SortApplicant[] => {
+    return applicants
+      .map((applicant) => ({
+        ...applicant,
+        applicantId: applicant.applicantId || '', // Provide fallback if applicantId is missing
+      }))
+      .sort((a, b) => {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return sortOption === 'Newest' ? dateB - dateA : dateA - dateB;
+      });
   };
 
-  // Toggle sort dropdown
   const toggleSortDropdown = (): void => {
     setIsSortOpen((prev) => !prev);
   };
 
-  // Handle sort option selection
   const handleSortSelect = (option: string): void => {
     setSortOption(option);
     setIsSortOpen(false);
   };
 
-
-
-  // Handle applicant details modal toggle
   const handleApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
-  setSortedApplicantDetails((prev) => ({ ...prev, modalValue: false })); // Close shortlisted modal
-  setApplicantDetails({
-    modalValue: true,
-    userId,
-    resume_Id,
-    jobId,
-  });
-};
+    setSortedApplicantDetails((prev) => ({ ...prev, modalValue: false }));
+    setApplicantDetails({
+      modalValue: true,
+      userId,
+      resume_Id,
+      jobId,
+    });
+  };
 
-const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
-  setApplicantDetails((prev) => ({ ...prev, modalValue: false })); // Close applicant modal
-  setSortedApplicantDetails({
-    modalValue: true,
-    userId,
-    resume_Id,
-    jobId,
-  });
-};
+  const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
+    setApplicantDetails((prev) => ({ ...prev, modalValue: false }));
+    setSortedApplicantDetails({
+      modalValue: true,
+      userId,
+      resume_Id,
+      jobId,
+    });
+  };
 
-  // Close the modal
   const closeModal = () => {
     setApplicantDetails((prev) => ({
       ...prev,
       modalValue: false,
     }));
   };
+
   const closeShortModal = () => {
-  setSortedApplicantDetails((prev) => ({
-    ...prev,
-    modalValue: false,
-  }));
-};
+    setSortedApplicantDetails((prev) => ({
+      ...prev,
+      modalValue: false,
+    }));
+  };
 
-  // Handle edit and delete actions (placeholder)
-
-  // Render the edit/delete dropdown
-
-
-  // Handle loading and error states
   if (userLoading || applicantsLoading || shortLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
   }
@@ -179,24 +172,15 @@ const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string;
     return <div className="text-center text-red-500">Error loading data</div>;
   }
 
-
-
   return (
     <div className="min-h-screen p-6">
-      {/* Breadcrumb */}
-      <div className="text-sm text-gray-500 mb-4">
-        Home / Job / Senior UI/UX Designer / Applications
-      </div>
-
-      {/* Parent Div with Flex for Headline and Buttons */}
+      <div className="text-sm text-gray-500 mb-4">Home / Job / Senior UI/UX Designer / Applications</div>
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Job Applications</h2>
         </div>
         <div className="flex space-x-3">
-          <button className="rounded-md px-4 py-1.5 text-base text-gray-600 hover:bg-gray-100">
-            Filter
-          </button>
+          <button className="rounded-md px-4 py-1.5 text-base text-gray-600 hover:bg-gray-100">Filter</button>
           <div className="relative">
             <Button
               onClick={toggleSortDropdown}
@@ -234,22 +218,16 @@ const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string;
           </div>
         </div>
       </div>
-
-      {/* Parent Div with Columns */}
       <div className="flex space-x-3">
-        {/* Column 1: All Applications */}
         <div className="rounded-lg bg-[#F8FAFC] p-5 flex-1">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              All Applications ({allApplicants?.length || 0})
-            </h3>
-            <button  className="text-blue-600 text-sm hover:underline">
+            <h3 className="text-lg font-semibold text-gray-800">All Applications ({allApplicants?.length || 0})</h3>
+            <button className="text-blue-600 text-sm hover:underline">
               <BsThreeDots />
             </button>
           </div>
-          
           {allApplicants?.length > 0 ? (
-           (allApplicants).map((applicant, index) => ( //Argument of type 'Applicant[]' is not assignable to parameter of type 'SortApplicant[]'. Property 'applicantId' is missing in type 'Applicant' but required in type 'SortApplicant'.ts(2345) ApplicationDetails.tsx(40, 3): 'applicantId' is declared here.
+            sortApplicants(allApplicants as Applicant[]).map((applicant, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md px-4 py-3 mb-4">
                 <div
                   title="click here"
@@ -287,18 +265,13 @@ const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string;
             <p className="text-gray-600 text-sm">No applicants found</p>
           )}
         </div>
-
-        {/* Column 2: Shortlisted */}
         <div className="rounded-lg bg-[#F8FAFC] p-5 flex-1">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Shortlisted ({shortlistedData?.length || 0})
-            </h3>
-            <button  className="text-blue-600 text-sm hover:underline">
+            <h3 className="text-lg font-semibold text-gray-800">Shortlisted ({shortlistedData?.length || 0})</h3>
+            <button className="text-blue-600 text-sm hover:underline">
               <BsThreeDots />
             </button>
           </div>
-          
           {shortlistedData?.length > 0 ? (
             sortApplicants(shortlistedData).map((applicant, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md px-4 py-3 mb-4">
@@ -339,8 +312,6 @@ const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string;
           )}
         </div>
       </div>
-
-      {/* Applicant Details Modal */}
       <ApplicantDetailsModal
         newopen={applicantDetails.modalValue}
         setnewopen={closeModal}
@@ -348,12 +319,13 @@ const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string;
         resume_Id={applicantDetails.resume_Id}
         jobId={applicantDetails.jobId}
       />
-
-      <ApplicantShortlistDetailsModal  newopen={sortedApplicantDetails.modalValue}
+      <ApplicantShortlistDetailsModal
+        newopen={sortedApplicantDetails.modalValue}
         setnewopen={closeShortModal}
         userId={sortedApplicantDetails.userId}
         resume_Id={sortedApplicantDetails.resume_Id}
-        jobId={sortedApplicantDetails.jobId}/>
+        jobId={sortedApplicantDetails.jobId}
+      />
     </div>
   );
 };
