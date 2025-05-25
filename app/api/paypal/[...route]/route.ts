@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // POST handler for /api/paypal/* routes
-export async function POST(req: NextRequest, { params }: { params: { route: string[] } }) {
+export async function POST(req: NextRequest, context: { params: { route?: string[] } }) {
   // Join route segments into a single string (e.g., ['create-order'] -> 'create-order')
-  console.log(params.route.join('/'))
-  const route = params.route.join('/');
+  const route = context.params.route?.join('/') || '';
   console.log('Received route:', route); // Debug log
   const body = await req.json();
   console.log('Request body:', body); // Debug log
