@@ -1,39 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest, context: { params: { route?: string[] } }): Promise<NextResponse> {
+// POST handler for /api/paypal/* routes
+export async function POST(req: NextRequest, { params }: { params: { route: string[] } }) {
+  // Join route segments into a single string (e.g., ['create-order'] -> 'create-order')
+  console.log(params.route.join('/'))
+  const route = params.route.join('/');
+  console.log('Received route:', route); // Debug log
+  const body = await req.json();
+  console.log('Request body:', body); // Debug log
+
   try {
-    // রাউট সেগমেন্টগুলো একত্রিত করা (যেমন ['create-order', 'capture'] -> 'create-order/capture')
-    const route = context.params.route?.join('/') || '';
-    console.log('Received route:', route); // ডিবাগ লগ
-
-    // রিকোয়েস্ট বডি পার্স করা
-    const body = await req.json();
-    console.log('Request body:', body); // ডিবাগ লগ
-
-    // ব্যাকএন্ড URL পরিবেশ ভেরিয়েবল থেকে নেওয়া
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
-    console.log('Forwarding to backend:', `${backendUrl}/api/paypal/${route}`); // ডিবাগ লগ
-
-    // ব্যাকএন্ডে রিকোয়েস্ট ফরওয়ার্ড করা
+    console.log('Forwarding to backend:', `${backendUrl}/api/paypal/${route}`); // Debug log
     const response = await fetch(`${backendUrl}/api/paypal/${route}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
 
-    console.log('Backend response status:', response.status); // ডিবাগ লগ
+    console.log('Backend response status:', response.status); // Debug log
     const data = await response.json();
-
-    // ব্যাকএন্ড থেকে প্রাপ্ত রেসপন্স রিটার্ন করা
     return NextResponse.json(data, { status: response.status });
-  } catch (error: unknown) {
-    // ত্রুটি হ্যান্ডলিং
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    console.error('Error forwarding request:', errorMessage); // ত্রুটি লগ
+  } catch (error: any) {
+    console.error('Error forwarding request:', error.message); // Error log
     return NextResponse.json(
-      { success: false, message: `Failed to forward request: ${errorMessage}` },
+      { success: false, message: `Failed to forward request: ${error.message}` },
       { status: 500 }
     );
   }

@@ -27,7 +27,7 @@ interface captureOrderData {
 const axiosBaseQuery = async ({ url, method, body }: { url: string; method: string; body?: any }) => {
   try {
     const response = await axios({
-      url: `/api/paypal${url}`,
+      url: `/api/paypal/${url}`,
       method,
       data: body,
       headers: { 'Content-Type': 'application/json' },
