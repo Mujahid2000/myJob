@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 // POST handler
 export async function POST(
   req: NextRequest,
-  context: { params: { route: string[] } }
-) {
-  const route = context.params.route.join('/');
+  context: { params: { route?: string[] } }
+): Promise<NextResponse> {
+  const route = context.params.route?.join('/') || '';
   console.log('Received route:', route);
 
   const body = await req.json();
