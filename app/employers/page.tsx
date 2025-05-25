@@ -119,7 +119,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
 
   return (
-    <div className="pt-20">
+    <div className="pt-29">
       <FilteringSide />
       {/* Job listings and filters */}
       <div className="max-w-7xl mx-auto flex gap-5">
