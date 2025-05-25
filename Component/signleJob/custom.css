@@ -1,0 +1,22 @@
+.ql-ui {
+  display: none;
+}
+
+[data-list="ordered"] {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+}
+
+[data-list="ordered"]::before {
+  display: none;
+}
+
+
+[data-list="bullet"] {
+  list-style: disc;
+  
+}
+
+.prose>ol {
+  padding-left: 20px;
+}

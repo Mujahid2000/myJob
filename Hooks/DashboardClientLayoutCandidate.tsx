@@ -82,12 +82,12 @@ if(!currentUser){
                   </Link>
                 </nav>
               </div>
-              <Button
-               onClick={handleLogout}
-                className="mt-6 cursor-pointer w-full flex text-left text-white hover:bg-[#9199A3]"
-              >
-                <LogOut /> Logout
-              </Button>
+              <button
+                             onClick={handleLogout}
+                              className="mt-6 p-3 cursor-pointer w-full flex text-left text-white bg-[#0A65CC] duration-300 font-semibold hover:bg-gray-100 hover:text-[#0A65CC] rounded-sm"
+                            >
+                              <LogOut /> Logout
+                            </button>
             </div>
             <div className="flex-1 bg-white p-6 shadow">{children}</div>
           </div>

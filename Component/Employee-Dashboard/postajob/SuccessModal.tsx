@@ -1,3 +1,5 @@
+'use client';
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 
 // Define the props interface for the SuccessModal component
@@ -5,14 +7,13 @@ interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
   onViewJobs: () => void;
-  onPromoteJob: () => void;
+  onPromoteJob: (selection: string | null) => void;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, onViewJobs, onPromoteJob }) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [showSkip, setShowSkip] = useState<boolean>(false)
+  const [showSkip, setShowSkip] = useState<boolean>(false);
   const [select, setSelect] = useState<string | null>(null);
-
 
   useEffect(() => {
     if (isOpen) {
@@ -27,16 +28,15 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, onViewJobs
 
   if (!isOpen && !isVisible) return null;
 
-
-const handlePromote = (bol: boolean) => {
+  const handlePromote = (bol: boolean) => {
     if (showSkip !== bol) {
-        setShowSkip(bol);
+      setShowSkip(bol);
     }
-};
+  };
 
-const handleSelectBorder = (sel: string) => {
+  const handleSelectBorder = (sel: string) => {
     setSelect((prevSelect) => (prevSelect !== sel ? sel : prevSelect));
-};
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -54,30 +54,35 @@ const handleSelectBorder = (sel: string) => {
         }`}
       >
         {/* Header */}
-       {
-        select == null ? 
-        <><div className="flex justify-between items-center mb-4">
-                          <div className="flex items-center">
-                              <span className="text-yellow-500 mr-2">🎉</span>
-                              <h2 className="text-lg font-semibold">
-                                  Congratulations, Your Job is successfully posted!
-                              </h2>
-                          </div>
-                          <button onClick={handleClose} className="text-gray-500 p-2 rounded-full hover:bg-gray-100 cursor-pointer hover:text-gray-700">
-                              ✕
-                          </button>
-                      </div><p className="text-gray-600 mb-6">
-                              You can manage your form my-jobs section in your dashboard
-                          </p><button
-                              onClick={onViewJobs}
-                              className="bg-[#0A65CC] cursor-pointer text-white px-4 py-2 rounded-md hover:bg-blue-700 transition mb-6"
-                          >
-                              View Jobs →
-                          </button></>
-        :
-        
-        <p></p>
-       }
+        {select == null ? (
+          <>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center">
+                <span className="text-yellow-500 mr-2">🎉</span>
+                <h2 className="text-lg font-semibold">
+                  Congratulations, Your Job is successfully posted!
+                </h2>
+              </div>
+              <button
+                onClick={handleClose}
+                className="text-gray-500 p-2 rounded-full hover:bg-gray-100 cursor-pointer hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-gray-600 mb-6">
+              You can manage your job from the my-jobs section in your dashboard.
+            </p>
+            <Link href={'/company-dashboard/my-jobs'}>
+            <button
+              onClick={onViewJobs}
+              className="bg-[#0A65CC] cursor-pointer text-white px-4 py-2 rounded-md hover:bg-blue-700 transition mb-6"
+            >
+              View Jobs →
+            </button>
+            </Link>
+          </>
+        ) : null}
 
         {/* Promote Job Section */}
         <h3 className="text-lg font-semibold mb-2">Promote Job: UI/UX Designer</h3>
@@ -88,7 +93,10 @@ const handleSelectBorder = (sel: string) => {
         {/* Promotion Options */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {/* Always on the Top */}
-          <div onClick={()=>handleSelectBorder('top')} className={`${select == 'top' ? 'border border-blue-500' : 'border border-gray-200'} rounded-lg p-4`}>
+          <div
+            onClick={() => handleSelectBorder('top')}
+            className={`${select === 'top' ? 'border border-blue-500' : 'border border-gray-200'} rounded-lg p-4 cursor-pointer`}
+          >
             <h4 className="font-semibold mb-2">ALWAYS ON THE TOP</h4>
             <div className="flex items-center mb-2">
               <div className="w-1/3 h-2 bg-blue-500 rounded"></div>
@@ -98,13 +106,23 @@ const handleSelectBorder = (sel: string) => {
               Sed neque diam, lacinia nec dolor et, euismod bibendum turpis. Sed feugiat faucibus.
             </p>
             <div className="flex items-center mt-2">
-              <input onClick={()=>handlePromote(true)} type="radio" name="promotion" className="mr-2" />
+              <input
+                onClick={() => handlePromote(true)}
+                type="radio"
+                name="promotion"
+                className="mr-2"
+                checked={select === 'top'}
+                onChange={() => {}}
+              />
               <span>Featured Your Job</span>
             </div>
           </div>
 
           {/* Highlight Job with Color */}
-          <div onClick={()=>handleSelectBorder('highlight')} className={`${select == 'highlight' ? 'border border-blue-300': 'border border-gray-200'} rounded-lg p-4`}>
+          <div
+            onClick={() => handleSelectBorder('highlight')}
+            className={`${select === 'highlight' ? 'border border-blue-300' : 'border border-gray-200'} rounded-lg p-4 cursor-pointer`}
+          >
             <h4 className="font-semibold mb-2">HIGHLIGHT JOB WITH COLOR</h4>
             <div className="flex items-center mb-2">
               <div className="w-1/3 h-2 bg-yellow-400 rounded"></div>
@@ -114,28 +132,45 @@ const handleSelectBorder = (sel: string) => {
               Sed neque diam, lacinia nec dolor et, euismod bibendum turpis. Sed feugiat faucibus.
             </p>
             <div className="flex items-center mt-2">
-              <input onClick={()=>handlePromote(true)}  type="radio" name="promotion" className="mr-2" />
+              <input
+                onClick={() => handlePromote(true)}
+                type="radio"
+                name="promotion"
+                className="mr-2"
+                checked={select === 'highlight'}
+                onChange={() => {}}
+              />
               <span>Highlight Your Job</span>
             </div>
           </div>
         </div>
 
         {/* Skip and Promote Buttons */}
-        <div className="flex  justify-between items-center">
-         {
-            showSkip== true? 
-<button onClick={handleClose} className="text-gray-600 cursor-pointer hover:text-gray-800">
-            Cancel
-          </button>
-            :
-            <button onClick={handleClose} className="text-gray-600 cursor-pointer hover:text-gray-800">
-            Skip Now
-          </button>
-         }
-          
+        <div className="flex justify-between items-center">
+          {showSkip ? (
+            <button
+              onClick={() => {
+                handleClose();
+                onPromoteJob('cancel');
+              }}
+              className="text-gray-600 cursor-pointer hover:text-gray-800"
+            >
+              Cancel
+            </button>
+          ) : (
+            <button
+              onClick={handleClose}
+              className="text-gray-600 cursor-pointer hover:text-gray-800"
+            >
+              Skip Now
+            </button>
+          )}
           <button
-            onClick={onPromoteJob}
-            className="bg-[#0A65CC] cursor-pointer text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            onClick={() => onPromoteJob(select)}
+            disabled={!select} // Disable button if no promotion type is selected
+            className={`${
+              !select ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0A65CC] cursor-pointer'
+            } text-white px-4 py-2 rounded-md hover:bg-blue-700 transition`}
           >
             Promote Job →
           </button>

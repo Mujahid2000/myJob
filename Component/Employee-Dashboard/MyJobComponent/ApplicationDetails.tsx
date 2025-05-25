@@ -1,83 +1,125 @@
-'use client'
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { CirclePlus, Download, PenLine, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import { Download, PenLine, Trash2 } from 'lucide-react';
+import React, { useContext, useState, useEffect } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-import AddColumnModal from './AddColumnModal';
 import ApplicantDetailsModal from './ApplicantDetailsModal';
+import { AuthContext } from '@/Authentication/AuthContext';
+import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import { useGetJobPostApplicantListByJobIdQuery } from '@/RTKQuery/JobApplyApiSlice';
+import { useGetShortListedDataQuery } from '@/RTKQuery/ShortListedApi';
+import Link from 'next/link';
+import ApplicantShortlistDetailsModal from './ApplicantShortlistDetailsModal';
 
 // Define the interface for an applicant
 interface Applicant {
-  name: string;
-  role: string;
+  _id: string;
+  fullName: string;
+  title: string;
   experience: string;
   education: string;
-  appliedDate: string;
+  date: string;
+  resumeLink: string;
+  userId: string;
+  resume_Id: string;
+  profilePicture?: string;
+}
+interface SortApplicant {
+  _id: string;
+  fullName: string;
+  title: string;
+  experience: string;
+  education: string;
+  date: string;
+  resumeLink: string;
+  userId: string;
+  resume_Id: string;
+  profilePicture?: string;
+applicantId: string
 }
 
-// Define the interface for a custom column
-interface CustomColumn {
-  name: string;
-  applicants: Applicant[];
+// Define the interface for the modal state
+interface Modal {
+  modalValue: boolean;
+  userId: string;
+  resume_Id: string;
+  jobId: string;
 }
 
-// Sample data for applicants
-const allApplicants: Applicant[] = [
-  {
-    name: 'Ronald Richards',
-    role: 'UI/UX Designer',
-    experience: '7 Years Experience',
-    education: 'Master Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-  {
-    name: 'Theresa Webb',
-    role: 'Product Designer',
-    experience: '7 Years Experience',
-    education: 'High School Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-  {
-    name: 'Devon Lane',
-    role: 'UI/UX Designer',
-    experience: '7 Years Experience',
-    education: 'Master Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-  {
-    name: 'Kathryn Murphy',
-    role: 'UI/UX Designer',
-    experience: '7 Years Experience',
-    education: 'Master Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-];
+// Define props for the component
+interface ApplicationDetailsProps {
+  jobId: string;
+}
 
-const shortlistedApplicants: Applicant[] = [
-  {
-    name: 'Darre',
-    role: 'UI/UX',
-    experience: '7 Years Experience',
-    education: 'Intermediate Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-  {
-    name: 'Jenny Wilson',
-    role: 'UI Designer',
-    experience: '7 Years Experience',
-    education: 'Bachelor Degree',
-    appliedDate: 'Jan 23, 2022',
-  },
-];
-
-const ApplicationDetails: React.FC = () => {
+const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({ jobId }) => {
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('Newest');
-  const [editDelete, setEditDelete] = useState<boolean>(false);
-  const [editDelete1, setEditDelete1] = useState<boolean>(false);
-  const [isAddColumnModalOpen, setIsAddColumnModalOpen] = useState<boolean>(false);
-  const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]);
-  const [applicantDetails, setApplicationDetails] = useState<boolean>()
+  const [applicantDetails, setApplicantDetails] = useState<Modal>({
+    modalValue: false,
+    userId: '',
+    resume_Id: '',
+    jobId: '',
+  });
+  const [sortedApplicantDetails, setSortedApplicantDetails] = useState<Modal>({
+  modalValue: false,
+  userId: '',
+  resume_Id: '',
+  jobId: '',
+});
+  const [shortlistedData, setShortlistedData] = useState<SortApplicant[]>([]);
+
+  const authContext = useContext(AuthContext);
+  const currentUser = authContext?.currentUser;
+  const { data: userEmail, isLoading: userLoading, error: userEmailError } = useGetUserByIdQuery(
+    currentUser?.email || '',
+    { skip: !currentUser?.email }
+  );
+  const userId = userEmail?.user?._id || '';
+  const email = userEmail?.user?.email || '';
+  const { data: jobApplicantsList, isLoading: applicantsLoading, isError: applicantsError } =
+    useGetJobPostApplicantListByJobIdQuery(jobId);
+  const allApplicants = jobApplicantsList?.data || [];
+
+  const {
+    data: shortlistedApplicants,
+    isLoading: shortLoading,
+    isError: shortError,
+    refetch,
+  } = useGetShortListedDataQuery(jobId, {
+    pollingInterval: 5000, // Refetch every 5 seconds to check for updates
+  });
+
+  // Update shortlistedData when shortlistedApplicants changes
+  useEffect(() => {
+    if (shortlistedApplicants?.data) {
+      setShortlistedData(
+        shortlistedApplicants.data.map((item: any) => ({
+          _id: item._id,
+          fullName: item.fullName,
+          title: item.title,
+          experience: item.experience,
+          education: item.education,
+          date: item.date || '', // Provide a fallback if date is missing
+          resumeLink: item.resumeLink,
+          userId: item.userId,
+          resume_Id: item.resume_Id,
+          profilePicture: item.profilePicture,
+          applicantId: item.applicantId || ''
+        }))
+      );
+    }
+  }, [shortlistedApplicants]);
+
+  // Sort applicants based on the selected sort option
+  const sortApplicants = (applicants: SortApplicant[]): SortApplicant[] => {
+    return [...applicants].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return sortOption === 'Newest' ? dateB - dateA : dateA - dateB;
+    });
+  };
+
   // Toggle sort dropdown
   const toggleSortDropdown = (): void => {
     setIsSortOpen((prev) => !prev);
@@ -89,87 +131,61 @@ const ApplicationDetails: React.FC = () => {
     setIsSortOpen(false);
   };
 
-  const handleThreeDots = (): void => {
-    setEditDelete((prev) => !prev);
-  };
 
-  const handleThreeDots1 = (): void => {
-    setEditDelete1((prev) => !prev);
-  };
 
-  const handleOpenAddColumnModal = (): void => {
-    setIsAddColumnModalOpen(true);
-  };
+  // Handle applicant details modal toggle
+  const handleApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
+  setSortedApplicantDetails((prev) => ({ ...prev, modalValue: false })); // Close shortlisted modal
+  setApplicantDetails({
+    modalValue: true,
+    userId,
+    resume_Id,
+    jobId,
+  });
+};
 
-  const handleCloseAddColumnModal = (): void => {
-    setIsAddColumnModalOpen(false);
-  };
+const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
+  setApplicantDetails((prev) => ({ ...prev, modalValue: false })); // Close applicant modal
+  setSortedApplicantDetails({
+    modalValue: true,
+    userId,
+    resume_Id,
+    jobId,
+  });
+};
 
-  const handleAddColumn = (columnName: string): void => {
-    setCustomColumns([...customColumns, { name: columnName, applicants: [] }]);
+  // Close the modal
+  const closeModal = () => {
+    setApplicantDetails((prev) => ({
+      ...prev,
+      modalValue: false,
+    }));
   };
+  const closeShortModal = () => {
+  setSortedApplicantDetails((prev) => ({
+    ...prev,
+    modalValue: false,
+  }));
+};
 
-  const handleApplicationDetails =() =>{
-    setApplicationDetails((prev) => !prev)
-  }
+  // Handle edit and delete actions (placeholder)
 
   // Render the edit/delete dropdown
-  const editDeleteCard = () => (
-    <div className="bg-white flex flex-col justify-start items-start absolute ml-37 -mt-3 rounded-lg shadow-md">
-      <button className="flex w-full items-center rounded-sm gap-3 hover:bg-gray-200 px-2 py-1">
-        <PenLine size={16} /> Edit Column
-      </button>
-      <button className="flex text-red-500 w-full items-center rounded-sm gap-3 hover:bg-gray-200 px-2 py-1">
-        <Trash2 size={16} /> Delete
-      </button>
-    </div>
-  );
 
-  // Render an applicant card
-  const renderApplicantCard = (applicant: Applicant) => (
-    <div  className="bg-white  rounded-lg shadow-md px-4 py-3 mb-4">
-      <div onClick={handleApplicationDetails} className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer">
-        <img
-          src="https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png"
-          alt=""
-          className="w-10 h-10 rounded-full"
-        />
-        <div>
-          <h3>{applicant.name}</h3>
-          <p>{applicant.role}</p>
-        </div>
-      </div>
-      <ul className="py-2 text-[#5E6670] px-5 list-disc flex flex-col gap-1">
-        <li>{applicant.experience}</li>
-        <li>Eduction: {applicant.education}</li>
-        <li>Applied: {applicant.appliedDate}</li>
-      </ul>
-      <button className="hover:bg-gray-100 px-2 py-1 rounded-lg flex gap-2 items-center text-[#0A65CC] font-bold cursor-pointer">
-        <Download /> Download Cv
-      </button>
-    </div>
-  );
 
-  // Render a column
-  const renderColumn = (title: string, applicants: Applicant[], showEditDelete: boolean, onEditDelete: () => void) => (
-    <div className="rounded-lg bg-[#F8FAFC] p-5">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">
-          {title} ({applicants.length})
-        </h3>
-        <button onClick={onEditDelete} className="text-blue-600 text-sm hover:underline">
-          <BsThreeDots />
-        </button>
-      </div>
-      {showEditDelete && editDeleteCard()}
-      {applicants.map((applicant, index) => (
-        <div key={index}>{renderApplicantCard(applicant)}</div>
-      ))}
-    </div>
-  );
+  // Handle loading and error states
+  if (userLoading || applicantsLoading || shortLoading) {
+    return <div className="text-center text-gray-600">Loading...</div>;
+  }
+
+  if (userEmailError || applicantsError || shortError) {
+    return <div className="text-center text-red-500">Error loading data</div>;
+  }
+
+
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen p-6">
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-4">
         Home / Job / Senior UI/UX Designer / Applications
@@ -177,21 +193,20 @@ const ApplicationDetails: React.FC = () => {
 
       {/* Parent Div with Flex for Headline and Buttons */}
       <div className="flex justify-between items-center mb-6">
-        {/* Child 1: Headline */}
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Job Applications</h2>
         </div>
-
-        {/* Child 2: Filter and Sort Buttons */}
         <div className="flex space-x-3">
-          <p className="rounded-md px-4 py-1.5 text-base text-gray-600">Filter</p>
+          <button className="rounded-md px-4 py-1.5 text-base text-gray-600 hover:bg-gray-100">
+            Filter
+          </button>
           <div className="relative">
-            <button
+            <Button
               onClick={toggleSortDropdown}
-              className="border bg-[#0A65CC] cursor-pointer text-white border-gray-300 rounded-md px-4 py-1.5 text-sm hover:text-[#0A65CC] hover:bg-gray-100 flex items-center"
+              className="bg-[#0A65CC] text-white hover:bg-gray-100 hover:text-[#0A65CC] px-4 py-1.5 text-sm"
             >
               Sort
-            </button>
+            </Button>
             {isSortOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 <div className="p-3">
@@ -224,47 +239,124 @@ const ApplicationDetails: React.FC = () => {
       </div>
 
       {/* Parent Div with Columns */}
-      <div className="flex justify-between space-x-3">
-        {/* Column 1: All Application */}
-        {renderColumn('All Application', allApplicants, editDelete, handleThreeDots)}
+      <div className="flex space-x-3">
+        {/* Column 1: All Applications */}
+        <div className="rounded-lg bg-[#F8FAFC] p-5 flex-1">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              All Applications ({allApplicants?.length || 0})
+            </h3>
+            <button  className="text-blue-600 text-sm hover:underline">
+              <BsThreeDots />
+            </button>
+          </div>
+          
+          {allApplicants?.length > 0 ? (
+           (allApplicants).map((applicant, index) => ( //Argument of type 'Applicant[]' is not assignable to parameter of type 'SortApplicant[]'. Property 'applicantId' is missing in type 'Applicant' but required in type 'SortApplicant'.ts(2345) ApplicationDetails.tsx(40, 3): 'applicantId' is declared here.
+              <div key={index} className="bg-white rounded-lg shadow-md px-4 py-3 mb-4">
+                <div
+                  title="click here"
+                  onClick={() =>
+                    handleApplicationDetails({ userId: applicant.userId, resume_Id: applicant.resume_Id })
+                  }
+                  className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer"
+                >
+                  <img
+                    src={
+                      applicant.profilePicture ||
+                      'https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png'
+                    }
+                    alt={applicant.fullName}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">{applicant.fullName}</h3>
+                    <p className="text-sm text-gray-600">{applicant.title}</p>
+                  </div>
+                </div>
+                <ul className="py-2 text-[#5E6670] px-5 list-disc flex flex-col gap-1">
+                  <li>Experience: {applicant.experience}</li>
+                  <li>Education: {applicant.education}</li>
+                  <li>Applied: {applicant.date}</li>
+                </ul>
+                <Link href={applicant.resumeLink} target="_blank">
+                  <button className="hover:bg-gray-100 px-2 py-1 rounded-lg flex gap-2 items-center text-[#0A65CC] font-bold cursor-pointer">
+                    <Download /> Download CV
+                  </button>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-600 text-sm">No applicants found</p>
+          )}
+        </div>
 
         {/* Column 2: Shortlisted */}
-        {renderColumn('Shortlisted', shortlistedApplicants, editDelete1, handleThreeDots1)}
-
-        {/* Dynamic Custom Columns */}
-        {customColumns.map((column, index) => (
-          <div key={index} className="rounded-lg bg-[#F8FAFC] p-5">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">
-                {column.name} ({column.applicants.length})
-              </h3>
-              <button className="text-blue-600 text-sm hover:underline">
-                <BsThreeDots />
-              </button>
-            </div>
-            {column.applicants.map((applicant, applicantIndex) => (
-              <div key={applicantIndex}>{renderApplicantCard(applicant)}</div>
-            ))}
+        <div className="rounded-lg bg-[#F8FAFC] p-5 flex-1">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Shortlisted ({shortlistedData?.length || 0})
+            </h3>
+            <button  className="text-blue-600 text-sm hover:underline">
+              <BsThreeDots />
+            </button>
           </div>
-        ))}
-
-        {/* Last Column: Create New Column Button */}
-        <button
-          onClick={handleOpenAddColumnModal}
-          className="h-12 flex items-center gap-2 px-5 rounded-lg bg-[#F8FAFC] text-blue-600 text-lg w-auto font-medium hover:text-blue-800"
-        >
-          <CirclePlus /> Create New Column
-        </button>
+          
+          {shortlistedData?.length > 0 ? (
+            sortApplicants(shortlistedData).map((applicant, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-md px-4 py-3 mb-4">
+                <div
+                  title="click here"
+                  onClick={() =>
+                    handleSortedApplicationDetails({ userId: applicant.applicantId, resume_Id: applicant.resume_Id })
+                  }
+                  className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer"
+                >
+                  <img
+                    src={
+                      applicant.profilePicture ||
+                      'https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png'
+                    }
+                    alt={applicant.fullName}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">{applicant.fullName}</h3>
+                    <p className="text-sm text-gray-600">{applicant.title}</p>
+                  </div>
+                </div>
+                <ul className="py-2 text-[#5E6670] px-5 list-disc flex flex-col gap-1">
+                  <li>Experience: {applicant.experience}</li>
+                  <li>Education: {applicant.education}</li>
+                  <li>Applied: {applicant.date}</li>
+                </ul>
+                <Link href={applicant.resumeLink} target="_blank">
+                  <button className="hover:bg-gray-100 px-2 py-1 rounded-lg flex gap-2 items-center text-[#0A65CC] font-bold cursor-pointer">
+                    <Download /> Download CV
+                  </button>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-600 text-sm">No shortlisted applicants found</p>
+          )}
+        </div>
       </div>
 
-      {/* AddColumnModal */}
-      <AddColumnModal
-        isOpen={isAddColumnModalOpen}
-        onClose={handleCloseAddColumnModal}
-        onAddColumn={handleAddColumn}
+      {/* Applicant Details Modal */}
+      <ApplicantDetailsModal
+        newopen={applicantDetails.modalValue}
+        setnewopen={closeModal}
+        userId={applicantDetails.userId}
+        resume_Id={applicantDetails.resume_Id}
+        jobId={applicantDetails.jobId}
       />
 
-      <ApplicantDetailsModal newopen={applicantDetails} setnewopen={setApplicationDetails}/>
+      <ApplicantShortlistDetailsModal  newopen={sortedApplicantDetails.modalValue}
+        setnewopen={closeShortModal}
+        userId={sortedApplicantDetails.userId}
+        resume_Id={sortedApplicantDetails.resume_Id}
+        jobId={sortedApplicantDetails.jobId}/>
     </div>
   );
 };

@@ -2,16 +2,40 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { CreditCard, MoveRight, X } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/Store/Store';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import { useCaptureOrderMutation, useCreateOrderMutation } from '@/RTKQuery/paymentApi';
+import { toast } from 'react-toastify';
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const initialOptions = {
+  clientId: "test",
+  currency: "USD",
+  intent: "capture",
+};
+
+interface PayPalButtonProps {
+  price: number; // Changed from amount to price
+  userId: string;
+  packageName: string; // e.g., "Basic", "Standard", "Premium"
+  duration: string; // e.g., "1 month", "6 months", "1 year"
+}
+
 const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const [selectedCard, setSelectedCard] = useState<string>('saved');
-  const count = useRef(0);
+  const [error, setError] = useState<string | null>(null);
+  const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
+  const [captureOrder, { isLoading: isCapturingOrder }] = useCaptureOrderMutation();
+
+  const router = useRouter();
+  const {price, duration, packageName: name, packageName, userId } = useSelector((state: RootState) => state.subscription);
+
   const [newCard, setNewCard] = useState({
     name: '',
     cardNumber: '',
@@ -25,6 +49,38 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     const { name, value } = e.target;
     setNewCard((prev) => ({ ...prev, [name]: value }));
   };
+
+  const createOrderHandler = async () => {
+    try {
+      const response = await createOrder({ price, userId, packageName, duration }).unwrap();
+      return response.orderID;
+    } catch (err: any) {
+      const errorMessage = err.data?.message || 'Failed to create order';
+      setError(errorMessage);
+      toast.error(errorMessage);
+      throw err;
+    }
+  };
+
+  const onApprove = async (data: any) => {
+    
+    try {
+      await captureOrder({ orderID: data.orderID, userId, packageName, duration, price }).unwrap();
+      toast.success('Payment successful!');
+      onClose(); // Close the modal after successful payment
+      router.push('/payments/success'); // Redirect to success page
+    } catch (err: any) {
+      const errorMessage = err.data?.message || 'Payment failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
+  };
+
+  console.log('PayPal SDK Options:', {
+    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+    currency: 'USD',
+    intent: 'capture',
+  });
 
   return (
     <div
@@ -82,7 +138,25 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
               </div>
 
               {/* Saved Card */}
-              <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg mb-4 w-full">
+              {
+                selectedCard === 'paypal' ? (
+                  <PayPalScriptProvider
+                  options={{
+                    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
+                    currency: 'USD',
+                    intent: 'capture',
+                  }}
+      >
+        <PayPalButtons
+          createOrder={createOrderHandler}
+          onApprove={onApprove}
+          disabled={isCreatingOrder || isCapturingOrder}
+        />
+      </PayPalScriptProvider>
+                ) 
+                : 
+                (
+<div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg mb-4 w-full">
                 <input
                   type="radio"
                   checked={selectedCard === 'saved'}
@@ -106,6 +180,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
               </div>
+                )
+              }
+              
 
               {/* New Payment Card */}
               <div className="flex items-center gap-4 p-4 border border-gray-300 rounded-lg mb-4 w-full">
@@ -150,12 +227,12 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
             <div className="  p-2 rounded-lg">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Summary</h3>
               <div className="flex text-sm justify-between gap-2 text-gray-600 mb-2">
-                <span>Pricing Plans: Premium</span>
-                <span>$59.00</span>
+                <span>Pricing Plans: {name}</span>
+                <span>${price}</span>
               </div>
               <div className="flex gap-5 justify-between font-semibold text-gray-900 border-t border-gray-200 pt-2">
                 <span>TOTAL:</span>
-                <span>$59</span>
+                <span>${price}</span>
               </div>
               <Link href={'/company-dashboard/post-job'}>
               <button className="mt-6 flex cursor-pointer items-center justify-evenly w-full bg-[#0A65CC] text-white py-3 rounded-sm font-semibold hover:bg-blue-600">

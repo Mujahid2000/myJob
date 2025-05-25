@@ -2,16 +2,48 @@ import SuggestJob from "@/Component/employee-Component/SuggestJob";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, DollarSign, Globe, GraduationCap, Mail } from "lucide-react";
+import { BriefcaseBusiness, Calendar, DollarSign, Globe, GraduationCap, Mail, Timer, Wallet } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
 
 
 
-const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
-    const resolvedParams = await params;
-    
+export default async function Page  ({ params }: { params: { id: string } }) {
+    const resolvedParams = params.id;
+    const response = await fetch(`http://localhost:5000/jobs/getSingleCompanyData/${resolvedParams}`);
+    const data = await response.json();
+    const singleCompany = data.data
+    const yearOfEstablishment = singleCompany.yearEstablished.split('T');
+    const myDate = yearOfEstablishment[0] || "N/A";
+   
+
+    function formatDateToOrdinal(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+  
+  // Format day with ordinal suffix (st, nd, rd, th)
+  const day = date.getDate();
+  const month = date.toLocaleDateString('en-GB', { month: 'long' }); // 'May'
+  const year = date.getFullYear();
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th'; // catch 11th, 12th, 13th
+    switch (day % 10) {
+      case 1:  return "st";
+      case 2:  return "nd";
+      case 3:  return "rd";
+      default: return "th";
+    }
+  };
+
+  return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+}
+
+// Example usage
+const formattedDate = formatDateToOrdinal(myDate);
+
     return (
         <div className="pt-35">
             <div className="border-2 bg-[#F1F2F4]">
@@ -42,7 +74,7 @@ const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
             <div>
                 <div className="h-[312px] max-w-full mx-auto flex items-center justify-center p-4 bg-cover bg-center"
                     style={{
-                        backgroundImage: "url('https://images.pexels.com/photos/5989062/pexels-photo-5989062.jpeg')",
+                        backgroundImage: `url(${singleCompany?.banner})`,
                     }}
                 >
                     <div className="relative z-10">
@@ -58,8 +90,8 @@ const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
                                             className="rounded-lg border-2 border-white"
                                         />
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Twitter {resolvedParams.id}</h2>
-                                            <p className="text-sm text-gray-500">Information Technology (IT)</p>
+                                            <h2 className="text-xl font-bold text-gray-900">{singleCompany?.companyName}</h2>
+                                            <p className="text-sm text-gray-500">{singleCompany?.industryTypes}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center">
@@ -117,46 +149,51 @@ const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
                             <div className="grid grid-cols-2 gap-6 text-gray-600">
                                 <p className="flex flex-col text-[#0A65CC] items-start gap-1">
                                     <Calendar size={26} strokeWidth={1.7} />
-                                    <span className="font-normal text-[#767F8C]">Job Posted:</span>
-                                    <span className="text-black font-medium">14 June, 2021</span>
+                                    <span className="font-normal uppercase text-[#767F8C]">Founded In:</span>
+                                    <span className="text-black font-medium">{formattedDate}</span>
                                 </p>
                                 <p className="flex flex-col text-[#0A65CC] items-start gap-1">
-                                    <GraduationCap size={26} strokeWidth={1.7} />
-                                    <span className="font-normal text-[#767F8C]">Education:</span>
-                                    <span className="text-black font-medium">Graduation</span>
+                                    <Timer size={26} strokeWidth={1.7} />
+                                    <span className="font-normal uppercase text-[#767F8C]">Organization Type:</span>
+                                    <span className="text-black font-medium">{singleCompany.organizationType}</span>
                                 </p>
                                 <p className="flex flex-col text-[#0A65CC] items-start gap-1">
-                                    <DollarSign size={26} strokeWidth={1.7} />
-                                    <span className="font-normal text-[#767F8C]">Salary:</span>
-                                    <span className="text-black font-medium">$50k-80k/month</span>
+                                    <Wallet size={26} strokeWidth={1.7} />
+                                    <span className="font-normal uppercase text-[#767F8C]">Team Size:</span>
+                                    <span className="text-black font-medium">{singleCompany?.teamSize}</span>
+                                </p>
+                                <p className="flex flex-col text-[#0A65CC] items-start gap-1">
+                                    <BriefcaseBusiness size={26} strokeWidth={1.7} />
+                                    <span className="font-normal uppercase text-[#767F8C]">Industry Type:</span>
+                                    <span className="text-black font-medium">{singleCompany?.industryTypes}</span>
                                 </p>
                             </div>
                         </Card>
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Contact Information</CardTitle>
+                                <CardTitle className="text-xl">Contact Information</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex items-center space-x-3">
                                     <Globe className="text-blue-500" />
                                     <div>
                                         <p className="text-sm text-gray-500">WEBSITE</p>
-                                        <a href="http://www.estherhoward.com">www.estherhoward.com</a>
+                                        <a href="http://www.estherhoward.com">{singleCompany?.companyWebsite}</a>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <FaPhone className="text-blue-600" size={21} />
                                     <div>
                                         <p className="text-sm text-gray-500">PHONE</p>
-                                        <p className="text-gray-700">+1-202-555-0141</p>
+                                        <p className="text-gray-700">{singleCompany?.phoneNumber}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <Mail className="text-blue-600" size={24} />
                                     <div>
                                         <p className="text-sm text-gray-500">EMAIL ADDRESS</p>
-                                        <a href="mailto:esther.howard@gmail.com">esther.howard@gmail.com</a>
+                                        <a href="mailto:esther.howard@gmail.com">{singleCompany?.email}</a>
                                     </div>
                                 </div>
                             </CardContent>
@@ -167,24 +204,28 @@ const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
                                 <CardTitle>Follow us on:</CardTitle>
                             </CardHeader>
                             <CardContent className="flex space-x-4">
-                                <button className=" cursor-pointer hover:bg-[#0A65CC] bg-[#E7F0FA] transition-colors duration-300 p-3">
-                                    <FaFacebook className="text-blue-600 hover:text-white transition-colors duration-300" />
-                                </button>
-                                <button  className=" cursor-pointer hover:bg-[#0A65CC] bg-[#E7F0FA] transition-colors duration-300 p-3">
-                                    
-                                        <FaTwitter className="text-blue-400" />
-                                   
-                                </button>
-                                <button  className=" cursor-pointer hover:bg-[#0A65CC] bg-[#E7F0FA] transition-colors duration-300 p-3">
-                                    
-                                        <FaInstagram className="text-pink-600" />
-                                 
-                                </button>
-                                <button  className=" cursor-pointer hover:bg-[#0A65CC] bg-[#E7F0FA] transition-colors duration-300 p-3">
-                                   
-                                        <FaYoutube className="text-red-600" />
-                                   
-                                </button>
+                                {singleCompany.socialLink.map((social:any, index:number) => (
+                                    <Link
+                                        key={index}
+                                        href={social.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="cursor-pointer hover:bg-[#0A65CC] bg-[#E7F0FA] transition-colors duration-300 p-3"
+                                    >
+                                        {social.platform === "Facebook" && (
+                                            <FaFacebook className="text-blue-600 hover:text-white transition-colors duration-300" />
+                                        )}
+                                        {social.platform === "Twitter" && (
+                                            <FaTwitter className="text-blue-400 hover:text-white transition-colors duration-300" />
+                                        )}
+                                        {social.platform === "Instagram" && (
+                                            <FaInstagram className="text-pink-600 hover:text-white transition-colors duration-300" />
+                                        )}
+                                        {social.platform === "YouTube" && (
+                                            <FaYoutube className="text-red-600 hover:text-white transition-colors duration-300" />
+                                        )}
+                                    </Link>
+                                ))}
                             </CardContent>
                         </Card>
                     </div>
@@ -195,4 +236,4 @@ const Page = async ({ params }: { params: Promise<{ id: number }> }) => {
     );
 };
 
-export default Page;
+

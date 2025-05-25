@@ -1,5 +1,4 @@
 import { CheckCheck } from 'lucide-react';
-import Head from 'next/head';
 import Link from 'next/link';
 
 export default function SetupComplete() {
@@ -23,7 +22,7 @@ export default function SetupComplete() {
                 View Dashboard
               </button>
             </Link>
-            <Link href="/post-job">
+            <Link href="/company-dashboard/Post-a-Job">
               <button className="px-4 py-2 bg-[#0A65CC] text-white rounded-md hover:bg-blue-400 flex items-center space-x-2">
                 <span>Post Job</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

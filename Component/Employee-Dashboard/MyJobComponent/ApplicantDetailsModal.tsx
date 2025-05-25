@@ -1,21 +1,132 @@
+import { AuthContext } from '@/Authentication/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import { useGetJobPostApplicantDetailsQuery } from '@/RTKQuery/JobApplyApiSlice';
+import { shortlistRequest, usePostShortListedDataMutation, useSaveCandidateProfileMutation } from '@/RTKQuery/ShortListedApi';
 import { Bookmark, Cake, CircleArrowRight, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, Map, MapPin, Phone, Star } from 'lucide-react';
-import React from 'react';
+import Link from 'next/link';
+import React, { useContext } from 'react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { toast, Toaster } from 'sonner';
+import { FaUsersBetweenLines } from "react-icons/fa6";
 
-const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:any}) => {
+const ApplicantDetailsModal = ({ newopen, setnewopen, userId, resume_Id, jobId}:{newopen: any, setnewopen:any, userId: string, resume_Id:string, jobId:string}) => {
+     const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+    const userid = userEmail?.user?._id || '';
+    const email = userEmail?.user?.email || '';
+  const applicantDetailsData = {userId, resume_Id};
+  const [sendShortList, {isLoading: shortLoading}]= usePostShortListedDataMutation()
+
+  const { data: applicantDetails, isLoading, isError, error, isSuccess } = useGetJobPostApplicantDetailsQuery(applicantDetailsData);
+  const [saveProfileData, {isLoading: saveProfileLoading}] = useSaveCandidateProfileMutation()
+  const applicantData = applicantDetails?.applicant;
+  const date = applicantData?.dateOfBirth;
+  interface FormatDateToOrdinalOptions {
+    year: 'numeric';
+    month: 'long';
+    day: 'numeric';
+  }
+
+  function formatDateToOrdinal(dateString: string): string {
+    const options: FormatDateToOrdinalOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date: Date = new Date(dateString);
+
+    // Format day with ordinal suffix (st, nd, rd, th)
+    const day: number = date.getDate();
+    const month: string = date.toLocaleDateString('en-GB', { month: 'long' });
+    const year: number = date.getFullYear();
+
+    const getOrdinalSuffix = (day: number): string => {
+      if (day > 3 && day < 21) return 'th'; // catch 11th, 12th, 13th
+      switch (day % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+      }
+    };
+
+    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+  }
+
+// Example usage
+const formattedDate = formatDateToOrdinal(date ?? '');
+
+if (isLoading) {
+   
+     return <div className="text-center text-gray-600">Loading...</div>;
+   
+  }
+
+
+if (isSuccess && !applicantData) {
+    return (
+      <div className="w-full h-screen fixed top-0 left-0 z-[200000000]  flex items-center justify-center">
+        <div className="text-white text-lg">No applicant details found</div>
+      </div>
+    );
+  }
+
+
+const handleShortListed = async () => {
+    if (!applicantData) {
+        console.error('No applicant data available');
+        return;
+    }
+    const shortListedData: shortlistRequest = {
+        jobId: jobId || '',
+        userId: userid,
+        resumeId: applicantData.resumeId || '',
+        email: email || '',
+        applicantId: applicantDetails?.applicant.userId || ''
+        
+    };
+    try {
+        const response = await sendShortList(shortListedData).unwrap();
+        if(response.message === 'you already added this candidate'){
+          toast.warning(response.message)
+        }else if (response.message === 'You shortListed this candidate successfully'){
+          toast.success(response.message)
+        }
+        console.log('Shortlist response:', response);
+    } catch (error) {
+        console.error('Failed to shortlist:', error);
+    }
+};
+
+
+const handleSaveProfile = async ({ currentUsersId, SapplicantId }: { currentUsersId: string, SapplicantId: string }) => {
+  try {
+    const userId = currentUsersId;
+    const applicantId = SapplicantId;
+    const response = await saveProfileData({ userId, applicantId }).unwrap();
+    if (response?.message === 'Candidate profile already saved') {
+      toast.warning(response.message);
+    } else if (response?.message === 'Candidate profile saved successfully') {
+      toast.success(response.message);
+    } else if (response?.message) {
+      toast.warning(response.message);
+    }
+  } catch (error: any) {
+    toast.error(error?.data?.message || 'Failed to save candidate profile');
+    console.error('Save profile error:', error);
+  }
+};
+
     return (
         <div>
              <div
         className={`${
           newopen ? " visible" : " invisible"
-        } w-full  fixed top-0  left-0 z-[200000000] bg-[#0000002a]  transition-all duration-300 flex items-center justify-center`}
+        } w-full h-screen fixed top-0 left-0 z-[200000000] bg-[#0000002a] transition-all duration-300 flex items-center justify-center`}
       >
         <div
           className={`${
             newopen ? " scale-[1] opacity-100" : " scale-[0] opacity-0"
-          } w-[50%] h-screen pt-6 rounded-lg transition-all duration-300  `}
+          } w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300  `}
         >
           <div className="flex gap-3 ">
                       
@@ -26,19 +137,22 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
                 {/* this is header */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-4">
-                    <img src='https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?t=st=1744370221~exp=1744373821~hmac=bf9f0c7b9e4a2b2b0886b2278f2d6c5b8dcd60f7c3a72a3d4d2ba9f68c486866&w=996' className="w-16 h-16  rounded-full object-cover" />
+                    <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
                     <div>
                       <h1 className="text-xl font-bold text-gray-800">
-                        Esther Howard
+                        {applicantData?.fullName}
                       </h1>
                       <p className="text-sm text-gray-600">
-                        Website Designer (UI/UX)
+                        {applicantData?.title}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <Button  className="cursor-pointer">
-                    <Star className='text-[#0A65CC]'/>
+                    <Button onClick={handleShortListed} title='shortlisted'  className="cursor-pointer">
+                    <FaUsersBetweenLines />
+                    </Button>
+                    <Button title="save candidate profile" className="cursor-pointer" onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '' })}>
+                      <Bookmark />
                     </Button>
 
                     <Button className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
@@ -99,12 +213,12 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
 <Card className="p-6 shadow-none hover:shadow-md duration-300 rounded-md  max-w-[33rem]">
         
         <div className="grid grid-cols-2 gap-2 text-gray-600">
-          <p className="flex flex-col text-[#0A65CC] items-start "><Cake  size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Date of Birth:</span> <span className='text-black font-medium text-[14px]'>14 June, 2021</span></p>
-          <p className="flex flex-col items-start "><Map className="text-[#0A65CC]" size={16} strokeWidth={1.7}/> <span className="font-normal  text-[12px] text-[#767F8C]">Nationality:</span> <span className='text-black font-medium text-[14px]'>Bangladeshi</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><ClipboardList size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">marital Status:</span> <span className='text-black font-medium text-[14px]'>Single</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><CircleUserRound size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Gender:</span> <span className='text-black font-medium text-[14px]'>Male</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><Layers size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Experience:</span> <span className='text-black font-medium text-[14px]'>7 Years</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><GraduationCap size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Educations:</span> <span className='text-black font-medium text-[14px]'>Master Degree</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><Cake  size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Date of Birth:</span> <span className='text-black font-medium text-[14px]'>{formattedDate}</span></p>
+          <p className="flex flex-col items-start "><Map className="text-[#0A65CC]" size={16} strokeWidth={1.7}/> <span className="font-normal  text-[12px] text-[#767F8C]">Nationality:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.country}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><ClipboardList size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">marital Status:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.maritalStatus}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><CircleUserRound size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Gender:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.gender}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><Layers size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Experience:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.experience}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><GraduationCap size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Educations:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.education}</span></p>
         
         </div>
       </Card>
@@ -117,11 +231,19 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
         <div className="flex justify-between items-center gap-2">
         <FileText className="text-[#E4E5E8]" size={40} />
         <div className="flex flex-col gap-1">
-          <h5 className="text-[#767F8C] text-sm">Esther Howard</h5>
+          <h5 className="text-[#767F8C] text-sm">{applicantData?.resumeName}</h5>
           <h5 className="text-[#18191C] text-sm font-medium">PDF</h5>
         </div>
         </div>
-        <button className="bg-[#E7F0FA] hover:bg-[#0A65CC] hover:text-white p-3 rounded-sm"><Download size={20}/></button>
+        {applicantData?.resumeUrl ? (
+          <Link href={applicantData.resumeUrl} target='_blank'>
+            <button className="bg-[#E7F0FA] cursor-pointer hover:bg-[#0A65CC] hover:text-white p-3 rounded-sm"><Download size={20}/></button>
+          </Link>
+        ) : (
+          <button className="bg-[#E7F0FA] cursor-not-allowed p-3 rounded-sm" disabled>
+            <Download size={20}/>
+          </button>
+        )}
         </div>
       </Card>
 
@@ -133,7 +255,13 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
     <MapPin className="text-blue-500"/>
       <div>
         <p className="text-sm">Website</p>
-        <p className="text-sm font-medium">www.estherhoward.com</p>
+        {applicantData?.portfolio ? (
+          <Link href={applicantData.portfolio} target='_blank'>
+            <p className="text-sm font-medium">{applicantData.portfolio.slice(0,28)}</p>
+          </Link>
+        ) : (
+          <p className="text-sm font-medium text-gray-400">No portfolio provided</p>
+        )}
       </div>
     </div>
     
@@ -142,7 +270,7 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
     <MapPin className="text-blue-500"/>
       <div>
         <p className="text-sm">Location</p>
-        <p className="text-sm font-medium">Beverly Hills, California 90202</p>
+        <p className="text-sm font-medium">{applicantData?.mapLocation}</p>
       </div>
     </div>
     <p className="text-wrap px-6 py-1 text-[#5E6670] text-sm">Zone/Block Basement 1 Unit B2, 1372 <br /> Spring Avenue, Portland, </p>
@@ -153,9 +281,9 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
     <Phone className="text-blue-500"/>
       <div>
         <p className="text-sm">Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0141</p>
+        <p className="text-sm font-medium">+880{applicantData?.phoneNumber}</p>
         <p className="text-sm font-medium text-[#767F8C] pt-1">Secondary Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0189</p>
+        <p className="text-sm font-medium">+880{applicantData?.phoneNumber}</p>
       </div>
     </div>
     
@@ -171,6 +299,7 @@ const ApplicantDetailsModal = ({ newopen, setnewopen}:{newopen: any, setnewopen:
           </div>
         </div>
       </div>
+      <Toaster richColors/>
         </div>
     );
 };

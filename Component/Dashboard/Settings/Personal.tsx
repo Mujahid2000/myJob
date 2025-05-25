@@ -1,59 +1,83 @@
-import { Button } from "@/components/ui/button";
-import "react-day-picker/style.css";
-import React, { useState } from "react";
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { DayPicker } from "react-day-picker";
+import React, { useContext, useState } from "react";
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import { useForm, SubmitHandler } from "react-hook-form";
+import './custom.css'
+import { usePostCandidatePersonalDataMutation } from "@/RTKQuery/CandidateInfo";
+import { toast, Toaster } from "sonner";
+import { AuthContext } from "@/Authentication/AuthContext";
+import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
+
+type Inputs = {
+  country: string,
+  dateOfBirth: string,
+  gender: string,
+  maritalStatus: string,
+  education: string,
+  experience: string,
+
+};
 
 // components/settings/Personal.tsx
 const Personal: React.FC = () => {
-  const [date, setDate] = React.useState<Date>()
-  const [selected, setSelected] = useState<Date>();
+
+  const [biography, setBiography] = useState<string>();
+  const [createPersonalData, { data, error, isLoading }] = usePostCandidatePersonalDataMutation()
+  const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
+    const userId = userEmail?.user?._id;
+    const email = userEmail?.user?.email || ''; // Default to empty string if undefined
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = async data => {
+    if (!userId) {
+      alert("User ID is missing. Please try again later.");
+      return;
+    }
+    const sendData = { ...data, biography: biography ?? "", userId, email };
+    try {
+      const result = await createPersonalData(sendData);
+      if ('data' in result && result.data) {
+        setBiography('')
+        //if result get successfully then empty the form 
+        reset({
+          country: "",
+          dateOfBirth: "",
+          gender: "",
+          maritalStatus: "",
+          education: "",
+          experience: "",
+        })
+        toast.success("Personal data saved successfully!");
+      } else if ('error' in result && result.error) {
+        toast.error("Failed to save changes. Please try again.");
+      }
+      console.log(result);
+    } catch (error) {
+      console.error("Error submitting personal data:", error);
+      toast.error("Failed to save changes. Please try again.");
+    }
+  };
+
 
     return (
-      <div className="space-y-9 py-6 bg-white h-screen">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-9 py-6 bg-white h-screen">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Nationality
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <select {...register("country", { required: true })} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
               <option>Bangladeshi</option>
+              <option>United States</option>
+              <option>Nepal</option>
             </select>
           </div>
           <div>
             <label className="block pb-1 text-sm font-medium text-gray-700">
               Date of Birth
             </label>
-            <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-      <DayPicker
-      animate
-      mode="single"
-      selected={selected}
-      onSelect={setSelected}
-      className={`p-4 `}
-    />
-      </PopoverContent>
-    </Popover>
+            <input {...register("dateOfBirth", { required: true })} type="date" className="w-full border border-gray-300 py-2 px-2 rounded-sm"/>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -61,7 +85,7 @@ const Personal: React.FC = () => {
             <label className="block text-sm font-medium text-gray-700">
               Gender
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <select {...register("gender", { required: true })} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
               <option>Select...</option>
               <option>Male</option>
               <option>Female</option>
@@ -71,7 +95,7 @@ const Personal: React.FC = () => {
             <label className="block text-sm font-medium text-gray-700">
               Marital Status
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <select {...register("maritalStatus", { required: true })} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
               <option>Select...</option>
               <option>Single</option>
               <option>Married</option>
@@ -83,7 +107,7 @@ const Personal: React.FC = () => {
             <label className="block text-sm font-medium text-gray-700">
               Education
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <select {...register("education", { required: true })} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
               <option>Select...</option>
               <option>S.S.C</option>
               <option>H.S.C</option>
@@ -95,7 +119,7 @@ const Personal: React.FC = () => {
             <label className="block text-sm font-medium text-gray-700">
               Experience
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            <select {...register("experience", { required: true })} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
               <option>Select...</option>
               <option>Less than 1 Year</option>
               <option>1 Year</option>
@@ -105,28 +129,24 @@ const Personal: React.FC = () => {
             </select>
           </div>
         </div>
-        <div className="border border-gray-300 rounded-md">
-          <label className="block text-sm px-3 py-2 font-medium text-gray-700">
-            Biography
-          </label>
-          <textarea
-            placeholder="Write down your biography here. Let the employer know who you are..."
-            className="mt-1 block h-56 w-full  px-3 py-2 h-32"
-          />
-          <div className="mt-2 px-3 py-2 flex space-x-2 text-gray-500">
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">𝐁</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">𝑰</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">𝑼</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">𝑺</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">🔗</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">𝐻</button>
-            <button className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">≡</button>
-          </div>
-        </div>
-        <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+       <div className=''>
+                     <label className="block text-sm font-medium text-gray-700 pb-2">Biography</label>
+                      <ReactQuill
+                   className="mt-1  rounded-md text-xl block h-56 w-full "
+                   theme="snow"
+                   value={biography}
+                   placeholder='Add your job responsibilities...'
+                   onChange={(value) => {
+                     setBiography(value); // Update local state
+                   }}
+                 />
+                   
+                   </div>
+        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
           Save Changes
         </button>
-      </div>
+         <Toaster richColors />
+      </form>
     );
   };
   

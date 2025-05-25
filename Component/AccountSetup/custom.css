@@ -1,0 +1,13 @@
+.ql-container {
+ border-radius: 0 0 8px 8px;
+  border: 1px solid #ccc; /* Optional: customize the border color */
+  padding: 8px;          /* Optional: adds spacing inside */
+}
+
+.ql-toolbar {
+  border-radius: 8px 8px 0 0;
+}
+
+.ql-editor {
+  border-radius: 0 8px 0 0;
+}

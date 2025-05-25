@@ -2,12 +2,17 @@
 import Image from 'next/image';
 import { ArrowRight, Check, MoveRight } from 'lucide-react';
 import CheckoutModal from '@/Component/Employee-Dashboard/postajob/CheckoutModal';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setPlanDetails } from '@/Store/Subscription';
+import { AuthContext } from '@/Authentication/AuthContext';
+import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+
 
 // Define the interface for a single plan
 interface Plan {
   name: string;
-  price: number;
+  price: string;
   description: string;
   features: string[];
   recommended?: boolean;
@@ -17,7 +22,7 @@ interface Plan {
 const plans: Plan[] = [
   {
     name: 'Basic',
-    price: 19,
+    price: '19.00',
     description: 'Praesent eget pulvinar orci. Duis ut pellentesque ligula convallis.',
     features: [
       'Post 1 Job',
@@ -30,7 +35,7 @@ const plans: Plan[] = [
   },
   {
     name: 'Standard',
-    price: 39,
+    price: '39.00',
     description: 'Praesent eget pulvinar orci. Duis ut pellentesque ligula convallis.',
     features: [
       '3 Active Jobs',
@@ -44,7 +49,7 @@ const plans: Plan[] = [
   },
   {
     name: 'Premium',
-    price: 59,
+    price: '59.00',
     description: 'Praesent eget pulvinar orci. Duis ut pellentesque ligula convallis.',
     features: [
       '6 Active Jobs',
@@ -59,8 +64,17 @@ const plans: Plan[] = [
 
 // Define the PricingPlans component with TypeScript
 const page: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-console.log(isModalOpen)
+  const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
+    const id = userEmail?.user?._id;
+
+    const handleModalOpen = () => {
+        setIsModalOpen(!isModalOpen);
+    }
+
   return (
     <div className="max-w-7xl mx-auto p5-5 ">
       {/* Header Section */}
@@ -117,7 +131,10 @@ console.log(isModalOpen)
               ))}
             </ul>
             <button 
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                handleModalOpen();
+                dispatch(setPlanDetails({userId: id|| '', name: plan.name, price: plan.price, duration: 'Monthly' }));
+              }}
               className={`mt-8 w-full justify-center gap-3 flex py-3 rounded-xs text-[#0A65CC] hover:text-white cursor-pointer font-semibold ${
                'hover:bg-[#0A65CC] bg-[#E7F0FA]'
               

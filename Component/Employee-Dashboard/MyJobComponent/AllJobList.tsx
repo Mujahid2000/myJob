@@ -1,173 +1,183 @@
 'use client'
+import { AuthContext } from "@/Authentication/AuthContext";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
+import { useGetJobPostDataQuery } from "@/RTKQuery/JobApplyApiSlice";
 import { Check, CircleX, Eye, MoveRight, PlusCircle, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 
 // Define the interface for a single job entry
 interface Job {
-  id: number;
-  companyLogo: string;
-  jobTitle: string;
-  jobType: string;
-  location: string;
-  salary: string;
-  applicationCount: number;
-  status: string;
+  _id: string
+  userId: string
+  title: string
+  salaryType: string
+  minSalary: number
+  maxSalary: number
+  jobType: string
+  location: string
+  logo: string
+  applicationCount: number,
+  status: string
 }
 
 // Define the job data array with the Job interface
-const jobData: Job[] = [
-    {
-        id: 1,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Networking Engineer",
-        jobType: "Remote",
-        location: "Washington",
-        salary: "$50K-80K/month",
-        applicationCount: 729,
-        status: "Active",
-    },
-    {
-        id: 2,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Product Designer",
-        jobType: "Full Time",
-        location: "Dhaka",
-        salary: "$50K-80K/month",
-        applicationCount: 729,
-        status: "Active",
-    },
-    {
-        id: 3,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png", 
-        jobTitle: "Junior Graphic Designer",
-        jobType: "Temporary",
-        location: "Brazil",
-        salary: "$50K-80K/month",
-        applicationCount: 729,
-        status: "Active",
-    },
-    {
-        id: 4,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png", 
-        jobTitle: "Visual Designer",
-        jobType: "Contract Base",
-        location: "Wisconsin",
-        salary: "$50K-80K/month",
-        applicationCount: 729,
-        status: "Active",
-    },
-    {
-        id: 5,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Software Engineer",
-        jobType: "Full Time",
-        location: "California",
-        salary: "$90K-120K/year",
-        applicationCount: 500,
-        status: "Active",
-    },
-    {
-        id: 6,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Data Scientist",
-        jobType: "Remote",
-        location: "New York",
-        salary: "$100K-150K/year",
-        applicationCount: 300,
-        status: "Active",
-    },
-    {
-        id: 7,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Marketing Specialist",
-        jobType: "Part Time",
-        location: "London",
-        salary: "$40K-60K/year",
-        applicationCount: 200,
-        status: "Active",
-    },
-    {
-        id: 8,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "HR Manager",
-        jobType: "Full Time",
-        location: "Berlin",
-        salary: "$70K-90K/year",
-        applicationCount: 150,
-        status: "Active",
-    },
-    {
-        id: 9,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Frontend Developer",
-        jobType: "Remote",
-        location: "Toronto",
-        salary: "$80K-100K/year",
-        applicationCount: 400,
-        status: "Active",
-    },
-    {
-        id: 10,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Backend Developer",
-        jobType: "Full Time",
-        location: "Sydney",
-        salary: "$85K-110K/year",
-        applicationCount: 350,
-        status: "Active",
-    },
-    {
-        id: 11,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "DevOps Engineer",
-        jobType: "Contract Base",
-        location: "Singapore",
-        salary: "$95K-130K/year",
-        applicationCount: 250,
-        status: "Active",
-    },
-    {
-        id: 12,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "UI/UX Designer",
-        jobType: "Temporary",
-        location: "Paris",
-        salary: "$60K-80K/year",
-        applicationCount: 180,
-        status: "Active",
-    },
-    {
-        id: 13,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Project Manager",
-        jobType: "Full Time",
-        location: "Tokyo",
-        salary: "$100K-140K/year",
-        applicationCount: 220,
-        status: "Active",
-    },
-    {
-        id: 14,
-        companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-        jobTitle: "Content Writer",
-        jobType: "Part Time",
-        location: "Mumbai",
-        salary: "$30K-50K/year",
-        applicationCount: 100,
-        status: "Active",
-    },
-];
+// const jobData: Job[] = [
+//     {
+//         id: 1,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Networking Engineer",
+//         jobType: "Remote",
+//         location: "Washington",
+//         salary: "$50K-80K/month",
+//         applicationCount: 729,
+//         status: "Active",
+//     },
+//     {
+//         id: 2,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Product Designer",
+//         jobType: "Full Time",
+//         location: "Dhaka",
+//         salary: "$50K-80K/month",
+//         applicationCount: 729,
+//         status: "Active",
+//     },
+//     {
+//         id: 3,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png", 
+//         jobTitle: "Junior Graphic Designer",
+//         jobType: "Temporary",
+//         location: "Brazil",
+//         salary: "$50K-80K/month",
+//         applicationCount: 729,
+//         status: "Active",
+//     },
+//     {
+//         id: 4,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png", 
+//         jobTitle: "Visual Designer",
+//         jobType: "Contract Base",
+//         location: "Wisconsin",
+//         salary: "$50K-80K/month",
+//         applicationCount: 729,
+//         status: "Active",
+//     },
+//     {
+//         id: 5,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Software Engineer",
+//         jobType: "Full Time",
+//         location: "California",
+//         salary: "$90K-120K/year",
+//         applicationCount: 500,
+//         status: "Active",
+//     },
+//     {
+//         id: 6,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Data Scientist",
+//         jobType: "Remote",
+//         location: "New York",
+//         salary: "$100K-150K/year",
+//         applicationCount: 300,
+//         status: "Active",
+//     },
+//     {
+//         id: 7,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Marketing Specialist",
+//         jobType: "Part Time",
+//         location: "London",
+//         salary: "$40K-60K/year",
+//         applicationCount: 200,
+//         status: "Active",
+//     },
+//     {
+//         id: 8,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "HR Manager",
+//         jobType: "Full Time",
+//         location: "Berlin",
+//         salary: "$70K-90K/year",
+//         applicationCount: 150,
+//         status: "Active",
+//     },
+//     {
+//         id: 9,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Frontend Developer",
+//         jobType: "Remote",
+//         location: "Toronto",
+//         salary: "$80K-100K/year",
+//         applicationCount: 400,
+//         status: "Active",
+//     },
+//     {
+//         id: 10,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Backend Developer",
+//         jobType: "Full Time",
+//         location: "Sydney",
+//         salary: "$85K-110K/year",
+//         applicationCount: 350,
+//         status: "Active",
+//     },
+//     {
+//         id: 11,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "DevOps Engineer",
+//         jobType: "Contract Base",
+//         location: "Singapore",
+//         salary: "$95K-130K/year",
+//         applicationCount: 250,
+//         status: "Active",
+//     },
+//     {
+//         id: 12,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "UI/UX Designer",
+//         jobType: "Temporary",
+//         location: "Paris",
+//         salary: "$60K-80K/year",
+//         applicationCount: 180,
+//         status: "Active",
+//     },
+//     {
+//         id: 13,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Project Manager",
+//         jobType: "Full Time",
+//         location: "Tokyo",
+//         salary: "$100K-140K/year",
+//         applicationCount: 220,
+//         status: "Active",
+//     },
+//     {
+//         id: 14,
+//         companyLogo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
+//         jobTitle: "Content Writer",
+//         jobType: "Part Time",
+//         location: "Mumbai",
+//         salary: "$30K-50K/year",
+//         applicationCount: 100,
+//         status: "Active",
+//     },
+// ];
 
 // Define the JobTable component as a functional component with TypeScript
 const AllJobList: React.FC = () => {
-    const [openModalId, setOpenModalId] = useState<number | null>(null);
-
-console.log(openModalId)
-    const handle3Dot = (id: number) =>{
+    const [openModalId, setOpenModalId] = useState<string | null>(null);
+    const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+    const userId = userEmail?.user?._id || '';
+    const email = userEmail?.user?.email || '';
+    const {data:jobsData, isLoading:jobsLoading} = useGetJobPostDataQuery(userId)
+    const handle3Dot = (id: string) =>{
         setOpenModalId(prevId => prevId === id ? null : id);
     }
 
@@ -205,28 +215,28 @@ console.log(openModalId)
           </thead>
           {/* Table Body */}
           <tbody>
-            {jobData.map((job: Job) => (
+            {jobsData?.jobs.map((job: Job) => (
               <tr
-                key={job.id}
+                key={job._id}
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
                 {/* Job Column */}
                 <td className="p-4">
                   <div className="flex items-center space-x-4">
                     <Image
-                      src={job.companyLogo}
-                      alt={`${job.jobTitle} logo`}
+                      src={job.logo}
+                      alt={`${job.title} logo`}
                       width={40}
                       height={40}
                       className="rounded"
                     />
                     <div>
                       <div className="flex gap-3">
-                      <p className="font-semibold">{job.jobTitle}</p>
+                      <p className="font-semibold">{job.title}</p>
                       <p className="text-sm bg-[#E7F0FA] rounded-full px-2 text-[#0A65CC] ">{job.jobType}</p>
                       </div>
                       <p className="text-sm text-gray-500">
-                        {job.location} • {job.salary}
+                        {job.location} • {job.minSalary} - {job.maxSalary}/{job.salaryType}
                       </p>
                     </div>
                   </div>
@@ -235,7 +245,7 @@ console.log(openModalId)
                 <td className="p-3">
                 <div className="flex items-center space-x-2">
                     <span className="text-green-500"><Check size={16} /></span>
-                    <span className="text-sm text-green-500">{job.status}</span>
+                    <span className="text-sm text-green-500">{job.status === 'open' ? 'Active' : 'Expired'}</span>
                   </div>
                 </td>
                 {/* Status Column */}
@@ -247,19 +257,19 @@ console.log(openModalId)
                 </td>
                 {/* Action Column */}
                 <td className="p-4 flex gap-5">
-                  <Link href={'/company-dashboard/my-jobs/details'}>
+                  <Link href={`/company-dashboard/my-jobs/${job._id}`}>
                   <button className="bg-[#F1F2F4] cursor-pointer hover:bg-[#0A65CC] duration-300 font-medium text-[#0A65CC] cursor-pointer hover:text-white px-4 py-2 rounded">
                     View Details
                   </button>
                   </Link>
-                  <button onClick={()=>handle3Dot(job.id)} className="cursor-pointer "> <BsThreeDots/> </button>
-                  {openModalId === job.id && (
+                  <button onClick={() => handle3Dot(job._id)} className="cursor-pointer "> <BsThreeDots/> </button>
+                  {openModalId === job._id && (
                     <div className="absolute  mt-16 w-48 bg-white shadow-lg rounded-lg z-10">
                       <button className="flex gap-2 hover:bg-[#E7F0FA] hover:text-[#0A65CC] px-3 py-2 cursor-pointer w-full text-left">
                         <PlusCircle size={16} />
                         Promote Job
                       </button>
-                      <Link href={'/company-dashboard/my-jobs/details'}>
+                      <Link href={`/company-dashboard/my-jobs/${job._id}`}>
                       <button className="flex gap-2 hover:bg-[#E7F0FA] hover:text-[#0A65CC] px-3 py-2 cursor-pointer w-full text-left">
                         <Eye size={16} />
                         View Details

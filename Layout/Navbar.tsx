@@ -97,12 +97,15 @@ const Navbar = () => {
                 <div className='flex gap-11 items-center'>
                     {/* Logo */}
                     <div className='flex items-center gap-2'>
+                      <Link href={'/'}>
                         <Image
                             src="https://res.cloudinary.com/diez3alve/image/upload/v1740414466/briefcase_1_l2uamk.png"
                             alt="Logo"
                             width={40}
                             height={40}
                         />
+
+                      </Link>
                         <p className='text-2xl font-semibold'>MyJob</p>
                     </div>
 
@@ -150,7 +153,7 @@ const Navbar = () => {
                     {isOpen && (
                       <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
                         <Link
-                          href="/profile"
+                          href="/company-dashboard/employer-profile"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setIsOpen(false)}
                         >

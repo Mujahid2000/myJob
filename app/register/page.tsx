@@ -18,7 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
 import '../signin/signin.css';
+import { useGetUserByIdQuery, useSignupMutation } from '@/RTKQuery/authSlice';
+import { toast, Toaster } from 'sonner';
 
 // Type definitions
 interface FormInputs {
@@ -27,7 +30,7 @@ interface FormInputs {
   email: string;
   password: string;
   confirmPassword: string;
-  role: 'Employee' | 'Applicant';
+  phoneNumber: number;
 }
 
 // Custom error type
@@ -38,12 +41,12 @@ interface FormError {
 export default function SignUpPage() {
   const router = useRouter();
   const authContext = useContext(AuthContext);
-  
+
   if (!authContext) {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { currentUser, signup } = authContext;
+  const { signup } = authContext;
 
   // Form setup
   const {
@@ -52,15 +55,14 @@ export default function SignUpPage() {
     formState: { errors },
   } = useForm<FormInputs>({
     mode: 'onBlur',
-    defaultValues: {
-      role: 'Applicant',
-    },
   });
 
   // State management
   const [formError, setFormError] = useState<FormError | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [signupMutation, { isLoading: isSigningUp }] = useSignupMutation();
+  const [role, setRole] = useState<'Company' | 'Applicant' | null>(null);
 
   // Form submission handler
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
@@ -76,25 +78,43 @@ export default function SignUpPage() {
         return;
       }
 
-      setFormError(null);
-      
-      // Perform signup
-      await signup(
-        `${data.firstName} ${data.lastName}`,
-        data.email,
-        data.password
-      );
+      if (!role) {
+        setFormError({ message: 'Please select a role.' });
+        return;
+      }
 
-      // Redirect on successful signup
-      if (currentUser) {
+      const name = `${data.firstName} ${data.lastName}`;
+      setFormError(null);
+
+      // Step 1: Sign up with Firebase
+      await signup(name, data.email, data.password);
+
+      // Step 2: Save user data to database using RTK Query
+      const signupResponse = await signupMutation({
+        name,
+        email: data.email,
+        password: data.password,
+        role: role,
+        phoneNumber: data.phoneNumber,
+      }).unwrap();
+
+      // Show success toast
+      toast.success('Account created successfully!');
+
+      // Redirect based on role
+      if (role === 'Company') {
+        router.push('/account-setup');
+      } else if (role === 'Applicant') {
         router.push('/');
       }
-    } catch (error) {
-      setFormError({ message: 'An error occurred during signup' });
+    } catch (error: any) {
+      setFormError({
+        message: error?.data?.message || 'An error occurred during signup',
+      });
+      toast.error(error?.data?.message || 'An error occurred during signup');
       console.error('Signup error:', error);
     }
   };
-
   return (
     <div className="flex h-screen">
       {/* Left Section */}
@@ -112,17 +132,17 @@ export default function SignUpPage() {
         Already have account? <Link href="/signin" className="text-[#0A65CC]">Log In</Link>
         </p>
         </div>
-        <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a Role" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem value="Employee">Employee</SelectItem>
-          <SelectItem value="Applicant">Applicant</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+        <Select onValueChange={(value) => setRole(value as 'Company' | 'Applicant')}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a Role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="Company">Company</SelectItem>
+              <SelectItem value="Applicant">Applicant</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         </div>
       
 
@@ -160,9 +180,6 @@ export default function SignUpPage() {
             )}
 
                 </div>
-               
-         
-              
           </div>
           
             </div>
@@ -215,6 +232,19 @@ export default function SignUpPage() {
               <p className="text-sm text-red-500">{formError.message}</p>
             )}
             </div>
+            <Input
+              {...register('phoneNumber', {
+                required: 'Phone number is required',
+              })}
+              type="number"
+              placeholder="Phone Number"
+              className="rounded-sm"
+              min={0}
+              aria-invalid={errors.email ? 'true' : 'false'}
+            />
+            {errors.phoneNumber && (
+              <p className="text-sm text-red-500">{errors.phoneNumber.message}</p>
+            )}
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Checkbox id="remember" required/>
@@ -222,7 +252,7 @@ export default function SignUpPage() {
             </div>
             <a href="#" className="text-[#0A65CC]">Forgot password?</a>
           </div>
-          <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign In →</Button>
+          <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign Up →</Button>
         </form>
 
         <div className="flex items-center my-6">
@@ -265,6 +295,7 @@ export default function SignUpPage() {
           </div>
         </div>
       </div>
+      <Toaster richColors />
     </div>
   );
 }

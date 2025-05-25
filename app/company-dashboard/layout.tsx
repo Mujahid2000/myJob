@@ -1,6 +1,5 @@
 import DashboardClientLayoutCompany from "@/Hooks/DashboardClientCompanyLayout";
 
-// app/dashboard/layout.tsx
 
 
 export default function DashboardLayout({ children }: {children: any}) {

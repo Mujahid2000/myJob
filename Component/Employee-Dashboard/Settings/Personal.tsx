@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Calendar, Link, Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon } from 'lucide-react';
+import { useGetCompanyProfileQuery } from '@/RTKQuery/companySlice';
+import { AuthContext } from '@/Authentication/AuthContext';
+import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import './custom.css';
+
 
 const EmployeeCompanyInfo: React.FC = () => {
+   const [value, setValue] = useState(''); // State for ReactQuill content
+    const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+    const userId = userEmail?.user?._id || '';
+    const email = userEmail?.user?.email || '';
+    const {data:companyProfile} = useGetCompanyProfileQuery(userId);
+    
+
+    useEffect(() =>{
+      if(companyProfile?.companyVision){
+        setValue(companyProfile.companyVision)
+      }
+    },[companyProfile])
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Organization Type, Industry Types, Team Size */}
@@ -13,7 +34,7 @@ const EmployeeCompanyInfo: React.FC = () => {
           </label>
           <select
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            defaultValue=""
+            defaultValue={companyProfile?.organizationType}
           >
             <option value="" disabled>
               Select...
@@ -32,7 +53,7 @@ const EmployeeCompanyInfo: React.FC = () => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             defaultValue=""
           >
-            <option value="" disabled>
+            <option defaultValue={companyProfile?.industryTypes} disabled>
               Select...
             </option>
             <option value="tech">Technology</option>
@@ -49,7 +70,7 @@ const EmployeeCompanyInfo: React.FC = () => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             defaultValue=""
           >
-            <option value="" disabled>
+            <option defaultValue={companyProfile?.teamSize} disabled>
               Select...
             </option>
             <option value="1-10">1-10</option>
@@ -69,6 +90,7 @@ const EmployeeCompanyInfo: React.FC = () => {
           <div className="relative">
             <input
               type="date"
+              defaultValue={companyProfile?.yearEstablished}
               placeholder="mm/dd/yyyy"
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -81,6 +103,7 @@ const EmployeeCompanyInfo: React.FC = () => {
           </label>
           <div className="relative">
             <input
+            defaultValue={companyProfile?.companyWebsite}
               type="url"
               placeholder="Website url..."
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -92,43 +115,22 @@ const EmployeeCompanyInfo: React.FC = () => {
 
       {/* Company Vision */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          COMPANY VISION
-        </label>
-        <div className='border rounded-lg'>
-        <textarea
-          className="w-full p-3  focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows={5}
-          placeholder="Tell us what Vision of your company..."
-        />
-        {/* Enhanced Editor Toolbar */}
-        <div className="flex gap-1 mt-2  p-2 rounded-lg shadow-sm">
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Bold">
-            <Bold className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Italic">
-            <Italic className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Underline">
-            <Underline className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Bulleted List">
-            <List className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Numbered List">
-            <ListOrdered className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors" title="Link">
-            <LinkIcon className="w-5 h-5" />
-          </button>
-        </div>
-        </div>
-      </div>
+              <label className="block uppercase text-sm font-medium text-gray-700 mb-2">
+                Company Vision
+              </label>
+              <ReactQuill
+                className="mt-1 rounded-md text-xl block h-56 w-full"
+                theme="snow"
+                value={value}
+                onChange={(newValue) => setValue(newValue)}
+                placeholder="Write down your company here. Let the candidate know who we are..."
+              />
+            </div>
 
       {/* Save Button */}
-      <div className="flex justify-start">
-        <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-          Save Changes
+      <div className="flex justify-start pt-12">
+         <button className="bg-[#0A65CC] text-white px-6 py-3 rounded-sm cursor-pointer hover:bg-blue-500">
+          Save Change
         </button>
       </div>
     </div>

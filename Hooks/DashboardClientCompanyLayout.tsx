@@ -18,7 +18,6 @@ const sidebarDetails= [
 const DashboardClientLayoutCompany: React.FC<{ children: ReactNode }> = ({ children }) => {
     const pathname = usePathname();
     const router = useRouter()
-    console.log('get',router)
     const authContext = useAuth();
     const currentUser = authContext?.currentUser;
     const logOut: (() => Promise<void>) | undefined = authContext?.logout;

@@ -38,6 +38,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState('Personal');
   const [tabloading, setTabLoading] = useState(true);
+  
   async function signup(name: string, email: string, password: string): Promise<UserCredential> {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);

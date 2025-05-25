@@ -1,0 +1,25 @@
+'use client'
+import { Button } from "@/components/ui/button";
+import { openModal } from "@/Store/ModalSlice";
+import { useDispatch } from "react-redux";
+
+const ApplyNowButton = ({ id }: { id: string }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const jobId = id
+  const handleOpen = () => {
+    dispatch(openModal({ value: true, jobId }));
+  };
+
+  return (
+    <div>
+      <Button
+        onClick={handleOpen}
+        className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white w-[13rem] px-[2rem] py-[1rem] rounded-none"
+      >
+        Apply Now →
+      </Button>
+    </div>
+  );
+};
+
+export default ApplyNowButton;

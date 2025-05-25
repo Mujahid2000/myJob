@@ -1,55 +1,47 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { rangeData } from "@/Store/CompanyFilterState";
+import { RootState } from "@/Store/Store";
+import { useDispatch, useSelector } from "react-redux";
 
+const orgTypes = [
+  { label: "Government", value: "Government" },
+  { label: "Semi Government", value: "Semi_Government" },
+  { label: "NGO", value: "NGO" },
+  { label: "Private Company", value: "Private_Company" },
+  { label: "International Agencies", value: "International_Agencies" },
+  { label: "Others", value: "Others" },
+];
 
 export function RadioGroupItems() {
-    const [arrow, SelectArrow] = useState(true);
+  const dispatch = useDispatch();
+  const { inputSelect, slider } = useSelector((state: RootState) => state.filter);
 
-    return (
-        <div className="">
-            <h2 className="flex justify-between py-6">
-                Organization Type{" "}
-                <span
-                    className="cursor-pointer"
-                    onClick={() => SelectArrow(!arrow)}
-                >
-                    <ChevronDown className={`${arrow== true? 'rotate-180 duration-400' :"duration-400"}`} size={20} />
-                </span>
-            </h2>
-            <div
-                className={`transition-all duration-500 ${
-                    arrow ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-                } overflow-hidden`}
-            >
-                <RadioGroup className="">
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Government" id="option-one" />
-                        <Label htmlFor="option-one">Government</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Semi_Government" id="option-one" />
-                        <Label htmlFor="option-one">Semi Government</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="NGO" id="option-one" />
-                        <Label htmlFor="option-one">NGO</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Private_Company" id="option-one" />
-                        <Label htmlFor="option-one">Private Company</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="International_Agencies" id="option-two" />
-                        <Label htmlFor="option-two">International Agencies</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Others" id="option-two" />
-                        <Label htmlFor="option-two">Others </Label>
-                    </div>
-                </RadioGroup>
-            </div>
-        </div>
-    );
+  const handleSelectChange = (value: string) => {
+    dispatch(rangeData({ slider, inputSelect: value }));
+  };
+
+  return (
+    <Accordion type="single" collapsible defaultValue="org-type" className="">
+      <AccordionItem value="org-type">
+        <AccordionTrigger className="hover:no-underline">Organization Type</AccordionTrigger>
+        <AccordionContent>
+          <RadioGroup value={inputSelect} onValueChange={handleSelectChange}>
+            {orgTypes.map(({ label, value }, index) => (
+              <div key={value} className="flex items-center space-x-2 ">
+                <RadioGroupItem value={value} id={`org-type-${index}`} />
+                <Label htmlFor={`org-type-${index}`}>{label}</Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
 }
