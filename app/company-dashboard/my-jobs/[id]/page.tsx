@@ -5,7 +5,7 @@ interface PageProps {
     params: { id: string };
 }
 
-const Page = async ({ params }: PageProps) => {
+const Page = async ({ params }: PageProps):Promise<any> => {
     const { id } = params;
 
     return (
