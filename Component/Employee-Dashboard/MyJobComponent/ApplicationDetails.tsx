@@ -48,11 +48,8 @@ interface Modal {
 }
 
 // Define props for the component
-interface ApplicationDetailsProps {
-  jobId: string;
-}
 
-const ApplicationDetails: React.FC<ApplicationDetailsProps> = ({ jobId }) => {
+const ApplicationDetails = ({ jobId }: {jobId: string}) => {
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('Newest');
   const [applicantDetails, setApplicantDetails] = useState<Modal>({

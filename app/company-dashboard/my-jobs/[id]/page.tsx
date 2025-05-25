@@ -2,7 +2,7 @@ import ApplicationDetails from '@/Component/Employee-Dashboard/MyJobComponent/Ap
 import React from 'react';
 
 
-export default async function page ({ params }: {params: { id: string }}) {
+export default async function page ({ params }: {params: { id: string }}):Promise<any> {
     const { id } = params;
 
     return (
