@@ -19,7 +19,7 @@ export default async function Page  ({ params }: { params: { id: string } }) {
     const myDate = yearOfEstablishment[0] || "N/A";
    
 
-    function formatDateToOrdinal(dateString) {
+    function formatDateToOrdinal(dateString:any) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(dateString);
   
@@ -28,7 +28,7 @@ export default async function Page  ({ params }: { params: { id: string } }) {
   const month = date.toLocaleDateString('en-GB', { month: 'long' }); // 'May'
   const year = date.getFullYear();
 
-  const getOrdinalSuffix = (day) => {
+  const getOrdinalSuffix = (day:any) => {
     if (day > 3 && day < 21) return 'th'; // catch 11th, 12th, 13th
     switch (day % 10) {
       case 1:  return "st";

@@ -19,12 +19,9 @@ type Inputs = {
 
 };
 
-interface ModalProps {
-  open: boolean;
-  modalOpen: (state: boolean) => void;
-}
 
-const Modal: React.FC<ModalProps> = ({ open, modalOpen }) => {
+
+const Modal: React.FC = () => {
       const dispatch = useDispatch<AppDispatch>();
       const authContext = useContext(AuthContext);
       const currentUser = authContext?.currentUser;
@@ -44,7 +41,6 @@ const Modal: React.FC<ModalProps> = ({ open, modalOpen }) => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<Inputs>({
     defaultValues: { resume_id: '', coverLetter: '' },
   });

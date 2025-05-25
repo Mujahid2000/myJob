@@ -6,13 +6,13 @@ import { useGetCompanyDataQuery, useJobPostPromotedMutation, usePostAJobMutation
 import { useGetAllTagsQuery } from '@/RTKQuery/TagsApi';
 import { RootState } from '@/Store/Store';
 import { addTag, removeTag } from '@/Store/TagStateSlice';
-import { useRouter } from 'next/navigation'; // Use next/navigation for App Router
+import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import './custom.css'
+import './custom.css';
 
 type Inputs = {
   title: string;
@@ -29,7 +29,9 @@ type Inputs = {
   expiryDate: string;
   applyMethod: string;
   description: string;
-  location?: string; // Optional, will be overridden by companyData.mapLocation
+  location?: string;
+  biography?: string; // Added for better form handling
+  responsibilities?: string; // Added for better form handling
 };
 
 interface tagsType {
@@ -38,57 +40,68 @@ interface tagsType {
 }
 
 const PostAJob: React.FC = () => {
-  const router = useRouter(); // Use useRouter from next/navigation
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const dispatch = useDispatch();
   const { tags } = useSelector((state: RootState) => state.SelectedTag);
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
-  const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
+  const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '', {
+    skip: !currentUser?.email,
+  });
   const id = userEmail?.user?._id;
-  const { data: companyData, isLoading: isCompanyDataLoading } = useGetCompanyDataQuery(id || '');
+  const { data: companyData, isLoading: isCompanyDataLoading } = useGetCompanyDataQuery(id || '', {
+    skip: !id,
+  });
   const [promotedJobs, { isLoading: isPromotedLoading }] = useJobPostPromotedMutation();
   const companyId = companyData?._id;
   const location = companyData?.mapLocation;
   const [postData, { isLoading: isPostJobLoading }] = usePostAJobMutation();
   const [filteredTags, setFilteredTags] = useState<tagsType[]>([]);
-  const { data: tagsList } = useGetAllTagsQuery() as { data: tagsType[] | undefined };
+  const { data: tagsList } = useGetAllTagsQuery();
+  const taglist = tagsList?.data;
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<Inputs>();
   const [jobId, setJobId] = useState<string | undefined>(undefined);
-  const [descriptionValues, setDescriptionValues] = useState<string>('')
-  const [responsibilityValues, setResponsibilityValues] = useState<string>('')
-// console.log(descriptionValues)
+  const [descriptionValues, setDescriptionValues] = useState<string>('');
+  const [responsibilityValues, setResponsibilityValues] = useState<string>('');
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (userEmail?.user?.role === 'Company' && id && companyId && location) {
-      const jobData = {
-        ...data,
-        userId: id,
-        companyId,
-        biography: descriptionValues,
-        responsibilities: responsibilityValues,
-        location, // Override form location with companyData.mapLocation
-        expiryDate: data.expiryDate, // Ensure date format is compatible
-      };
-      try {
-        const result = await postData(jobData).unwrap();
-        if (result?._id) {
-          setJobId(result._id);
-          setIsModalOpen(true); // Open modal on success
-          // Reset the form fields
-          Object.keys(data).forEach((key) => setValue(key as keyof Inputs, ''));
-          dispatch(removeTag('')); // Clear tags in Redux state
-        }
-      } catch (error) {
-        console.error('Error posting job:', error);
+    if (userEmail?.user?.role !== 'Company' || !id || !companyId || !location) {
+      console.log('User role is not Company or missing ID/companyId/location');
+      alert('User is not authorized or missing required data.');
+      return;
+    }
+
+    const jobData = {
+      ...data,
+      userId: id,
+      companyId,
+      biography: descriptionValues || '',
+      responsibilities: responsibilityValues || '',
+      location,
+      expiryDate: data.expiryDate,
+      status: 'active', // Added as required by PostJobRequest
+      minSalary: Number(data.minSalary) || 0, // Convert to number as required by PostJobRequest
+      maxSalary: Number(data.maxSalary) || 0, // Convert to number as required by PostJobRequest
+    };
+
+    try {
+      const result = await postData(jobData).unwrap();
+      if (result?.data._id) {
+        setJobId(result.data._id);
+        setIsModalOpen(true);
+        Object.keys(data).forEach((key) => setValue(key as keyof Inputs, ''));
+        dispatch(removeTag('')); // Consider revising this to clear all tags
       }
-    } else {
-      console.log('User role is not Company or missing ID/companyId');
+    } catch (error) {
+      console.error('Error posting job:', error);
+      alert('Failed to post job. Please try again.');
     }
   };
 
   useEffect(() => {
-    setValue('tags', tags); // Sync Redux tags with form
+    setValue('tags', tags);
   }, [tags, setValue]);
 
   const handleCloseModal = (): void => {
@@ -97,7 +110,7 @@ const PostAJob: React.FC = () => {
 
   const handleViewJobs = (): void => {
     setIsModalOpen(false);
-    router.push('/company-dashboard/my-jobs'); // Use router.push for navigation
+    router.push('/company-dashboard/my-jobs');
   };
 
   const handlePromoteJob = async (promotionType: string | null) => {
@@ -111,22 +124,28 @@ const PostAJob: React.FC = () => {
         setIsModalOpen(false);
         router.push('/company-dashboard/my-jobs');
       } else {
-        const result = await promotedJobs({ companyId, jobId, id, promotedSystem: promotionType }).unwrap();
+        const result = await promotedJobs({
+          userId: id,
+          jobId,
+          companyId,
+          promotedSystem: promotionType,
+        }).unwrap();
         if (result) {
           setIsModalOpen(false);
           console.log('Job promoted successfully:', result);
-          router.push('/company-dashboard/my-jobs'); // Redirect on success
+          router.push('/company-dashboard/my-jobs');
         }
       }
     } catch (error) {
       console.error('Error promoting job:', error);
-      setIsModalOpen(false); // Close modal on error
+      alert('Failed to promote job. Please try again.');
+      setIsModalOpen(false);
     }
   };
 
   const filterTags = (value: string) => {
     setTimeout(() => {
-      const filtered = tagsList?.data?.filter((tag) => tag.name.toLowerCase().includes(value.toLowerCase())) || [];
+      const filtered = taglist?.filter((tag) => tag.name.toLowerCase().includes(value.toLowerCase())) || [];
       setFilteredTags(filtered);
     }, 300);
   };
@@ -171,10 +190,11 @@ const PostAJob: React.FC = () => {
           <input
             type="text"
             id="title"
-            {...register("title")}
+            {...register("title", { required: "Job title is required" })}
             className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
             placeholder="Add job title, role, vacancies etc..."
           />
+          {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
         </div>
 
         {/* Tags and Job Role */}
@@ -232,7 +252,7 @@ const PostAJob: React.FC = () => {
             </label>
             <select
               id="jobRole"
-              {...register("jobRole")}
+              {...register("jobRole", { required: "Job type is required" })}
               className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Select...</option>
@@ -240,6 +260,7 @@ const PostAJob: React.FC = () => {
               <option value="Development">Development</option>
               <option value="Marketing">Marketing</option>
             </select>
+            {errors.jobRole && <p className="text-red-500 text-xs mt-1">{errors.jobRole.message}</p>}
           </div>
         </div>
 
@@ -255,7 +276,7 @@ const PostAJob: React.FC = () => {
                 <input
                   type="number"
                   id="minSalary"
-                  {...register("minSalary")}
+                  {...register("minSalary", { required: "Minimum salary is required" })}
                   className="w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Minimum salary..."
                 />
@@ -263,6 +284,7 @@ const PostAJob: React.FC = () => {
                   USD
                 </span>
               </div>
+              {errors.minSalary && <p className="text-red-500 text-xs mt-1">{errors.minSalary.message}</p>}
             </div>
             <div>
               <label htmlFor="maxSalary" className="block text-sm font-medium text-gray-700">
@@ -272,7 +294,7 @@ const PostAJob: React.FC = () => {
                 <input
                   type="number"
                   id="maxSalary"
-                  {...register("maxSalary")}
+                  {...register("maxSalary", { required: "Maximum salary is required" })}
                   className="w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Maximum salary..."
                 />
@@ -280,6 +302,7 @@ const PostAJob: React.FC = () => {
                   USD
                 </span>
               </div>
+              {errors.maxSalary && <p className="text-red-500 text-xs mt-1">{errors.maxSalary.message}</p>}
             </div>
             <div>
               <label htmlFor="salaryType" className="block text-sm font-medium text-gray-700">
@@ -287,7 +310,7 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="salaryType"
-                {...register("salaryType")}
+                {...register("salaryType", { required: "Salary type is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
@@ -295,6 +318,7 @@ const PostAJob: React.FC = () => {
                 <option value="yearly">Yearly</option>
                 <option value="hourly">Hourly</option>
               </select>
+              {errors.salaryType && <p className="text-red-500 text-xs mt-1">{errors.salaryType.message}</p>}
             </div>
           </div>
         </div>
@@ -309,7 +333,7 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="education"
-                {...register("education")}
+                {...register("education", { required: "Education level is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
@@ -318,8 +342,8 @@ const PostAJob: React.FC = () => {
                 <option value="Bachelor-Degree">Bachelor Degree</option>
                 <option value="Graduation">Graduation</option>
                 <option value="Master-Degree">Master Degree</option>
-                
               </select>
+              {errors.education && <p className="text-red-500 text-xs mt-1">{errors.education.message}</p>}
             </div>
             <div>
               <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
@@ -327,11 +351,11 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="experience"
-                {...register("experience")}
+                {...register("experience", { required: "Experience level is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
-                <option value="Freshers-">Freshers</option>
+                <option value="Freshers">Freshers</option>
                 <option value="1-2">1 - 2 Years</option>
                 <option value="2-4">2 - 4 Years</option>
                 <option value="4-6">4 - 6 Years</option>
@@ -340,8 +364,7 @@ const PostAJob: React.FC = () => {
                 <option value="10-15">10 - 15 Years</option>
                 <option value="15+">15+ Years</option>
               </select>
-
-
+              {errors.experience && <p className="text-red-500 text-xs mt-1">{errors.experience.message}</p>}
             </div>
             <div>
               <label htmlFor="jobType" className="block text-sm font-medium text-gray-700">
@@ -349,7 +372,7 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="jobType"
-                {...register("jobType")}
+                {...register("jobType", { required: "Job type is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
@@ -359,9 +382,8 @@ const PostAJob: React.FC = () => {
                 <option value="Remote">Remote</option>
                 <option value="Temporary">Temporary</option>
                 <option value="Contract-Base">Contract Base</option>
-                
-
               </select>
+              {errors.jobType && <p className="text-red-500 text-xs mt-1">{errors.jobType.message}</p>}
             </div>
             <div>
               <label htmlFor="jobLevel" className="block text-sm font-medium text-gray-700">
@@ -369,7 +391,7 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="jobLevel"
-                {...register("jobLevel")}
+                {...register("jobLevel", { required: "Job level is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
@@ -377,6 +399,7 @@ const PostAJob: React.FC = () => {
                 <option value="Mid-Level">Mid-Level</option>
                 <option value="Expert-Level">Expert-Level</option>
               </select>
+              {errors.jobLevel && <p className="text-red-500 text-xs mt-1">{errors.jobLevel.message}</p>}
             </div>
             <div>
               <label htmlFor="vacancies" className="block text-sm font-medium text-gray-700">
@@ -384,7 +407,7 @@ const PostAJob: React.FC = () => {
               </label>
               <select
                 id="vacancies"
-                {...register("vacancies")}
+                {...register("vacancies", { required: "Number of vacancies is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select...</option>
@@ -392,6 +415,7 @@ const PostAJob: React.FC = () => {
                 <option value="2-5">2-5</option>
                 <option value="5+">5+</option>
               </select>
+              {errors.vacancies && <p className="text-red-500 text-xs mt-1">{errors.vacancies.message}</p>}
             </div>
             <div>
               <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700">
@@ -400,10 +424,11 @@ const PostAJob: React.FC = () => {
               <input
                 type="date"
                 id="expiryDate"
-                {...register("expiryDate")}
+                {...register("expiryDate", { required: "Expiry date is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-sm p-3 text-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="DD/MM/YYYY"
               />
+              {errors.expiryDate && <p className="text-red-500 text-xs mt-1">{errors.expiryDate.message}</p>}
             </div>
           </div>
         </div>
@@ -416,7 +441,7 @@ const PostAJob: React.FC = () => {
               <input
                 type="radio"
                 value="on_jobpilot"
-                {...register("applyMethod")}
+                {...register("applyMethod", { required: "Application method is required" })}
                 className="h-5 w-5 text-blue-500"
               />
               <span className="text-sm text-gray-700">
@@ -455,6 +480,7 @@ const PostAJob: React.FC = () => {
               </span>
             </label>
           </div>
+          {errors.applyMethod && <p className="text-red-500 text-xs mt-1">{errors.applyMethod.message}</p>}
         </div>
 
         {/* Description & Responsibilities */}
@@ -463,34 +489,32 @@ const PostAJob: React.FC = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Description</label>
-               <ReactQuill
-            className="mt-1  rounded-md text-xl block h-56 w-full "
-            theme="snow"
-            value={descriptionValues}
-            placeholder='Add your job description...'
-            onChange={(value) => {
-              setValue('description', value); // Update the 'description' field in the form
-              setDescriptionValues(value); // Update local state
-            }}
-          />
-            
+              <ReactQuill
+                className="mt-1 rounded-md text-xl block h-56 w-full"
+                theme="snow"
+                value={descriptionValues}
+                placeholder="Add your job description..."
+                onChange={(value) => {
+                  setValue('description', value);
+                  setDescriptionValues(value);
+                }}
+              />
+              {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
             </div>
-            <div className='py-12'>
+            <div className="py-12">
               <label className="block text-sm font-medium text-gray-700">Responsibilities</label>
-               <ReactQuill
-            className="mt-1  rounded-md text-xl block h-56 w-full "
-            theme="snow"
-            value={responsibilityValues}
-            placeholder='Add your job responsibilities...'
-            onChange={(value) => {
-              setValue('description', value); // Update the 'description' field in the form
-              setResponsibilityValues(value); // Update local state
-            }}
-          />
-            
+              <ReactQuill
+                className="mt-1 rounded-md text-xl block h-56 w-full"
+                theme="snow"
+                value={responsibilityValues}
+                placeholder="Add your job responsibilities..."
+                onChange={(value) => {
+                  setValue('responsibilities', value); // Fixed to set 'responsibilities' instead of 'description'
+                  setResponsibilityValues(value);
+                }}
+              />
+              {errors.responsibilities && <p className="text-red-500 text-xs mt-1">{errors.responsibilities.message}</p>}
             </div>
-         
-           
           </div>
         </div>
 

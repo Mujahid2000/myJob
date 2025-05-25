@@ -1,6 +1,7 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { openModal } from "@/Store/ModalSlice";
+import { AppDispatch } from "@/Store/Store";
 import { useDispatch } from "react-redux";
 
 const ApplyNowButton = ({ id }: { id: string }) => {

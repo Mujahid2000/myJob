@@ -1,9 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface TagsApiResponse {
-    _id: string;
-    name: string;
+export interface TagsApiResponse {
+  success: boolean
+  message: string
+  data: Daum[]
 }
+
+export interface Daum {
+  _id: string
+  name: string
+}
+
 
 
 

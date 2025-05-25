@@ -1,79 +1,79 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface PostJobRequest {
-    userId: string;
-    companyId: string;
-    jobTitle: string;
-    tags?: string[]; // Optional array of strings
-    jobRole: string;
-    salaryType: string;
-    minSalary: number;
-    maxSalary: number;
-    education: string;
-    experience: string;
-    jobType: string;
-    expireDate: string; // ISO string or date format compatible with Date
-    vacancy: string;
-    jobLevel: string;
-    description: string;
-    responsibilities: string;
-    location: string;
-    status?: string; // Optional, defaults to 'open' in schema
+  userId: string;
+  companyId: string;
+  title: string;
+  tags: string[];
+  jobRole: string;
+  salaryType: string;
+  minSalary: number;
+  maxSalary: number;
+  education: string;
+  experience: string;
+  jobType: string;
+  expiryDate: string;
+  vacancies: string;
+  jobLevel: string;
+  biography: string;
+  responsibilities: string;
+  location: string;
+  status: string;
 }
 
 export interface PostJobResponse {
+  success: boolean;
+  message: string;
+  data: Data;
+}
+
+export interface Data {
+  userId: string;
+  companyId: string;
+  title: string;
+  tags: string[];
+  jobRole: string;
+  salaryType: string;
+  minSalary: number;
+  maxSalary: number;
+  education: string;
+  experience: string;
+  jobType: string;
+  expiryDate: string;
+  vacancies: string;
+  jobLevel: string;
+  biography: string;
+  responsibilities: string;
+  location: string;
+  status: string;
+  _id: string;
+  postedDate: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+// Input type for the jobPostPromoted mutation
+export interface PromotedJobsRequest {
+    userId: string;
+    jobId: string;
+    companyId: string;
+    promotedSystem: string;
+}
+
+// Response type for the jobPostPromoted mutation
+export interface PromotedJobsResponse {
     success: boolean;
     message: string;
     data: {
         userId: string;
+        jobId: string;
         companyId: string;
-        jobTitle: string;
-        tags: string[];
-        jobRole: string;
-        salaryType: string;
-        minSalary: number;
-        maxSalary: number;
-        education: string;
-        experience: string;
-        jobType: string;
-        expireDate: Date;
-        vacancy: string;
-        jobLevel: string;
-        description: string;
-        responsibilities: string;
-        location: string;
-        postedDate: Date;
-        status: string;
-        _id: string;
+        promotedSystem: string;
         createdAt: Date;
         updatedAt: Date;
         __v: number;
     };
-}
-
-
-
-
-interface PromotedJobsResponse {
-    userId: string,
-    jobId: string,
-    companyId: string,
-    promotedSystem: string
-}
-
-
-interface PromotedJobsRequest {
-    success: boolean;
-    message: string;
-    data: {
-    userId: string,
-    jobId: string,
-    companyId: string,
-    promotedSystem: string,
-    createdAt: Date;
-    updatedAt: Date;
-    __v: number;
-    }
 }
 
 // Define types for the GET method
@@ -92,7 +92,7 @@ export const JobPostApi = createApi({
     tagTypes: ['jobPost'],
     endpoints: (builder) => ({
         getCompanyData: builder.query<GetCompanyDataResponse, string>({
-            query: (id) => `/getCompanyData/companyDataById/${id}`
+            query: (id) => `/getCompanyData/companyDataById/${id}`,
         }),
         postAJob: builder.mutation<PostJobResponse, PostJobRequest>({
             query: (formData) => ({
@@ -105,20 +105,20 @@ export const JobPostApi = createApi({
                 response: { status: string | number },
                 meta,
                 arg,
-              ) => response.status,
+            ) => response.status,
             invalidatesTags: ['jobPost'],
         }),
-        jobPostPromoted: builder.mutation<PromotedJobsResponse,PromotedJobsRequest >({
-            query: (data) =>({
+        jobPostPromoted: builder.mutation<PromotedJobsResponse, PromotedJobsRequest>({
+            query: (data) => ({
                 url: '/jobs/PromotedJObs',
                 method: 'POST',
-                body: data
-            })
+                body: data,
+            }),
         }),
         getPostJob: builder.query<PostJobResponse, string>({
-            query: () =>'/jobs/getAllPostedData'
-        })
-    })
+            query: () => '/jobs/getAllPostedData',
+        }),
+    }),
 });
 
 export const { usePostAJobMutation, useGetCompanyDataQuery, useJobPostPromotedMutation, useGetPostJobQuery } = JobPostApi;

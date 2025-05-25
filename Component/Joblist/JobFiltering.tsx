@@ -74,7 +74,7 @@ const JobFiltering = () => {
                   <div className='flex gap-3 items-center '>
                     <FiSearch className='text-blue-500 text-2xl' />
                     <Input 
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setJobTitleKeyword([e.target.value])} 
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setJobTitleKeyword(e.target.value)} //error: Argument of type 'string[]' is not assignable to parameter of type 'SetStateAction<string>'.
                       value={jobTitleKeyword} 
                       type='text' 
                       placeholder='Job title, Keyword...' 

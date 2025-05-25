@@ -17,15 +17,15 @@ import Link from "next/link";
 
 
 
-;interface PageProps {
+interface PageProps {
   viewMode?: string;
   location?: string;
   category?: string;
   jobRole?: string;
-  companyName: string;
-  organizationType: string,
-  jobTitle: string,
-  tags: string[]
+  companyName?: string;
+  organizationType?: string,
+  jobTitle?: string,
+  tags?: string[]
 }
 
 export interface JobItem {
@@ -48,7 +48,7 @@ export interface JobApiResponse {
 }
 
 
-const page = async ({ searchParams = {} }: { searchParams?: PageProps }) => {
+const page = async ({ searchParams = {} }: { searchParams?: PageProps }) => { //Type '{}' is missing the following properties from type 'PageProps': companyName, organizationType, jobTitle, tagsts(2739)
   const viewMode = searchParams.viewMode || "grid";
   const data = await fetch('http://localhost:5000/jobs/getCompanyData');
   const jobListings: JobApiResponse = await data.json();
@@ -123,11 +123,11 @@ const filteredJobs = companyList.filter((job) => {
                             <h4 className="font-semibold text-[1rem]">
                               {job?.companyName}
                             </h4>
-                            {job?.featured && (
+                           
                               <span className="bg-[#FFE0E0] text-[#FF4F4F] px-2 py-1 rounded">
                                 Featured
                               </span>
-                            )}
+                           
                           </div>
                           <div className="flex gap-1 items-center">
                             <MapPin className="w-4" />
@@ -143,7 +143,7 @@ const filteredJobs = companyList.filter((job) => {
                        jlkwdjvawv
                       </h3>
                       <p className="text-gray-500">
-                        {job?.type} • {job?.salary}
+                        {job?.jobRole} • $100-200/month
                       </p>
                     </CardContent>
                   </Card>

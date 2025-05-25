@@ -7,7 +7,7 @@ import Modal from "@/Component/signleJob/Modal";
     return (
      <div className="pt-36">
       <JobDetails id={JobId} />
-      <Modal open={false} modalOpen={true} />
+      <Modal  />
      </div>
     );
   }
