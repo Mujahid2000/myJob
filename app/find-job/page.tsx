@@ -3,20 +3,13 @@ import JobFiltering from '@/Component/Joblist/JobFiltering';
 import JobListings from '@/Component/Joblist/Joblist';
 
 // Define the props for searchParams
-interface SearchParams {
+
+
+interface PageProps {
   viewMode?: string;
 }
 
-interface PageProps {
-  searchParams: SearchParams;
-}
-
-/**
- * Page component for displaying job filtering and listings.
- * @param searchParams - A promise that resolves to query parameters for filtering jobs.
- */
 export default async function Page({ searchParams }: { searchParams: Promise<PageProps> }) {
-  // Resolve searchParams
   let resolvedSearchParams: PageProps;
   try {
     resolvedSearchParams = await searchParams;
@@ -29,8 +22,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
     );
   }
 
-  // Extract the inner searchParams
-  const params = resolvedSearchParams.searchParams || { viewMode: 'grid' };
+   const params = resolvedSearchParams || { viewMode: 'grid' }; 
 
   return (
     <>
