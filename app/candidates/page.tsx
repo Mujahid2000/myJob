@@ -56,7 +56,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
   // Fetch candidate data
   try {
-    const response = await fetch(`http://localhost:5000/candidateJobApplyData/candidateList`, {
+    const response = await fetch(`https://serverjob.vercel.app/candidateJobApplyData/candidateList`, {
       cache: 'no-store',
     });
 

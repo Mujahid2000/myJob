@@ -39,7 +39,7 @@ export default async function SuggestJob({userId}: { userId?: string }) {
 
     let jobListings: JobListing[] = [];
   try {
-    const res = await fetch("http://localhost:5000jobs/getAllPostedData", {
+    const res = await fetch("https://serverjob.vercel.appjobs/getAllPostedData", {
       next: { revalidate: 60 }, // Revalidate every 60 seconds
       headers: {
         "Content-Type": "application/json",

@@ -71,7 +71,7 @@ export interface CompanyContacts {
 export const companyApiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000', // Replace with your API base URL
+    baseUrl: 'https://serverjob.vercel.app', // Replace with your API base URL
   }),
   tagTypes: ['Company'],
   endpoints: (builder) => ({

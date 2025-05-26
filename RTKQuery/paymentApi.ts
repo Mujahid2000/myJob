@@ -27,7 +27,7 @@ interface captureOrderData {
 export const paymentApi = createApi({
     reducerPath: 'paymentApi',
     baseQuery: fetchBaseQuery({
-      baseUrl: 'http://localhost:5000/api/paypal'
+      baseUrl: 'https://serverjob.vercel.app/api/paypal'
     }),
     endpoints: (builder) =>({
         createOrder: builder.mutation<orderApiResponse ,orderData >({
