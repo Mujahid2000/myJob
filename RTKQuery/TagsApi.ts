@@ -17,7 +17,7 @@ export interface Daum {
 export const TagsApi = createApi({
     reducerPath: 'tagsName',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://serverjob.vercel.app/',
+        baseUrl: 'http://localhost:5000',
     }),
     tagTypes: ['Tags'],
     endpoints:(builder)=>({

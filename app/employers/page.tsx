@@ -19,24 +19,25 @@ interface PageProps {
   page?: string; // Add page for pagination
 }
 
-export interface JobItem {
-  _id: string;
-  title: string;
-  tags: string[];
-  location: string;
-  jobRole: string;
-  postedDate: string;
-  companyName: string;
-  totalUpcomingCount: number;
-  logo: string;
-  organizationType: string;
-  userId: string;
+export interface JobApiResponse {
+  message: string
+  data: jobItem[]
 }
 
-export interface JobApiResponse {
-  message: string;
-  data: JobItem[];
+export interface jobItem {
+  _id: string
+  userId: string
+  title: string
+  tags: string[]
+  jobRole: string
+  location?: string
+  postedDate: string
+  companyName?: string
+  logo?: string
+  organizationType?: string
+  totalCompanyJobs: number
 }
+
 
 /**
  * Page component for displaying job listings with filtering and pagination.
@@ -63,7 +64,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   // Fetch job data
   let jobListings: JobApiResponse;
   try {
-    const response = await fetch('https://serverjob.vercel.app//jobs/getCompanyData', {
+    const response = await fetch('http://localhost:5000/jobs/getCompanyData', {
       cache: 'no-store', // Disable caching for fresh data
     });
     if (!response.ok) {
@@ -93,7 +94,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
     const matchesJobTitle = !lower.jobTitle
       ? true
       : job.title.toLowerCase().includes(lower.jobTitle) ||
-        job.companyName.toLowerCase().includes(lower.jobTitle) ||
+        (job.companyName?.toLowerCase().includes(lower.jobTitle) ?? false) ||
         (job.tags?.some((tag) => tag.toLowerCase().includes(lower.jobTitle!)) ?? false);
 
     const matchesCategory = !resolvedSearchParams.category
@@ -130,20 +131,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
           {viewMode === 'list' ? (
             <div className="grid grid-cols-2 gap-4">
               {paginatedJobs.map((job) => (
-                <Link href={`/employers/${job._id}`} key={job._id}>
+                <Link href={`/employers/${job.userId}`} key={job._id}>
                   <Card className="border hover:shadow-lg transition">
                     <CardContent className="flex flex-col gap-3 p-4">
                       <div className="flex items-center gap-3">
-                        <Image
-                          src={job.logo || 'https://via.placeholder.com/55'}
-                          alt={job.companyName || 'Company Logo'}
-                          width={55}
-                          height={55}
-                          className="rounded-md"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/55';
-                          }}
-                        />
+                       <img className='w-12 h-12' src={job.logo || 'https://via.placeholder.com/55'} alt="" />
                         <div>
                           <div className="flex gap-3">
                             <h4 className="font-semibold text-[1rem]">
@@ -182,16 +174,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
                   <CardContent className="flex items-center justify-between p-6">
                     {/* Left Section: Logo & Job Info */}
                     <div className="flex items-center gap-4">
-                      <Image
-                        src={job.logo || 'https://via.placeholder.com/55'}
-                        alt={job.companyName || 'Company Logo'}
-                        width={55}
-                        height={55}
-                        className="rounded-md"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/55';
-                        }}
-                      />
+                      <img className='w-12 h-12' src={job.logo} alt={job.companyName}  />
                       <div>
                         <div className="flex gap-3">
                           <h3 className="font-semibold text-[#18191C] text-lg">
@@ -205,7 +188,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
                           </div>
                           <div className="flex items-center gap-1">
                             <CalendarMinus2 size={16} />
-                            <span>{job.totalUpcomingCount} - open Job</span>
+                            <span>{job.totalCompanyJobs} - open Job</span>
                           </div>
                         </div>
                       </div>

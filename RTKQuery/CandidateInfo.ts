@@ -31,7 +31,7 @@ interface personalDataResponse {
 export const CandidatePersonalData = createApi({
     reducerPath: 'candidateApi',
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'https://serverjob.vercel.app//' 
+        baseUrl: 'http://localhost:5000' 
     }),
     tagTypes: ['candidate'],
     endpoints: builder =>({

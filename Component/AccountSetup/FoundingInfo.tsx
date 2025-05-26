@@ -116,11 +116,12 @@ export default function FoundingInfo() {
           >
             <option value="">Select...</option>
             <option value="Government Agency">Government Agency</option>
-            <option value="Nonprofit Organization">Semi Government</option>
-            <option value="Nonprofit Organization">NGO</option>
-            <option value="Nonprofit Organization">Private Company</option>
-            <option value="Nonprofit Organization">International Agencies </option>
-            <option value="Partnership">Others</option>
+            <option value="Semi Government">Semi Government</option>
+            <option value="NGO">NGO</option>
+            <option value="Private Company">Private Company</option>
+            <option value="Nonprofit Organization">Nonprofit Organization </option>
+            <option value="International Agencies">International Agencies </option>
+            <option value="others">Others</option>
           </select>
           {errors.organizationType && (
             <p className="text-red-500 text-sm mt-1">{errors.organizationType.message}</p>

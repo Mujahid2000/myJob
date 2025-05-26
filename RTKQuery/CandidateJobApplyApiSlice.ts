@@ -41,7 +41,7 @@ export interface Favortite {
 export const candidateJObApplyData = createApi({
     reducerPath: 'candidateJobApply',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://serverjob.vercel.app/'
+        baseUrl: 'http://localhost:5000'
     }),
     tagTypes: ['candidateJob'],
     endpoints: (builder) =>({

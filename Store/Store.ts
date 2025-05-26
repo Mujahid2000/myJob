@@ -27,8 +27,10 @@ import { notificationApi } from '@/RTKQuery/NotificationApiSlice';
 import { jobApply } from '@/RTKQuery/JobApplyApiSlice';
 import { shortListed } from '@/RTKQuery/ShortListedApi';
 import { candidateJObApplyData } from '@/RTKQuery/CandidateJobApplyApiSlice';
-
-
+import educationReducer from './EducationSlice';
+import candidateReducer from './candidateLevelSlice'
+import genderSlice from './genderSlice'
+import experience from './experienceSlice'
 
 
 export const store = configureStore({
@@ -60,6 +62,10 @@ export const store = configureStore({
     modal: modalReducer,
     filter: CompanyFilter,
     profile: profileReducer,
+    education : educationReducer,
+    candidateLevel: candidateReducer,
+    gender: genderSlice,
+    experience: experience
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -33,7 +33,7 @@ interface BookmarkResponse {
 }
 export const bookMarkApiSlice = createApi({
   reducerPath: 'bookmark',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://serverjob.vercel.app/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
   tagTypes: ['bookMarkApi'],
   endpoints: builder => ({
     bookMarkDataPost: builder.mutation<bookmarkTypesResponse, bookmarkTypesRequest>({

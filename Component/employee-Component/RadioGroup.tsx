@@ -11,11 +11,12 @@ import { RootState } from "@/Store/Store";
 import { useDispatch, useSelector } from "react-redux";
 
 const orgTypes = [
-  { label: "Government", value: "Government" },
-  { label: "Semi Government", value: "Semi_Government" },
-  { label: "NGO", value: "NGO" },
-  { label: "Private Company", value: "Private_Company" },
+  { label: "Nonprofit Organization", value: "Nonprofit Organization" },
   { label: "International Agencies", value: "International_Agencies" },
+  { label: "Semi Government", value: "Semi_Government" },
+  { label: "Private Company", value: "Private_Company" },
+  { label: "Government", value: "Government" },
+  { label: "NGO", value: "NGO" },
   { label: "Others", value: "Others" },
 ];
 

@@ -87,7 +87,7 @@ export interface GetCompanyDataResponse {
 export const JobPostApi = createApi({
     reducerPath: 'jobpostapi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://serverjob.vercel.app/',
+        baseUrl: 'http://localhost:5000',
     }),
     tagTypes: ['jobPost'],
     endpoints: (builder) => ({

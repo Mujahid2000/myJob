@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const socialMediaApiSlice = createApi({
     reducerPath: "socialMediaApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://serverjob.vercel.app/" }),
+    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
     tagTypes: ["SocialMedia"],
     endpoints: (builder) =>({
         postSocialMediaInfo: builder.mutation({

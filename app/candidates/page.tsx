@@ -1,19 +1,11 @@
 "use client";
 import { CheckboxDemo } from "@/Component/candidates-component/CheckBox";
 import { PaginationDemo } from "@/Component/candidates-component/Pagination";
-import { RadioGroupItems } from "@/Component/candidates-component/RadioGroup";
+import {  RadioGroupItemsExperience } from "@/Component/candidates-component/RadioGroup";
 import { SliderDemo } from "@/Component/candidates-component/RangeSlider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 
 import { Input } from "@/components/ui/input";
 import {
@@ -24,22 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@radix-ui/react-select";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   Bookmark,
-  Briefcase,
   BriefcaseConveyorBelt,
   Cake,
-  Calendar,
   CircleUserRound,
   ClipboardList,
-  DollarSign,
   Download,
   FileText,
-  Globe,
-  Globe2,
   GraduationCap,
   Grid,
   Layers,
@@ -49,8 +34,7 @@ import {
   MapPin,
   Phone,
   SlidersHorizontal,
-  Users,
-  X,
+ 
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,6 +49,10 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
+import { RadioGroupItemsCandidate } from "@/Component/candidates-component/CandidateLevel";
+import { RadioGroupItemsGender } from "@/Component/candidates-component/GenderRadioGroup";
+import HeaderSide from "@/Component/candidates-component/HeaderSide";
+import Sidebar from "@/Component/candidates-component/Sidebar";
 
 const jobListings = [
   {
@@ -120,133 +108,18 @@ const jobListings = [
 ];
 
 const FindJobPage = () => {
-  const [jobTitle, setJobTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [category, setCategory] = useState("");
-  const [values, setValues] = React.useState(50);
+  
   const [viewMode, setViewMode] = useState<string>();
   const [open, setOpen] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ jobTitle, location, category });
-    // Perform search logic here
-  };
+
+
+
 
   return (
     // Main container for the Find Job page
     <div className="pt-29 ">
       {/* Header section */}
-      <div className="bg-[#F1F2F4] px-2 py-6 ">
-        <div className="flex max-w-7xl mx-auto justify-between items-center py-3">
-          <h3 className="text-2xl font-semibold text-gray-800">Find Job</h3>
-          <p className="text-sm text-gray-500">Home / Find Job</p>
-        </div>
-
-        {/* Search Bar */}
-        <form
-          onSubmit={handleSubmit}
-          className="flex max-w-7xl mx-auto flex-wrap md:flex-nowrap items-center bg-white p-2 rounded-lg shadow-sm gap-2"
-        >
-          {/* Job Title Search */}
-          <div className="flex flex-2 items-center  rounded-md px-3 py-2">
-            <FiSearch className="text-blue-500 text-lg mr-2" />
-            <Input
-              type="text"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              placeholder="Job title, Keyword..."
-              className="bg-transparent border-none shadow-none outline-none text-gray-700 placeholder-gray-400"
-            />
-          </div>
-
-          {/* Separator */}
-          <div className="hidden md:block text-gray-300">|</div>
-
-          {/* Location Search */}
-          <div className="flex flex-1 items-center  rounded-md px-3 py-2">
-            <SlLocationPin className="text-blue-500 text-lg mr-2" />
-            <Input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Your Location"
-              className="bg-transparent border-none shadow-none outline-none text-gray-700 placeholder-gray-400"
-            />
-          </div>
-
-          {/* Category Select */}
-          <div className="flex flex-1 items-center">
-            <Select onValueChange={setCategory}>
-              <SelectTrigger className="flex  w-full items-center justify-between rounded-md px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[placeholder]:text-gray-400 border-none shadow-none">
-                <div className="flex gap-3 items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M2 17L12 22L22 17"
-                      stroke="#0A65CC"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M2 12L12 17L22 12"
-                      stroke="#0A65CC"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12 2L2 7L12 12L22 7L12 2Z"
-                      stroke="#0A65CC"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <SelectValue placeholder="Category" />
-                </div>
-              </SelectTrigger>
-              <SelectContent className="z-50 bg-white rounded-md shadow-lg">
-                <SelectGroup>
-                  <SelectItem
-                    value="design"
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Design
-                  </SelectItem>
-                  <SelectItem
-                    value="development"
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Development
-                  </SelectItem>
-                  <SelectItem
-                    value="marketing"
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Marketing
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Find Job Button */}
-          <div>
-            <Button
-              type="submit"
-              className="bg-[#0A65CC] h-10 px-6 text-white rounded-md hover:bg-[#0A65CC]/90"
-            >
-              Find Job
-            </Button>
-          </div>
-        </form>
-      </div>
+      <HeaderSide/>
 
       {/* Filter and view mode section */}
       <div className="flex justify-between max-w-7xl mx-auto py-6">
@@ -306,54 +179,7 @@ const FindJobPage = () => {
 
       {/* Job listings and filters */}
       <div className="max-w-7xl mx-auto flex  gap-5">
-        <div className="flex-1 flex flex-col gap-1">
-          {/* Filter section */}
-          <div className=" max-h-56 rounded-lg shadow-md border py-3 px-3">
-            <h2 className="pb-2">
-              Location Radius:{" "}
-              <span className="text-blue-600">{values} miles</span>
-            </h2>
-            <SliderDemo onValueChange={(newValue) => setValues(newValue[0])} />
-            <RadioGroupItems
-              title={"Candidate Level"}
-              list={["Entry Level", "Mid Level", "Expert Level  "]}
-            />
-          </div>
-          <div className="flex-1 max-h-66 rounded-lg shadow-md border py-2 px-3">
-            <RadioGroupItems
-              title={"Experiences"}
-              list={[
-                "Freshers",
-                "1 - 2 Years",
-                "2 - 4 Years",
-                "4 - 6 Years",
-                "6 - 8 Years",
-                "8 - 10 Years",
-                "10 - 15 Years",
-                "15+ Years",
-              ]}
-            />
-          </div>
-          <div className="flex-1 max-h-56 rounded-lg shadow-md border py-3 px-3">
-            <CheckboxDemo
-              title={"Education"}
-              list={[
-                "All",
-                "High School",
-                "Intermediate",
-                "Graduation",
-                "Master Degree",
-                "Bachelor Degree",
-              ]}
-            />
-          </div>
-          <div className="flex-1 max-h-32 rounded-lg shadow-md border py-3 px-3">
-            <RadioGroupItems
-              title={"Gender"}
-              list={["Male", "Female", "Others"]}
-            />
-          </div>
-        </div>
+        <Sidebar/>
 
         {/* Job listings section */}
         <div className="flex-2">
@@ -409,22 +235,26 @@ const FindJobPage = () => {
                   key={job.id}
                   className={`border  hover:hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white}`}
                 >
-                  <CardContent className="flex items-center justify-between p-6">
+                  <CardContent className="flex items-center justify-between ">
                     {/* Left Section: Logo & Job Info */}
                     <div className="flex items-center gap-4">
                       <Image
                         src={job.logo}
                         alt={job.role}
-                        width={55}
-                        height={55}
+                        width={75}
+                        height={75}
                         className="rounded-md"
                       />
 
                       <div>
                         <div className="flex gap-3 ">
+                          <div>
                           <h3 className="font-semibold text-[#18191C] text-lg">
-                            {job.role}
+                            Md Saifullah
                           </h3>
+                          <h4 className="text-sm">{job.role}</h4>
+                          </div>
+                            
                         </div>
                         <div className="flex items-center gap-3 text-gray-500 text-sm mt-2">
                           <div className="flex items-center gap-1">
