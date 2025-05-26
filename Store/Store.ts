@@ -31,7 +31,9 @@ import educationReducer from './EducationSlice';
 import candidateReducer from './candidateLevelSlice'
 import genderSlice from './genderSlice'
 import experience from './experienceSlice'
-
+import sliderReducer from './range';
+import searchFilterParams from './searchFilterSlice'
+import CandidateModal from './CandidateModal'
 
 export const store = configureStore({
   reducer: {
@@ -65,7 +67,10 @@ export const store = configureStore({
     education : educationReducer,
     candidateLevel: candidateReducer,
     gender: genderSlice,
-    experience: experience
+    experience: experience,
+    slider: sliderReducer,
+    searchFilter: searchFilterParams,
+    candidateModal: CandidateModal
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

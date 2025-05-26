@@ -8,7 +8,27 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
   
-  export function PaginationDemo() {
+interface PaginationProps {
+  itemsPerPage?: number;
+  candidates: Candidate[];
+}
+
+export interface Candidate {
+  _id: string;
+  profilePicture: string;
+  experience: string;
+  fullName: string;
+  title: string;
+  education: string;
+  gender: string;
+  location?: string;
+  level?: string;
+  category?: string;
+  createdAt?: string;
+  popularityScore?: number;
+}
+
+  export function PaginationDemo({itemsPerPage, candidates }: PaginationProps) {
     return (
       <Pagination className="py-7">
         <PaginationContent>

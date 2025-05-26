@@ -1,287 +1,222 @@
-"use client";
-import { CheckboxDemo } from "@/Component/candidates-component/CheckBox";
-import { PaginationDemo } from "@/Component/candidates-component/Pagination";
-import {  RadioGroupItemsExperience } from "@/Component/candidates-component/RadioGroup";
-import { SliderDemo } from "@/Component/candidates-component/RangeSlider";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PaginationDemo } from '@/Component/candidates-component/Pagination';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Bookmark, BriefcaseConveyorBelt, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import HeaderSide from '@/Component/candidates-component/HeaderSide';
+import Sidebar from '@/Component/candidates-component/Sidebar';
+import OpenModalButton from '@/Component/candidates-component/OpenModalButton';
+import CandidateModal from '@/Component/candidates-component/CandidateModal';
 
+interface CandidateFilteringList {
+  level: string;
+  education: string[];
+  gender: string;
+  experience: string;
+  jobTitle: string;
+  location: string;
+  category: string;
+  itemsPerPage: number;
+  sortBy: string;
+}
 
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+export interface CandidateList {
+  success: boolean;
+  data: Candidate[];
+}
 
-import {
-  Bookmark,
-  BriefcaseConveyorBelt,
-  Cake,
-  CircleUserRound,
-  ClipboardList,
-  Download,
-  FileText,
-  GraduationCap,
-  Grid,
-  Layers,
-  List,
-  Mail,
-  Map,
-  MapPin,
-  Phone,
-  SlidersHorizontal,
- 
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useState } from "react";
-import { FiSearch } from "react-icons/fi";
-import { SlLocationPin } from "react-icons/sl";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaLinkedinIn,
-  FaReddit,
-  FaTwitter,
-  FaYoutube,
-} from "react-icons/fa";
-import { RadioGroupItemsCandidate } from "@/Component/candidates-component/CandidateLevel";
-import { RadioGroupItemsGender } from "@/Component/candidates-component/GenderRadioGroup";
-import HeaderSide from "@/Component/candidates-component/HeaderSide";
-import Sidebar from "@/Component/candidates-component/Sidebar";
+export interface Candidate {
+  _id: string;
+  profilePicture: string;
+  experience: string;
+  fullName: string;
+  title: string;
+  education: string;
+  gender: string;
+  location?: string;
+  level?: string;
+  category?: string;
+  createdAt?: string;
+  popularityScore?: number;
+}
 
-const jobListings = [
-  {
-    id: 1,
-    company: "Reddit",
-    role: "Marketing Officer",
-    location: "United Kingdom",
-    salary: "$30K-$35K",
-    type: "Full Time",
-    featured: true,
-    logo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-  },
-  {
-    id: 2,
-    company: "Dribbble",
-    role: "Senior UX Designer",
-    location: "California",
-    salary: "$50K-$80K/month",
-    type: "Full-Time",
-    featured: true,
-    logo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-  },
-  {
-    id: 3,
-    company: "Figma",
-    role: "UI/UX Designer",
-    location: "Canada",
-    salary: "$50K-$70K",
-    type: "Full Time",
-    featured: true,
-    logo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-  },
-  {
-    id: 4,
-    company: "Microsoft",
-    role: "Product Designer",
-    location: "Australia",
-    salary: "$40K-$50K",
-    type: "Full Time",
-    featured: false,
-    logo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-  },
-  {
-    id: 5,
-    company: "Slack",
-    role: "Networking Engineer",
-    location: "Germany",
-    salary: "$50K-$90K",
-    type: "Remote",
-    featured: false,
-    logo: "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png",
-  },
-];
+export default async function FindJobPage({ searchParams }: { searchParams: Promise<CandidateFilteringList> }) {
+  let candidateData: Candidate[] = [];
+  let errorMessage: string | null = null;
+  let filteredCandidates: Candidate[] = [];
+  let level: string | undefined = undefined;
+  let category: string | undefined = undefined;
+  let education: string[] | undefined = undefined;
+  let experience: string | undefined = undefined;
+  let gender: string | undefined = undefined;
+  let itemsPerPage: number | undefined = undefined;
+  let jobTitle: string | undefined = undefined;
+  let location: string | undefined = undefined;
+  let sortBy: string | undefined = undefined;
 
-const FindJobPage = () => {
-  
-  const [viewMode, setViewMode] = useState<string>();
-  const [open, setOpen] = useState(false);
+  // Fetch candidate data
+  try {
+    const response = await fetch(`http://localhost:5000/candidateJobApplyData/candidateList`, {
+      cache: 'no-store',
+    });
 
+    if (!response.ok) {
+      throw new Error(`Failed to fetch job listings: ${response.statusText}`);
+    }
 
+    const candidateListings = await response.json();
 
+    if (!candidateListings || typeof candidateListings !== 'object' || !candidateListings.success || !Array.isArray(candidateListings.data)) {
+      throw new Error('Invalid response format from API');
+    }
+
+    candidateData = candidateListings.data || [];
+    if (candidateData.length === 0) {
+      errorMessage = 'No candidates found.';
+    }
+  } catch (error) {
+    console.error('Error fetching candidates:', error);
+    errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred while fetching candidates.';
+  }
+
+  // Filter candidates
+  try {
+    // Await searchParams and destructure inside the try block
+    const params = await searchParams;
+    level = params.level;
+    category = params.category;
+    education = params.education;
+    experience = params.experience;
+    gender = params.gender;
+    itemsPerPage = params.itemsPerPage;
+    jobTitle = params.jobTitle;
+    location = params.location;
+    sortBy = params.sortBy;
+
+    console.log(level, category, education, experience, gender, itemsPerPage, jobTitle, location, sortBy);
+
+    if (!errorMessage && candidateData.length > 0) {
+      filteredCandidates = candidateData.filter((candidate: Candidate) => {
+        let matches = true;
+
+        // Filter by level
+        if (level && candidate.level && candidate.level.toLowerCase() !== level.toLowerCase()) {
+          matches = false;
+        }
+
+        // Filter by education
+        if (education && education.length > 0) {
+          const educationArray = Array.isArray(education) ? education : education?.split(',').map((e: string) => e.trim());
+          if (!educationArray.includes(candidate.education)) {
+            matches = false;
+          }
+        }
+
+        // Filter by gender
+        if (gender && candidate.gender.toLowerCase() !== gender.toLowerCase()) {
+          matches = false;
+        }
+
+        // Filter by experience
+        if (experience && candidate.experience.toLowerCase() !== experience.toLowerCase()) {
+          matches = false;
+        }
+
+        // Filter by jobTitle
+        if (jobTitle && !candidate.title.toLowerCase().includes(jobTitle.toLowerCase())) {
+          matches = false;
+        }
+
+        // Filter by location
+        if (location && candidate.location && !candidate.location.toLowerCase().includes(location.toLowerCase())) {
+          matches = false;
+        }
+
+        // Filter by category
+        if (category && candidate.category && candidate.category.toLowerCase() !== category.toLowerCase()) {
+          matches = false;
+        }
+
+        return matches;
+      });
+
+      // Sort candidates
+      if (sortBy) {
+        if (sortBy === 'latest' && filteredCandidates.every(c => c.createdAt)) {
+          filteredCandidates.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+        } else if (sortBy === 'popular' && filteredCandidates.every(c => typeof c.popularityScore === 'number')) {
+          filteredCandidates.sort((a, b) => (b.popularityScore! - a.popularityScore!));
+        }
+      }
+
+      if (filteredCandidates.length === 0) {
+        errorMessage = 'No candidates match the selected filters.';
+      }
+    }
+  } catch (error) {
+    console.error('Error processing search params or filtering candidates:', error);
+    errorMessage = 'An error occurred while filtering candidates.';
+  }
+
+  // Validate itemsPerPage for pagination
+  const validatedItemsPerPage = itemsPerPage && !isNaN(itemsPerPage) && itemsPerPage > 0 ? itemsPerPage : 10;
 
   return (
-    // Main container for the Find Job page
-    <div className="pt-29 ">
-      {/* Header section */}
-      <HeaderSide/>
+    <div className="pt-29">
+      <HeaderSide />
 
-      {/* Filter and view mode section */}
-      <div className="flex justify-between max-w-7xl mx-auto py-6">
-        <div>
-          <Button className="bg-[#0A65CC] flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none">
-            <SlidersHorizontal />
-            Filter
-          </Button>
-        </div>
+      <div className="max-w-7xl mx-auto flex gap-5">
+        <Sidebar />
 
-        {/* Sorting and view mode buttons */}
-        <div className="flex gap-9">
-          <Select>
-            <SelectTrigger className="w-[120px] cursor-pointer">
-              <SelectValue placeholder="Latest" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="latest" className="cursor-pointer">
-                Latest
-              </SelectItem>
-              <SelectItem value="popular" className="cursor-pointer">
-                Popular
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select>
-            <SelectTrigger className="w-[120px] cursor-pointer">
-              <SelectValue placeholder="12 per page" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="12" className="cursor-pointer">
-                12 per page
-              </SelectItem>
-              <SelectItem value="24" className="cursor-pointer">
-                24 per page
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button
-            className="cursor-pointer"
-            variant="ghost"
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid size={20} />
-          </Button>
-          <Button
-            className="cursor-pointer"
-            variant="ghost"
-            onClick={() => setViewMode("list")}
-          >
-            <List size={20} />
-          </Button>
-        </div>
-      </div>
-
-      {/* Job listings and filters */}
-      <div className="max-w-7xl mx-auto flex  gap-5">
-        <Sidebar/>
-
-        {/* Job listings section */}
         <div className="flex-2">
-          {viewMode == "grid" ? (
-            <div className={`grid grid-cols-2 gap-4`}>
-              {jobListings.map((job) => (
-                <Link href={`/employers/${job.id}`} key={job.id}>
-                  <Card className=" border hover:shadow-lg transition">
-                    <CardContent className={`flex flex-col gap-3 p-4`}>
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={job.logo}
-                          alt={job.company}
-                          width={55}
-                          height={55}
-                          className="rounded-md"
-                        />
-                        <div>
-                          <div className="flex gap-3">
-                            <h4 className="font-semibold text-[1rem]">
-                              {job.company}
-                            </h4>
-                            {job.featured && (
-                              <span className="bg-[#FFE0E0] text-[#FF4F4F] px-2 py-1 rounded">
-                                Featured
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex gap-1 items-center">
-                            <MapPin className="w-4" />
-                            <p className="text-[0.875rem] text-gray-400">
-                              {job.location}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <h3 className="text-blue-600 font-semibold cursor-pointer text-[1.15rem]">
-                        {job.role}
-                      </h3>
-                      <p className="text-gray-500">
-                        {job.type} • {job.salary}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+          {errorMessage ? (
+            <div className="text-red-500 text-center p-4">
+              {errorMessage}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {jobListings.map((job) => (
+              {filteredCandidates.map((job) => (
                 <Card
-                  key={job.id}
-                  className={`border  hover:hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white}`}
+                  key={job._id}
+                  className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white"
                 >
-                  <CardContent className="flex items-center justify-between ">
-                    {/* Left Section: Logo & Job Info */}
+                  <CardContent className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Image
-                        src={job.logo}
-                        alt={job.role}
+                        src={job.profilePicture}
+                        alt={job.fullName}
                         width={75}
                         height={75}
                         className="rounded-md"
                       />
 
                       <div>
-                        <div className="flex gap-3 ">
+                        <div className="flex gap-3">
                           <div>
-                          <h3 className="font-semibold text-[#18191C] text-lg">
-                            Md Saifullah
-                          </h3>
-                          <h4 className="text-sm">{job.role}</h4>
+                            <h3 className="font-semibold text-[#18191C] text-lg">
+                              {job.fullName}
+                            </h3>
+                            <h4 className="text-sm">{job.title}</h4>
                           </div>
-                            
                         </div>
                         <div className="flex items-center gap-3 text-gray-500 text-sm mt-2">
                           <div className="flex items-center gap-1">
                             <MapPin size={16} />
-                            <span>{job.location}</span>
+                            <span>{job.location || 'Not specified'}</span>
                           </div>
-
                           <div className="flex items-center gap-1">
                             <BriefcaseConveyorBelt size={16} />
-                            <span>3 Years experience</span>
+                            <span>{job.experience || 'Not specified'}</span>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Right Section: Bookmark & Apply Button */}
                     <div className="flex items-center gap-4">
                       <Button variant="ghost" className="cursor-pointer">
                         <Bookmark />
                       </Button>
-
-                      <Button
-                        onClick={() => setOpen(!open)}
-                        className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2 rounded-sm"
-                      >
-                        View profile →
-                      </Button>
+                      <OpenModalButton candidateId={job._id} />
                     </div>
                   </CardContent>
                 </Card>
@@ -291,171 +226,8 @@ const FindJobPage = () => {
         </div>
       </div>
 
-      {/* Pagination section */}
-      <PaginationDemo />
-      <div
-        className={`${
-          open ? " visible" : " invisible"
-        } w-full  fixed top-0 left-0 z-[200000000] bg-[#0000002a]  transition-all duration-300 flex items-center justify-center`}
-      >
-        <div
-          className={`${
-            open ? " scale-[1] opacity-100" : " scale-[0] opacity-0"
-          } w-[50%] h-screen pt-6 rounded-lg transition-all duration-300  `}
-        >
-          <div className="flex gap-3 ">
-                      
-          <div className="p-5 rounded-md bg-white ">
-            <div className="max-w-7xl mx-auto px-4">
-            
-              <div>
-                {/* this is header */}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-4">
-                    <img src='https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?t=st=1744370221~exp=1744373821~hmac=bf9f0c7b9e4a2b2b0886b2278f2d6c5b8dcd60f7c3a72a3d4d2ba9f68c486866&w=996' className="w-16 h-16  rounded-full object-cover" />
-                    <div>
-                      <h1 className="text-xl font-bold text-gray-800">
-                        Esther Howard
-                      </h1>
-                      <p className="text-sm text-gray-600">
-                        Website Designer (UI/UX)
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <Button variant="ghost" className="cursor-pointer">
-                      <Bookmark />
-                    </Button>
-
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <Mail className="mr-2 h-4 w-4" /> Send Mail
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex gap-5 justify-between pt-6">
-{/* 1st parent div */}
-<div className="flex-1">
-<div className="pb-4">
-  <h3 className="text-base font-medium text-[#18191C]">BIOGRAPHY</h3>
-  <p className="text-sm">I&apos;ve been passionate about graphic design and digital art from an early age with a keen interest in Website and Mobile Application User Interfaces. I can create high-quality and aesthetically pleasing designs in a quick turnaround time. Check out the portfolio section of my profile to see samples of my work and feel free to discuss your designing needs. I mostly use Adobe Photoshop, Illustrator, XD and Figma. *Website User Experience and Interface (UI/UX) Design - for all kinds of Professional and Personal websites. *Mobile Application User Experience and Interface Design - for all kinds of IOS/Android and Hybrid Mobile Applications. *Wireframe Designs.</p>
-</div>
-<hr />
-<div>
-            <div className="border-b pb-6">
-              <div>
-                <h3 className="text-[#18191C] font-medium py-5">COVER LETTER</h3>
-              </div>
-              <div>
-                <p className="text-gray-700 text-sm">
-                  Dear Sir,
-                  <br />
-                  
-                  I am writing to express my interest in the fourth grade instructional position that is currently available in the Fort Wayne Community School System. I learned of the opening through a notice posted on JobZone, IPFW’s job database. I am confident that my academic background and curriculum development skills would be successfully utilized in this teaching position.
-                  <br />
-                  <br />
-                  I have just completed my Bachelor of Science degree in Elementary Education and have successfully completed Praxis I and Praxis II. During my student teaching experience, I developed and initiated a three-week curriculum sequence on animal species and earth resources. This collaborative unit involved working with three other third grade teachers within my team, and culminated in a field trip to the Indianapolis Zoo Animal Research Unit.
-                  <br />
-                  <br />
-                  Sincerely,
-                  <br />
-                  <span className="pt-3 text-xl">Esther Howard</span>
-                </p>
-              </div>
-            </div>
-</div>
-<div className="py-3">
-  <h3>Follow me on social media</h3>
-  <div className="flex gap-2 pt-3">
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"> <FaFacebookF /></button>
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"><FaTwitter /></button>
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"> <FaLinkedinIn /></button>
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"><FaReddit /></button>
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"> <FaInstagram /></button>
-<button className="bg-[#E7F0FA] hover:bg-[#0A65CC] rounded-sm text-blue-600 hover:text-white w-8 text-center flex justify-center items-center h-8"> <FaYoutube />
-</button>
-</div>
-</div>
-</div>
-{/* 2rd parent div */}
-<div className="">
-<Card className="p-6 shadow-none hover:shadow-md duration-300 rounded-md  max-w-[33rem]">
-        
-        <div className="grid grid-cols-2 gap-2 text-gray-600">
-          <p className="flex flex-col text-[#0A65CC] items-start "><Cake  size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Date of Birth:</span> <span className='text-black font-medium text-[14px]'>14 June, 2021</span></p>
-          <p className="flex flex-col items-start "><Map className="text-[#0A65CC]" size={16} strokeWidth={1.7}/> <span className="font-normal  text-[12px] text-[#767F8C]">Nationality:</span> <span className='text-black font-medium text-[14px]'>Bangladeshi</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><ClipboardList size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">marital Status:</span> <span className='text-black font-medium text-[14px]'>Single</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><CircleUserRound size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Gender:</span> <span className='text-black font-medium text-[14px]'>Male</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><Layers size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Experience:</span> <span className='text-black font-medium text-[14px]'>7 Years</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><GraduationCap size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Educations:</span> <span className='text-black font-medium text-[14px]'>Master Degree</span></p>
-        
-        </div>
-      </Card>
-
-
-<div>
-      <Card className="flex flex-col duration-300 gap-2 px-2 mt-2 shadow-none hover:shadow-md">
-        <h3 className="text-[16px] text-[#18191C] px-3 ">Download My Resume</h3>
-        <div className="flex justify-between items-center px-3">
-        <div className="flex justify-between items-center gap-2">
-        <FileText className="text-[#E4E5E8]" size={40} />
-        <div className="flex flex-col gap-1">
-          <h5 className="text-[#767F8C] text-sm">Esther Howard</h5>
-          <h5 className="text-[#18191C] text-sm font-medium">PDF</h5>
-        </div>
-        </div>
-        <button className="bg-[#E7F0FA] hover:bg-[#0A65CC] hover:text-white p-3 rounded-sm"><Download size={20}/></button>
-        </div>
-      </Card>
-
-</div>
-<div className="mt-2">
-  <div className="p-4 border rounded-xl duration-300 hover:shadow-md">
-    <h3 className="px-3 pb-2">Contact Information</h3>
-    <div className="flex gap-5 border-b pb-4 px-6 items-center">
-    <MapPin className="text-blue-500"/>
-      <div>
-        <p className="text-sm">Website</p>
-        <p className="text-sm font-medium">www.estherhoward.com</p>
-      </div>
-    </div>
-    
-    <div className="border-b pb-3">
-    <div className="flex justify-center gap-5 px-4 items-center">
-    <MapPin className="text-blue-500"/>
-      <div>
-        <p className="text-sm">Location</p>
-        <p className="text-sm font-medium">Beverly Hills, California 90202</p>
-      </div>
-    </div>
-    <p className="text-wrap px-6 py-1 text-[#5E6670] text-sm">Zone/Block Basement 1 Unit B2, 1372 <br /> Spring Avenue, Portland, </p>
-    </div>
-
-    <div className=" pt-3 ">
-    <div className="flex gap-4 px-7 items-start">
-    <Phone className="text-blue-500"/>
-      <div>
-        <p className="text-sm">Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0141</p>
-        <p className="text-sm font-medium text-[#767F8C] pt-1">Secondary Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0189</p>
-      </div>
-    </div>
-    
-    </div>
-  </div>
-</div>
-</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button onClick={() => setOpen(!open)} className="bg-white hover:bg-gray-200 w-5 h-5 flex justify-center items-center text-xl cursor-pointer text-black rounded-full p-5">X</button>
-          </div>
-        </div>
-      </div>
+      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
+      <CandidateModal />
     </div>
   );
-};
-
-export default FindJobPage;
+}
