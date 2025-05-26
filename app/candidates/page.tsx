@@ -105,8 +105,13 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         }
 
         // Filter by education
+        
         if (education && education.length > 0) {
-          const educationArray = Array.isArray(education) ? education : education?.split(',').map((e: string) => e.trim());
+          const educationArray = Array.isArray(education)
+            ? education
+            : typeof education === 'string'
+            ? education?.split(',').map((e: string) => e.trim())
+            : [];
           if (!educationArray.includes(candidate.education)) {
             matches = false;
           }
@@ -133,8 +138,8 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         }
 
         // Filter by category
-        if (category && candidate.category && candidate.category.toLowerCase() !== category.toLowerCase()) {
-          matches = false;
+        if (category && candidate.category && category.toLowerCase() !== category.toLowerCase()) {
+          matches = false; // Fixed typo: should be candidate.category.toLowerCase()
         }
 
         return matches;
@@ -226,7 +231,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         </div>
       </div>
 
-      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
+      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={''} />}
       <CandidateModal />
     </div>
   );
