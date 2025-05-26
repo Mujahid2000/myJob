@@ -5,7 +5,7 @@ export default function AppliedJobsPage() {
     return (
       <div>
         <AppliedJobs/>
-        <PaginationDemo/>
+        <PaginationDemo itemsPerPage={10} candidates='' />
       </div>
     );
   }

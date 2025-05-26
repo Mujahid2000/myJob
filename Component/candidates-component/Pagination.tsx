@@ -10,7 +10,7 @@ import {
   
 interface PaginationProps {
   itemsPerPage?: number;
-  candidates: Candidate[];
+  candidates: string;
 }
 
 export interface Candidate {
