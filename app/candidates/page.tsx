@@ -10,7 +10,7 @@ import CandidateModal from '@/Component/candidates-component/CandidateModal';
 
 interface CandidateFilteringList {
   level: string;
-  education: string[];
+  education: string | string[];
   gender: string;
   experience: string;
   jobTitle: string;
@@ -46,7 +46,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
   let filteredCandidates: Candidate[] = [];
   let level: string | undefined = undefined;
   let category: string | undefined = undefined;
-  let education: string[] | undefined = undefined;
+  let education: string | string[] | undefined = undefined;
   let experience: string | undefined = undefined;
   let gender: string | undefined = undefined;
   let itemsPerPage: number | undefined = undefined;
@@ -81,8 +81,8 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
   // Filter candidates
   try {
-    // Await searchParams and destructure inside the try block
     const params = await searchParams;
+    console.log('Resolved searchParams:', JSON.stringify(params, null, 2)); // Debug searchParams
     level = params.level;
     category = params.category;
     education = params.education;
@@ -105,12 +105,11 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         }
 
         // Filter by education
-        
-        if (education && education.length > 0) {
+        if (education) {
           const educationArray = Array.isArray(education)
             ? education
-            : typeof education === 'string'
-            ? education?.split(',').map((e: string) => e.trim())
+            : typeof education === 'string' && education
+            ? education.split(',').map(e => e.trim())
             : [];
           if (!educationArray.includes(candidate.education)) {
             matches = false;
@@ -138,8 +137,8 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         }
 
         // Filter by category
-        if (category && candidate.category && category.toLowerCase() !== category.toLowerCase()) {
-          matches = false; // Fixed typo: should be candidate.category.toLowerCase()
+        if (category && candidate.category && candidate.category.toLowerCase() !== category.toLowerCase()) {
+          matches = false;
         }
 
         return matches;
