@@ -39,7 +39,7 @@ export default async function SuggestJob() {
     let jobListings: JobListing[] = [];
    
   try {
-    const res = await fetch("https://serverjob.vercel.app/jobs/getAllPostedData", {
+    const res = await fetch("https://job-server-497l.vercel.app/jobs/getAllPostedData", {
       next: { revalidate: 60 }, // Revalidate every 60 seconds
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default async function SuggestJob() {
       
           <div className={`grid grid-cols-3 gap-4`}>
         {jobListings.map((job) => (
-          <Link href={`/employers/${job.userId}`} key={job._id}>
+          <Link href={`/find-job/${job._id}`} key={job._id}>
           <Card  className=' border hover:shadow-lg transition'>
             <CardContent className={`flex flex-col gap-3 p-4`}>
               <div className='flex items-center gap-3'>

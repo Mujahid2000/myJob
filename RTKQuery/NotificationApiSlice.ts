@@ -51,7 +51,7 @@ interface passwordDataResponse {
 export const notificationApi = createApi({
   reducerPath: 'notification',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://serverjob.vercel.app',
+    baseUrl: 'https://job-server-497l.vercel.app',
   }),
   tagTypes: ['notificationApi'],
   endpoints: (builder) => ({

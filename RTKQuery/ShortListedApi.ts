@@ -97,7 +97,7 @@ export interface ProfileDelete {
 export const shortListed = createApi({
     reducerPath: 'shortListed',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://serverjob.vercel.app'
+        baseUrl: 'https://job-server-497l.vercel.app'
     }),
     tagTypes: ['shortlist'],
     endpoints: (builder) => ({
