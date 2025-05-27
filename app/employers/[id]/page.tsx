@@ -11,6 +11,7 @@ import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } f
 
 
 export default async function Page  ({ params, }: {params:Promise< { id: string }>}) {
+    
     const { id } = await params;
     const response = await fetch(`https://serverjob.vercel.appjobs/getSingleCompanyData/${id}`);
     const data = await response.json();

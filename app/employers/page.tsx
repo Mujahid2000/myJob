@@ -120,7 +120,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
 
   return (
-    <div className="pt-29">
+    <div className="pt-29 pb-5">
       <FilteringSide />
       {/* Job listings and filters */}
       <div className="max-w-7xl mx-auto flex gap-5">
@@ -217,7 +217,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
         </div>
       </div>
       {/* Pagination section */}
-      <PaginationDemo currentPage={currentPage} totalPages={totalPages} />
+      {
+        paginatedJobs.length >= 12 ? <PaginationDemo currentPage={currentPage} totalPages={totalPages} /> : '' 
+      }
+      
     </div>
   );
 }

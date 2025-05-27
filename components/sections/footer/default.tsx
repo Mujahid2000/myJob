@@ -13,10 +13,11 @@ import { disableFooter } from "@/Hooks/DisableFooterDashbaord";
 
 export default function FooterSection() {
   const path = usePathname();
+  console.log(path)
   return (
     <>
     {
-      !disableNavWithFooter.includes(path) || !disableFooter && (
+      !disableNavWithFooter.includes(path) && !disableFooter.includes(path) && (
         <footer className="w-full bg-[#18191C] px-4">
       <div className="mx-auto bg-[#18191C] max-w-7xl">
         <Footer className="bg-[#18191C] text-white">

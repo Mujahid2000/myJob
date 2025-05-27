@@ -41,7 +41,7 @@ const AllJobList: React.FC = () => {
 
   // Handle job data fetching
   const { data: jobsData, error: jobsError, isLoading: jobsLoading } = useGetJobPostDataQuery(userId);
-
+console.log(jobsData, 'jobsData');
   // Handle 3-dot menu toggle
   const handle3Dot = (id: string) => {
     setOpenModalId((prevId) => (prevId === id ? null : id));

@@ -181,7 +181,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
 
   return (
-    <div className="pt-29">
+    <div className="pt-29 pb-5">
       <HeaderSide />
 
       <div className="max-w-7xl mx-auto flex gap-5">
@@ -245,7 +245,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         </div>
       </div>
 
-      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
+      {filteredCandidates.length >= 12 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
       <CandidateModal />
     </div>
   );

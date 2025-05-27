@@ -10,7 +10,7 @@ import {
   
 interface PaginationProps {
   itemsPerPage?: number;
-  candidates: Candidate[];
+  candidates: Candidate[] | string;
 }
 
 export interface Candidate {
@@ -29,8 +29,7 @@ export interface Candidate {
 }
 
   export function PaginationDemo({itemsPerPage, candidates }: PaginationProps) {
-    console.log(candidates, 'pagination candidates');
-    console.log(itemsPerPage, 'pagination itemsPerPage');
+
     
     if(itemsPerPage ){
       itemsPerPage = itemsPerPage > 0 ? itemsPerPage : 10;

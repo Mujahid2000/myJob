@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 // import './page.css'
 import { ChevronDown } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {  useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { SlLocationPin } from 'react-icons/sl';
@@ -56,6 +56,8 @@ const JobFiltering = () => {
     if(selectedLocation) params.set('location',selectedLocation);
     if(selectedCategory) params.set('category',selectedCategory);
     router.push(`/find-job?${params.toString()}`);
+    setArrow(false); // Close the advanced filter section after applying filters
+    setSelectedCategory('')
   }
 
 
