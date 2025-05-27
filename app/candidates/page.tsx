@@ -41,6 +41,19 @@ export interface Candidate {
 }
 
 export default async function FindJobPage({ searchParams }: { searchParams: Promise<CandidateFilteringList> }) {
+  let resolvedSearchParams: CandidateFilteringList;;
+
+  try {
+    resolvedSearchParams = await searchParams;
+  } catch (error) {
+    console.error('Error resolving searchParams:', error);
+    return (
+      <div className="text-center text-red-500 pt-20">
+        Error loading filters: {error instanceof Error ? error.message : 'Unknown error'}
+      </div>
+    );
+  }
+  
   let candidateData: Candidate[] = [];
   let errorMessage: string | null = null;
   let filteredCandidates: Candidate[] = [];
@@ -54,6 +67,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
   let location: string | undefined = undefined;
   let sortBy: string | undefined = undefined;
 
+  
   // Fetch candidate data
   try {
     const response = await fetch(`https://serverjob.vercel.app/candidateJobApplyData/candidateList`, {
@@ -93,7 +107,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
     location = params.location;
     sortBy = params.sortBy;
 
-    console.log(level, category, education, experience, gender, itemsPerPage, jobTitle, location, sortBy);
+    
 
     if (!errorMessage && candidateData.length > 0) {
       filteredCandidates = candidateData.filter((candidate: Candidate) => {
