@@ -28,7 +28,7 @@ return (
                 <Card className=" rounded-none shadow-none border-none">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <img src={singlePost.logo} alt="Instagram" className="w-[6rem] h-[6rem] rounded-full" />
+                            <img src={singlePost?.logo} alt="Instagram" className="w-[6rem] h-[6rem] rounded-full" />
                             <div>
                                 <div className='flex items-center gap-3'>
                                     <div>
