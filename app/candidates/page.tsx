@@ -134,6 +134,9 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         if (gender && candidate.gender.toLowerCase() !== gender.toLowerCase()) {
           matches = false;
         }
+        if (jobTitle && candidate.fullName.toLowerCase() !== jobTitle.toLowerCase()) {
+          matches = false;
+        }
 
         // Filter by experience
         if (experience && candidate.experience.toLowerCase() !== experience.toLowerCase()) {
