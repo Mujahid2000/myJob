@@ -41,7 +41,7 @@ export interface Candidate {
 }
 
 export default async function FindJobPage({ searchParams }: { searchParams: Promise<CandidateFilteringList> }) {
-  let resolvedSearchParams: CandidateFilteringList;;
+  let resolvedSearchParams: CandidateFilteringList;
 
   try {
     resolvedSearchParams = await searchParams;
@@ -53,7 +53,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
       </div>
     );
   }
-  
+
   let candidateData: Candidate[] = [];
   let errorMessage: string | null = null;
   let filteredCandidates: Candidate[] = [];
@@ -67,7 +67,6 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
   let location: string | undefined = undefined;
   let sortBy: string | undefined = undefined;
 
-  
   // Fetch candidate data
   try {
     const response = await fetch(`https://serverjob.vercel.app/candidateJobApplyData/candidateList`, {
@@ -107,8 +106,6 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
     location = params.location;
     sortBy = params.sortBy;
 
-    
-
     if (!errorMessage && candidateData.length > 0) {
       filteredCandidates = candidateData.filter((candidate: Candidate) => {
         let matches = true;
@@ -134,17 +131,17 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         if (gender && candidate.gender.toLowerCase() !== gender.toLowerCase()) {
           matches = false;
         }
-        if (jobTitle && candidate.fullName.toLowerCase() !== jobTitle.toLowerCase()) {
+
+        // Filter by jobTitle (matches either fullName or title)
+        if (
+          jobTitle &&
+          !(candidate.fullName?.toLowerCase().includes(jobTitle.toLowerCase()) || candidate.title.toLowerCase().includes(jobTitle.toLowerCase()))
+        ) {
           matches = false;
         }
 
         // Filter by experience
         if (experience && candidate.experience.toLowerCase() !== experience.toLowerCase()) {
-          matches = false;
-        }
-
-        // Filter by jobTitle
-        if (jobTitle && !candidate.title.toLowerCase().includes(jobTitle.toLowerCase())) {
           matches = false;
         }
 
@@ -181,6 +178,8 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
   // Validate itemsPerPage for pagination
   const validatedItemsPerPage = itemsPerPage && !isNaN(itemsPerPage) && itemsPerPage > 0 ? itemsPerPage : 10;
+  console.log(filteredCandidates, 'filteredCandidates');
+  console.log(candidateData, 'candidateData');
 
   return (
     <div className="pt-29">
