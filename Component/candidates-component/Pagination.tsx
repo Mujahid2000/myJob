@@ -10,7 +10,7 @@ import {
   
 interface PaginationProps {
   itemsPerPage?: number;
-  candidates: string;
+  candidates: Candidate[];
 }
 
 export interface Candidate {
@@ -29,6 +29,13 @@ export interface Candidate {
 }
 
   export function PaginationDemo({itemsPerPage, candidates }: PaginationProps) {
+    console.log(candidates, 'pagination candidates');
+    console.log(itemsPerPage, 'pagination itemsPerPage');
+    
+    if(itemsPerPage ){
+      itemsPerPage = itemsPerPage > 0 ? itemsPerPage : 10;
+    }
+
     return (
       <Pagination className="py-7">
         <PaginationContent>

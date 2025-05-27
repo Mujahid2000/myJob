@@ -54,9 +54,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   async function login(email: string, password: string): Promise<UserCredential> {
+    console.log(email, password)
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential)
       return userCredential;
+
     } catch (error) {
       throw error;
     }

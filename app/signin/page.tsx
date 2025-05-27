@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/Authentication/AuthContext";
 import { redirect } from "next/navigation";
+import { useSingInMutation } from "@/RTKQuery/authSlice";
 type Inputs = {
   email: string,
   password: string,
@@ -19,7 +20,7 @@ export default function Page() {
   const { register, handleSubmit } = useForm<Inputs>();
   const [showPassword, setShowpassword] = useState(false);
   const authContext = useContext(AuthContext);
-
+  const [singIn, {isLoading:signInLoading} ] =useSingInMutation()
   if (!authContext) {
     throw new Error("AuthContext is undefined. Ensure it is properly provided.");
   }
@@ -27,7 +28,11 @@ export default function Page() {
   const { currentUser, login } = authContext;
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    await login(data.email, data.password);
+    console.log(data)
+    const singInResponse = await singIn(data).unwrap();
+    
+    const singins = await login(data.email, data.password);
+    console.log(singins)
   };
 
   useEffect(() => {

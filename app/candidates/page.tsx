@@ -95,7 +95,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
   // Filter candidates
   try {
     const params = await searchParams;
-    console.log('Resolved searchParams:', JSON.stringify(params, null, 2)); // Debug searchParams
+    // console.log('Resolved searchParams:', JSON.stringify(params, null, 2)); // Debug searchParams
     level = params.level;
     category = params.category;
     education = params.education;
@@ -178,8 +178,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
   // Validate itemsPerPage for pagination
   const validatedItemsPerPage = itemsPerPage && !isNaN(itemsPerPage) && itemsPerPage > 0 ? itemsPerPage : 10;
-  console.log(filteredCandidates, 'filteredCandidates');
-  console.log(candidateData, 'candidateData');
+
 
   return (
     <div className="pt-29">
@@ -246,7 +245,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
         </div>
       </div>
 
-      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={''} />}
+      {filteredCandidates.length > 0 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
       <CandidateModal />
     </div>
   );

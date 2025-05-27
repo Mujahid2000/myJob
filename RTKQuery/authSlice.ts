@@ -30,6 +30,29 @@ interface SignupRequest {
   phoneNumber: number
 }
 
+interface SinginRequest {
+  email: string;
+  password: string;
+}
+
+export interface SignInResponse {
+  message: string
+  user: SignInUser
+}
+
+export interface SignInUser {
+  _id: string
+  name: string
+  email: string
+  password: string
+  role: string
+  phoneNumber: number
+  createdAt: string
+  updatedAt: string
+  __v: number
+}
+
+
 interface SignupResponse {
   user: User;
   token: string;
@@ -38,13 +61,21 @@ interface SignupResponse {
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://serverjob.vercel.app',
+    baseUrl: 'http://localhost:5000',
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
     signup: builder.mutation<SignupResponse, SignupRequest>({
       query: (credentials) => ({
         url: '/user/userReg',
+        method: 'POST',
+        body: credentials,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    singIn: builder.mutation<SignInResponse, SinginRequest>({
+      query: (credentials) => ({
+        url: '/user/login',
         method: 'POST',
         body: credentials,
       }),
@@ -57,4 +88,4 @@ export const authApiSlice = createApi({
   }),
 });
 
-export const { useSignupMutation, useGetUserByIdQuery } = authApiSlice;
+export const { useSignupMutation, useGetUserByIdQuery,useSingInMutation } = authApiSlice;
