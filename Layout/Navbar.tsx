@@ -20,11 +20,10 @@ export default function Navbar() {
   const navigationLinks = [
     { name: "Home", href: "/", active: true, id: 1 },
     { name: "Find Job", href: "/find-job", active: false, id: 2 },
-    { name: "Post A Job", href: "/post-job", active: false, id: 3 },
-    { name: "Employers", href: "/employers", active: false, id: 4 },
-    { name: "Candidates", href: "/candidates", active: false, id: 5 },
-    { name: "Pricing Plans", href: "/price-plans", active: false, id: 6 },
-    { name: "Customer Supports", href: "/customer-support", active: false, id: 7 },
+    { name: "Employers", href: "/employers", active: false, id: 3 },
+    { name: "Candidates", href: "/candidates", active: false, id: 4 },
+    { name: "Pricing Plans", href: "/price-plans", active: false, id: 5 },
+    { name: "Customer Supports", href: "/customer-support", active: false, id: 6 },
   ]
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const path = usePathname()
