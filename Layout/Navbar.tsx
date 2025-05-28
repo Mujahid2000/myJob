@@ -69,10 +69,10 @@ const Navbar = () => {
             !disableNavWithFooter.includes(path) && (
                 <div className='fixed z-50 w-full mx-auto'>
             {/* Top Navbar */}
-            <div className='  bg-[#F1F2F4]'>
-            <div className='flex max-w-7xl mx-auto justify-between py-3 mx-auto '>
+            {/* <div className='  bg-[#F1F2F4]'>
+            <div className=' px-3  flex max-w-7xl mx-auto justify-between py-3 mx-auto '>
                 <nav>
-                    <ul className='flex justify-around gap-4 relative'>
+                    <ul className='flex flex-col  md:flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around gap-4 relative'>
                         {list.map((link) => (
                             <li key={link.id} className="relative">
                                 <Link href={link.id === 1 ? '/' : `/${link.name.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -82,19 +82,19 @@ const Navbar = () => {
                         ))}
                     </ul>
                 </nav>
-                <div className='flex gap-3 items-center'>
+                <div className='hidden md:flex gap-3 items-center'>
                     <p className='flex gap-3 items-center text-base'>
                         <FiPhoneCall /> +1-202-555-0178
                     </p>
                     <CountryDropDown />
                 </div>
             </div>
-            </div>
+            </div> */}
 
             <div className='border bg-white shadow-sm'>
-            <div className='flex max-w-7xl mx-auto flex-row justify-between  py-4 items-center'>
+            <div className='flex   max-w-7xl mx-auto flex-row justify-between  py-4 item-start md:items-center'>
                 {/* Left Side - Logo & Search */}
-                <div className='flex gap-11 items-center'>
+                <div className='flex flex-col md:flex-col lg:flex-row gap-3 lg:gap-11 items-start lg:items-center'>
                     {/* Logo */}
                     <div className='flex items-center gap-2'>
                       <Link href={'/'}>
@@ -110,7 +110,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Search Bar */}
-                    <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse w-[500px] px-3 py-1">
+                    <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] px-3 py-1">
                         <Input type="text" placeholder="Search..." className="flex-1 border-none focus:outline-none outline-none px-2" />
                         <FiSearch className="text-blue-500 text-lg" />
 
@@ -128,7 +128,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Right Side - Buttons */}
-                <div className='flex gap-4'>
+                <div className='hidden lg:flex gap-4'>
                 {
                     currentUser? 
                     

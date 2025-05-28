@@ -62,7 +62,7 @@ export default function JobPilotSteps() {
   return (
     <section className="py-12 px-6 bg-gray-100">
       <h2 className="text-4xl py-5 font-semibold text-center mb-8">How JobPilot Works</h2>
-      <div className="flex justify-center items-center space-x-6 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-center items-center space-x-6 max-w-7xl mx-auto">
         {steps.map((step, index) => (
           <div key={index} className="text-center hover:bg-white rounded-sm duration-500 cursor-pointer p-6 relative flex flex-col items-center">
             <div className={`w-16 h-16 flex items-center justify-center rounded-full ${step.highlight ? 'bg-[#0A65CC] text-white' : 'bg-white text-blue-600'} shadow-md`}>

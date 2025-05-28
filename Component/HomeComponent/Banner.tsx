@@ -31,7 +31,7 @@ const Banner = () => {
                 <Image alt="Logo" src='https://res.cloudinary.com/diez3alve/image/upload/v1740507104/Screenshot_2025-02-25_010742-removebg-preview_ejpmnb.png' width={600} height={600}/>
             </div>
         </div>
-        <div className='flex justify-between max-w-7xl mx-auto py-20'>
+        <div className='flex flex-col md:flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-between max-w-7xl mx-auto py-20'>
                 <div className='flex items-center px-3 py-3 w-[19rem] rounded-sm gap-1 bg-white'>
                     <div className='p-5 rounded-sm bg-blue-100'>
                     <Image alt='' src='https://res.cloudinary.com/diez3alve/image/upload/v1740570665/briefcase-duotone_1_-_Copy_wrbjrq.svg' width={40} height={40}/>

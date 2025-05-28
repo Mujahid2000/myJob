@@ -1,0 +1,11 @@
+button:hover .bookmark-icon {
+  fill: #0A65CC;
+}
+
+@media screen and (max-width: 425) {
+  button .bookmark-icon {
+    width: 14px;
+    height: 14px;
+  }
+    
+}
