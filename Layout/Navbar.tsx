@@ -12,6 +12,7 @@ import ButtonCommon from '@/Component/HomeComponent/Button';
 import { disableNavWithFooter } from '@/Hooks/disableNavWithFooter';
 import { usePathname, useRouter } from 'next/navigation';
 import { AuthContext } from '@/Authentication/AuthContext';
+import { Menu } from 'lucide-react';
 
 
 
@@ -62,6 +63,10 @@ const Navbar = () => {
       console.error('Failed to logout:', error);
     }
   };
+
+  const singleName = currentUser?.displayName?.split(' ');
+  const firstName = singleName ? singleName[0] : 'User';
+
     
     return (
         <>
@@ -69,10 +74,13 @@ const Navbar = () => {
             !disableNavWithFooter.includes(path) && (
                 <div className='fixed z-50 w-full mx-auto'>
             {/* Top Navbar */}
-            {/* <div className='  bg-[#F1F2F4]'>
-            <div className=' px-3  flex max-w-7xl mx-auto justify-between py-3 mx-auto '>
+            <div className='bg-white'>
+              <button className='md:hidden p-3'>
+              <Menu />
+              </button>
+            <div className=' px-3  bg-white flex max-w-7xl mx-auto justify-between py-3 mx-auto '>
                 <nav>
-                    <ul className='flex flex-col  md:flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around gap-4 relative'>
+                    <ul className='flex flex-col bg-white md:flex-col lg:flex-row xl:flex-row 2xl:flex-row justify-around gap-4 relative'>
                         {list.map((link) => (
                             <li key={link.id} className="relative">
                                 <Link href={link.id === 1 ? '/' : `/${link.name.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -89,13 +97,14 @@ const Navbar = () => {
                     <CountryDropDown />
                 </div>
             </div>
-            </div> */}
+            </div>
 
             <div className='border bg-white shadow-sm'>
             <div className='flex   max-w-7xl mx-auto flex-row justify-between  py-4 item-start md:items-center'>
                 {/* Left Side - Logo & Search */}
                 <div className='flex flex-col md:flex-col lg:flex-row gap-3 lg:gap-11 items-start lg:items-center'>
                     {/* Logo */}
+                    <div className='flex items-center gap-2'>
                     <div className='flex items-center gap-2'>
                       <Link href={'/'}>
                         <Image
@@ -107,6 +116,57 @@ const Navbar = () => {
 
                       </Link>
                         <p className='text-2xl font-semibold'>MyJob</p>
+                    </div>
+                   <div className='flex lg:hidden gap-4'>
+                {
+                    currentUser? 
+                    
+                    <div className="relative" ref={menuRef}>
+                    {/* Profile button */}
+                    <button
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+                    >
+                      <span>{firstName || currentUser.email}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+              
+                    {/* Dropdown menu */}
+                    {isOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+                        <Link
+                          href="/company-dashboard/employer-profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Profile
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  :
+              <Link href="/signin" className="">
+                    <button  className="px-3 text-sm lg:px-6 py-4  border-gray-300 rounded-sm text-gray-700">Sign In</button>
+                </Link>
+                }
+                <Link href='/company-dashboard/Post-a-Job'>
+                
+                    <ButtonCommon name='Post A Post' />
+                </Link>
+                </div>
                     </div>
 
                     {/* Search Bar */}
@@ -138,7 +198,7 @@ const Navbar = () => {
                       onClick={() => setIsOpen(!isOpen)}
                       className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
                     >
-                      <span>{currentUser.displayName || currentUser.email}</span>
+                      <span>{firstName || currentUser.email}</span>
                       <svg
                         className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                         fill="none"
@@ -184,7 +244,7 @@ const Navbar = () => {
                 </div>
             </div>
             </div>
-            {/* Logo, Search Bar & Buttons */}
+           
         </div>
             )
         }

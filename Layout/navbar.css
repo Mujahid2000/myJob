@@ -19,3 +19,25 @@
 .bar:hover::after {
     width: 100%;
 }
+
+.bookmark-icon {
+  fill: currentColor;
+}
+
+/* Ensure full-width navbar */
+.navbar {
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+/* Mobile menu animation */
+.mobile-menu {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Active link styling */
+.active-link {
+  color: #0A65CC !important;
+  font-weight: 600;
+}
