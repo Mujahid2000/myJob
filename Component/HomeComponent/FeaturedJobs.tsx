@@ -10,7 +10,7 @@ const FeaturedJobs = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
       <div className="flex flex-row md:items-center justify-between py-4">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#191F33]">
+        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#191F33]">
           Featured Jobs
         </h1>
         <Button

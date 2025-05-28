@@ -107,7 +107,7 @@ export default function PopularCategory() {
   return (
     <section className="py-12 px-6">
       <div className="flex justify-between items-center max-w-7xl mx-auto mb-8">
-        <h2 className="text-3xl font-semibold">Popular Category</h2>
+        <h2 className="text-2xl lg:text-3xl font-semibold">Popular Category</h2>
         <Button variant="outline" className="text-blue-500 p-4 cursor-pointer">View All →</Button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">

@@ -15,7 +15,7 @@ export default function PopularVacancies() {
     ];
   
     return (
-      <section className="py-12 px-2 max-w-7xl mx-auto">
+      <section className="py-12 px-3 max-w-7xl mx-auto">
         <h2 className="text-3xl font-semibold text-left mb-8">Most Popular Vacancies</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-11 max-w-7xl mx-auto">
           {vacancies.map((vacancy, index) => (

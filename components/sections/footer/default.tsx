@@ -108,7 +108,7 @@ export default function FooterSection() {
             </FooterColumn>
           </FooterContent>
           <FooterBottom>
-            <div>© 2025 Mikołaj Dobrucki. All rights reserved</div>
+            <div>© 2025 Myjobs. All rights reserved</div>
             <div className="flex items-center gap-4">
               <Link href="/">Privacy Policy</Link>
               <Link href="/">Terms of Service</Link>
