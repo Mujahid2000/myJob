@@ -53,8 +53,6 @@ const BookMarkButton = ({ jobData }: { jobData: JobData }) => {
   return (
     <button
       onClick={() => handleOnclick(jobData)}
-     
-      size="icon"
       className="cursor-pointer relative hover:bg-gray-100"
       disabled={isLoading}
       title={isBookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
