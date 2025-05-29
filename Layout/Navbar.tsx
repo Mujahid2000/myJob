@@ -71,7 +71,7 @@ export default function Navbar() {
       !disableNavWithFooter.includes(path) && (
       <div className="w-full bg-white border-b fixed top-0 left-0 right-0 z-50 shadow-sm">
       {/* Top Navigation - Hidden on mobile */}
-      <nav className="hidden lg:flex items-center justify-between px-4 xl:px-6 py-3 max-w-7xl mx-auto">
+      <nav className="hidden lg:flex items-center justify-between   py-3 max-w-7xl mx-auto">
         <ul className="flex items-center space-x-6 xl:space-x-8">
          
             {navigationLinks.map((link, index) => (
@@ -105,7 +105,7 @@ export default function Navbar() {
       </nav>
 
       {/* Main Header */}
-      <div className="px-4 sm:px-6 py-3 sm:py-4 max-w-7xl mx-auto">
+      <div className=" px-6 lg:px-1 py-3 sm:py-4 max-w-7xl mx-auto">
         {/* Desktop Layout */}
         <div className="hidden lg:flex items-center justify-between">
           {/* Logo Section */}

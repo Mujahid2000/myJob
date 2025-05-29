@@ -194,7 +194,7 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
   return (
     <div className="max-w-7xl mx-auto py-7">
       {/* Filters */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start gap-3 px-3 lg:items-center mb-6">
         <div className="flex gap-2 flex-wrap">
           {activeFilters.map(({ key, value }) => {
             const updatedParams = { ...searchParams, [key]: "" };
@@ -217,9 +217,9 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
           )}
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex  justify-start gap-4">
           <Select defaultValue="latest">
-            <SelectTrigger className="w-[120px] cursor-pointer">
+            <SelectTrigger className="w-[80px] lg:w-[120px] cursor-pointer">
               <SelectValue placeholder="Latest" />
             </SelectTrigger>
             <SelectContent>
@@ -265,7 +265,7 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
           No job listings found matching your criteria.
         </div>
       ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
           {paginatedJobs.map((job) => (
             <Link href={`/find-job/${job._id}`} key={job._id}>
               <Card className="border cursor-pointer hover:shadow-lg transition">
@@ -305,76 +305,147 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 px-2">
           {paginatedJobs.map((job) => (
-            <Card
-              key={job._id}
-              className="border cursor-pointer hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white"
-            >
-              <CardContent className="flex items-center justify-between p-6">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={job.logo || "/default-logo.png"}
-                    alt={job.jobRole}
-                    width={55}
-                    height={55}
-                    className="rounded-md"
-                  />
-                  <div>
-                    <div className="flex gap-3 items-center">
-                      <h3 className="Dumbledore-semibold text-[#18191C] text-lg">{job.title}</h3>
-                      <div className="flex gap-2">
-                        {job.promotedSystem && (
-                          <Badge variant="destructive" className="bg-red-100 text-red-600">
-                            Featured
-                          </Badge>
-                        )}
-                        {job.jobType && (
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-600">
-                            {job.jobType}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-500 text-sm mt-2 flex-wrap">
-                      <div className="flex items-center gap-1">
-                        <MapPin size={16} />
-                        <span>{job.location}</span>
-                      </div>
-                      <div className="flex text-[#5E6670] items-center gap-1">
-                        <DollarSign size={16} />
-                        <span>${job.minSalary} - ${job.maxSalary}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar size={16} />
-                        <span>
-                          {job.expireDate
-                            ? `${Math.max(
-                                0,
-                                Math.ceil(
-                                  (new Date(job.expireDate).getTime() - new Date().getTime()) /
-                                    (1000 * 60 * 60 * 24)
-                                )
-                              )} Days Remaining`
-                            : "N/A"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  {/* Bookmark button */}
-                  <BookMarkButton jobData={job} />
+               <Card key={job._id} className="border cursor-pointer hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white">
+      <CardContent className="p-3 lg:p-6">
+        {/* Mobile Layout */}
+        <div className="flex lg:hidden">
+          {/* Image */}
+          <div className="flex-shrink-0 mr-3">
+            <Image
+              src={job.logo || "/default-logo.png"}
+              alt={job.jobRole}
+              width={55}
+              height={55}
+              className="rounded-md"
+            />
+          </div>
 
-
-                  <Link href={`/find-job/${job._id}`}>
-                    <Button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2 rounded-sm">
-                      Apply Now →
-                    </Button>
-                  </Link>
+          {/* Content and Buttons Container */}
+          <div className="flex-1 min-w-0">
+            {/* Job Details */}
+            <div className="mb-3">
+              <div className="flex flex-col-reverse gap-1 items-start mb-2">
+                <h3 className="font-semibold text-[#18191C] text-sm">{job.title}</h3>
+                <div className="flex gap-2 flex-wrap">
+                  {job.promotedSystem && (
+                    <Badge variant="destructive" className="bg-red-100 text-red-600 text-xs">
+                      Featured
+                    </Badge>
+                  )}
+                  {job.jobType && (
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-600 text-xs">
+                      {job.jobType}
+                    </Badge>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <div className="flex flex-col gap-1 text-gray-500 text-xs">
+                <div className="flex items-center gap-1">
+                  <MapPin size={14} />
+                  <span>{job.location}</span>
+                </div>
+                <div className="flex text-[#5E6670] items-center gap-1">
+                  <DollarSign size={14} />
+                  <span>
+                    ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Calendar size={14} />
+                  <span>
+                    {job.expireDate
+                      ? `${Math.max(
+                          0,
+                          Math.ceil(
+                            (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+                          ),
+                        )} Days Remaining`
+                      : "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Buttons aligned with content */}
+            <div className="flex items-center gap-2">
+              <BookMarkButton jobData={job} />
+              <Link href={`/find-job/${job._id}`}>
+                <Button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-3 py-1.5 rounded-sm text-sm">
+                  Apply Now →
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Image
+              src={job.logo || "/default-logo.png"}
+              alt={job.jobRole}
+              width={55}
+              height={55}
+              className="rounded-md"
+            />
+            <div>
+              <div className="flex flex-row gap-3 items-center mb-2">
+                <h3 className="font-semibold text-[#18191C] text-lg">{job.title}</h3>
+                <div className="flex gap-2">
+                  {job.promotedSystem && (
+                    <Badge variant="destructive" className="bg-red-100 text-red-600">
+                      Featured
+                    </Badge>
+                  )}
+                  {job.jobType && (
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-600">
+                      {job.jobType}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-gray-500 text-sm flex-wrap">
+                <div className="flex items-center gap-1">
+                  <MapPin size={16} />
+                  <span>{job.location}</span>
+                </div>
+                <div className="flex text-[#5E6670] items-center gap-1">
+                  <DollarSign size={16} />
+                  <span>
+                    ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Calendar size={16} />
+                  <span>
+                    {job.expireDate
+                      ? `${Math.max(
+                          0,
+                          Math.ceil(
+                            (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+                          ),
+                        )} Days Remaining`
+                      : "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <BookMarkButton jobData={job} />
+            <Link href={`/find-job/${job._id}`}>
+              <button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-2 lg:px-4 py-1 font-semibold lg:py-2 rounded-sm">
+                Apply Now →
+              </button>
+            </Link>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
           ))}
         </div>
       )}

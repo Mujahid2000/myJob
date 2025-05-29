@@ -67,12 +67,12 @@ const JobFiltering = () => {
                 {/* Page Header */}
                 <div className='bg-[#F1F2F4] px-2 py-[2rem]' >
                 <div className='flex max-w-7xl mx-auto justify-between items-center py-3'>
-                    <h3 className='text-2xl font-semibold text-gray-800'>Find Job</h3>
+                    <h3 className='text-xl lg:text-2xl font-semibold text-gray-800'>Find Job</h3>
                     <p className='text-gray-500'>Home / Find Job</p>
                 </div>
 
                 {/* Search Bar */}
-                <div className='flex  max-w-7xl mx-auto flex-wrap md:flex-nowrap justify-between items-center bg-white p-3 rounded-md shadow-md gap-4'>
+                <div className='flex flex-col lg:flex-row max-w-7xl mx-auto flex-wrap md:flex-nowrap justify-between items-start lg:items-center bg-white p-3 rounded-md shadow-md gap-4'>
                   <div className='flex gap-3 items-center '>
                     <FiSearch className='text-blue-500 text-2xl' />
                     <Input 
@@ -80,7 +80,7 @@ const JobFiltering = () => {
                       value={jobTitleKeyword} 
                       type='text' 
                       placeholder='Job title, Keyword...' 
-                      className='border-none shadow-none outline-none' 
+                      className='border-none shadow-none outline-none w-full lg:w-[180px]' 
                     />
                   </div>
                   <div className='flex gap-3 items-center '>
@@ -90,11 +90,11 @@ const JobFiltering = () => {
                       value={selectedLocation} 
                       type='text' 
                       placeholder='Your Location' 
-                      className='border-none shadow-none outline-none' 
+                      className='border-none shadow-none outline-none w-full lg:w-[180px]' 
                     />
                   </div>
                   <Select onValueChange={(value) => setSelectedCategory(value)}>
-                    <SelectTrigger className='overscroll-none w-[180px] cursor-pointer'>
+                    <SelectTrigger className='overscroll-none lg:w-[180px] cursor-pointer'>
                       <SelectValue placeholder='Category' />
                     </SelectTrigger>
                     <SelectContent>
@@ -105,9 +105,9 @@ const JobFiltering = () => {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  <Button className='bg-white cursor-pointer text-gray-400 hover:bg-white focus:outline-blue-300' onClick={() => setArrow(!arrow)}>Advance Filter <ChevronDown className={`${arrow ? 'rotate-180' : ''} duration-300`}/> </Button>
+                  <Button className='bg-white  cursor-pointer text-gray-400 hover:bg-white focus:outline-blue-300' onClick={() => setArrow(!arrow)}>Advance Filter <ChevronDown className={`${arrow ? 'rotate-180' : ''} duration-300`}/> </Button>
 
-                  <Button onClick={handleFiltering} className='bg-[#0A65CC] h-[3rem] w-[8rem] hover:bg-[#0A65CC] cursor-pointer'>Find Job</Button>
+                  <Button onClick={handleFiltering} className='bg-[#0A65CC] text-xs sm:text-sm lg:text-lg h-[1.9rem] md:h-[2rem] lg:h-[2.5rem] xl:h-[3rem] w-[5rem] md:w-[6rem] xl:w-[8rem] hover:bg-[#0A65CC] cursor-pointer'>Find Job</Button>
                 </div>
                 </div>
 
@@ -116,11 +116,11 @@ const JobFiltering = () => {
                   arrow && (
                     <div className={`max-w-7xl  mx-auto  `}>
                 <div className=' bg-white  shadow-lg rounded-lg'>
-                <div className='grid grid-cols-5 absolute bg-white -mt-8'>
+                <div className='grid grid-cols-1 w-full lg:w-auto xl:grid-cols-5 absolute z-40 bg-white -mt-8'>
                 
                 
                 {/* Experience */}
-<div className="border p-4 w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64 mx-auto">
       <h2 className="text-[1.25rem] font-semibold mb-2">Experience</h2>
       <div className="space-y-2">
         {[
@@ -184,7 +184,7 @@ const JobFiltering = () => {
 
 
 {/* Salary */}
-<div className="border p-4 w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64 mx-auto">
       <h2 className="text-[1.25rem] font-semibold mb-2">Salary</h2>
       <div className="space-y-2">
         {[
@@ -247,7 +247,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Job Type */}
-<div className="border p-4 w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64 mx-auto">
       <label className="font-semibold text-lg">Job Type</label>
       <div className="flex flex-col gap-2 mt-2">
         {[
@@ -311,7 +311,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Education */}
-<div className="border p-4 w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64 mx-auto">
       <h2 className="text-[1.25rem] font-semibold mb-2">Education</h2>
       <div className="flex flex-col gap-2">
         {[
@@ -374,7 +374,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Job Level */}
-<div className="border p-4 w-64  mx-auto">
+<div className="border p-4 w-full xl:w-64  mx-auto">
       <h2 className="text-[1.25rem] font-semibold mb-2">Job Level</h2>
       <div className="flex flex-col gap-2">
         {["Entry Level", "Mid Level", "Expert Level"].map((level, index) => (
