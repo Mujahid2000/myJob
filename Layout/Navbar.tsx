@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Search, Phone, ChevronDown, Briefcase, Menu } from "lucide-react"
+import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut } from "lucide-react"
 import Image from "next/image"
 import { useContext, useEffect, useRef, useState } from "react"
 import { FiSearch } from "react-icons/fi"
@@ -16,6 +16,8 @@ import { AuthContext } from "@/Authentication/AuthContext"
 import { disableNavWithFooter } from "@/Hooks/disableNavWithFooter"
 import ButtonCommon from "@/Component/HomeComponent/Button"
 import { DialogTitle } from "@/components/ui/dialog"
+import { FaUsers } from "react-icons/fa"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 export default function Navbar() {
   const navigationLinks = [
     { name: "Home", href: "/", active: true, id: 1 },
@@ -282,49 +284,60 @@ export default function Navbar() {
               {
                     currentUser? 
                     
-                    <div className="relative" ref={menuRef}>
-                    {/* Profile button */}
-                    <button
-                      onClick={() => setIsOpen(!isOpen)}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
-                    >
-                      <span>{firstName || currentUser.email}</span>
-                      <svg
-                        className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-              
-                    {/* Dropdown menu */}
-                    {isOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
-                        <Link
-                          href="/company-dashboard/employer-profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          Profile
-                        </Link>
-                        <Link
-                          href="/company-dashboard/Post-a-Job"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          Post A Job
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="border rounded-full  w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+           {currentUser.displayName?.slice(0,1)}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 mx-1" align="start">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Profile
+            <DropdownMenuShortcut><User size={16} /></DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Team
+          <DropdownMenuShortcut><FaUsers /></DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <Link href={'/candidate-dashboard'} >
+                <DropdownMenuItem>Overview</DropdownMenuItem>
+                </Link>
+                <Link href={'/candidate-dashboard/applied-jobs'}>
+                <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                </Link>
+                <Link href={'/candidate-dashboard/favourite-jobs'}>
+                <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                </Link>
+                <Link href={'/candidate-dashboard/job-alerts'}>
+                <DropdownMenuItem>Job Alert 09</DropdownMenuItem>
+                </Link>
+                <Link href={'/candidate-dashboard/settings'}>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                </Link>
+                <DropdownMenuSeparator />
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <Link href={'/customer-supports'}>
+        <DropdownMenuItem>Support</DropdownMenuItem>
+        </Link>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout}>
+          Log out
+          <DropdownMenuShortcut><LogOut size={16}/> </DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
                   :
               <Link href="/signin" className="">
                     <button  className="px-3 text-sm lg:px-6 py-4  border-gray-300 rounded-sm text-gray-700">Sign In</button>

@@ -92,8 +92,8 @@ const FavoriteJobsList: React.FC = () => {
             {/* Job Details */}
             <div className="flex items-center space-x-4">
               <Image
-                src={job.logo}
-                alt={`${job.jobTitle} logo`}
+                src={job?.logo || 'https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png'}
+                alt={`${job?.jobTitle}`}
                 width={40}
                 height={40}
                 className="rounded"

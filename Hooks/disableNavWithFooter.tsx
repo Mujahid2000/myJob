@@ -3,4 +3,5 @@ export const disableNavWithFooter = [
     "/register",
     '/account-setup',
     '/payments/success'
+    
   ]
