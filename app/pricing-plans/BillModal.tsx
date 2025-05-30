@@ -16,7 +16,7 @@ interface CheckoutModalProps {
 }
 
 const BillCheckModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
-  console.log(isOpen, 'isOpen in checkout modal');
+  
   const [selectedCard, setSelectedCard] = useState<string>('saved');
   const [error, setError] = useState<string | null>(null);
   const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
