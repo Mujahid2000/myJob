@@ -25,7 +25,7 @@ export function RadioGroupItemsCandidate() {
 
   return (
     <div className="">
-      <h2 className="flex justify-between pb-2">
+      <h2 className="flex justify-between py-2">
         Candidate Level
         <span className="cursor-pointer" onClick={() => setOpen(!open)}>
           <ChevronDown

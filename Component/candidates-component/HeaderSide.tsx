@@ -108,10 +108,10 @@ export default function HeaderSide() {
         {/* Search Bar */}
         <form
           onSubmit={handleSubmit}
-          className="flex max-w-7xl mx-auto flex-wrap md:flex-nowrap items-center bg-white p-2 rounded-lg shadow-sm gap-2"
+          className="flex flex-col lg:flex-row max-w-7xl mx-auto flex-wrap md:flex-nowrap items-start lg:items-center bg-white p-2 rounded-lg shadow-sm gap-2"
         >
           {/* Job Title Search */}
-          <div className="flex flex-2 items-center rounded-md px-3 py-2">
+          <div className="flex flex-2 w-full items-center rounded-md px-3 py-2">
             <FiSearch className="text-blue-500 text-lg mr-2" />
             <Input
               type="text"
@@ -126,7 +126,7 @@ export default function HeaderSide() {
           <div className="hidden md:block text-gray-300">|</div>
 
           {/* Location Search */}
-          <div className="flex flex-1 items-center rounded-md px-3 py-2">
+          <div className="flex w-full flex-1 items-center rounded-md px-3 py-2">
             <SlLocationPin className="text-blue-500 text-lg mr-2" />
             <Input
               type="text"
@@ -138,7 +138,7 @@ export default function HeaderSide() {
           </div>
 
           {/* Category Select */}
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 items-center w-full">
             <Select onValueChange={handleCategoryChange} value={localCategory}>
               <SelectTrigger className="flex w-full items-center justify-between rounded-md px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 data-[placeholder]:text-gray-400 border-none shadow-none">
                 <div className="flex gap-3 items-center">
@@ -203,7 +203,7 @@ export default function HeaderSide() {
       </div>
 
       {/* Filter and view mode section */}
-      <div className="flex justify-between max-w-7xl mx-auto py-6">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 px-4 lg:px-0 justify-between max-w-7xl mx-auto py-6">
         <div>
           <Button
             className="bg-[#0A65CC] flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none"
@@ -213,15 +213,11 @@ export default function HeaderSide() {
             Filter
           </Button>
           {/* Simple filter panel (expand this as needed) */}
-          {isFilterOpen && (
-            <div className="mt-2 p-4 bg-white shadow-md rounded-md">
-              <p>Filter panel is open. Add your filter components here.</p>
-            </div>
-          )}
+         
         </div>
 
         {/* Sorting and view mode buttons */}
-        <div className="flex gap-9">
+        <div className="flex gap-5 lg:gap-9">
           <Select onValueChange={handleSortByChange} value={sortBy || 'latest'}>
             <SelectTrigger className="w-[120px] cursor-pointer">
               <SelectValue placeholder="Latest" />

@@ -12,7 +12,7 @@ const Sidebar = () => {
     const [values, setValues] = React.useState(50);
    return (
         <>
-            <div className="flex-1 flex flex-col gap-1">
+            <div className="hidden lg:flex-1 lg:flex flex-col gap-1">
           {/* Filter section */}
           <div className=" max-h-56 rounded-lg shadow-md border py-3 px-3">
             <h2 className="pb-2">
