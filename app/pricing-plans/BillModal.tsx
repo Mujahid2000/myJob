@@ -57,7 +57,7 @@ const BillCheckModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
   // Validate PayPal clientId
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-  console.log(clientId, 'clientId');
+
   if (!clientId) {
     return (
       <div className="fixed top-0 left-0 w-full h-screen z-[200000000] bg-[#0000002a] flex items-center justify-center">
