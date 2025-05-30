@@ -111,9 +111,9 @@ export default function SupportPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white pt-30">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className=" ">
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Customer Support</h1>
           <p className="mt-2 text-lg text-gray-600">
@@ -123,7 +123,7 @@ export default function SupportPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-5 lg:py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Contact Form */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -291,7 +291,7 @@ export default function SupportPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Toaster/>
+      <Toaster richColors/>
     </div>
   );
 }

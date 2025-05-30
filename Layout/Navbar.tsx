@@ -23,7 +23,7 @@ export default function Navbar() {
     { name: "Employers", href: "/employers", active: false, id: 3 },
     { name: "Candidates", href: "/candidates", active: false, id: 4 },
     { name: "Pricing Plans", href: "/price-plans", active: false, id: 5 },
-    { name: "Customer Supports", href: "/customer-support", active: false, id: 6 },
+    { name: "Customer Supports", href: "/customer-supports", active: false, id: 6 },
   ]
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const path = usePathname()
