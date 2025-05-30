@@ -62,7 +62,7 @@ export default async function SuggestJob() {
       </div>
     );
   }
- console.log(jobListings, "jobListings");
+
   return (
     <div className='max-w-7xl mx-auto py-7'>
      <h1 className="text-3xl font-medium py-5">Open Position ({jobListings.length})</h1>

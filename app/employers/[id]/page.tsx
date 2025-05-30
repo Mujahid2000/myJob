@@ -1,4 +1,6 @@
 import SuggestJob from "@/Component/employee-Component/SuggestJob";
+import SafeHtml from "@/Component/signleJob/SafeHtml";
+import SafeResponsibilities from "@/Component/signleJob/SafeResponsibilities";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -148,29 +150,16 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
 
         <div className="flex gap-9 pb-5 pt-30 justify-between max-w-7xl mx-auto">
           <div className="max-w-[45.875rem]">
-            <div>
-              <h3 className="py-3 text-[1.25rem] text-[#18191C] font-medium">Description</h3>
-              <p className="text-[1rem] text-[#5E6670]">
-                {singleCompany?.description || "No description available."}
-              </p>
-            </div>
+            
             <div className="mb-6">
-              <h2 className="py-4 text-xl text-[#18191C] font-medium">Company Benefits</h2>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                {singleCompany?.benefits?.length ? (
-                  singleCompany.benefits.map((benefit: string, index: number) => (
-                    <li key={index}>{benefit}</li>
-                  ))
-                ) : (
-                  <li>No benefits listed.</li>
-                )}
-              </ul>
+              <h2 className="py-4 text-xl text-[#18191C] font-medium">About Company</h2>
+              <SafeResponsibilities html={singleCompany?.biography || "<p>No benefits description available.</p>"} />
+              
             </div>
             <div>
               <CardTitle className="text-xl text-[#18191C] font-medium">Company Vision</CardTitle>
-              <p className="py-3 text-gray-700">
-                {singleCompany?.vision || "No vision statement available."}
-              </p>
+              <SafeHtml html={singleCompany?.companyVision || "<p>No vision statement available.</p>"} />
+             
             </div>
             <div className="flex items-center space-x-2 py-[2rem]">
               <span className="text-gray-700">Share this job:</span>
