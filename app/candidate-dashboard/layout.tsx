@@ -1,19 +1,14 @@
-import TestComponent from "@/Hooks/DashboardClientLayoutCandidate";
+"use client"
+
+import ResponsiveDashboard from "@/Hooks/DashboardClientLayoutCandidate"
+import type React from "react"
 
 
 
-export default function DashboardLayout({children}: {
-  children: React.ReactNode;
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
 }) {
-
-
-
-  return (
-   <div className="min-h-screen">
-     <TestComponent>
-      {children}
-    </TestComponent>
-   </div>
-  );
+  return <ResponsiveDashboard>{children}</ResponsiveDashboard>
 }
-
