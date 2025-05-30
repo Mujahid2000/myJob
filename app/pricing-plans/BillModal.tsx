@@ -38,25 +38,26 @@ const BillCheckModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   }
 
   // Validate required fields before proceeding
-  // if (!price || !userId || !packageName || !duration) {
-  //   return (
-  //     <div className={`${modal===false? 'hidden' : 'block'} fixed top-0 left-0 w-full h-screen z-[200000000] bg-[#0000002a] flex items-center justify-center`}>
-  //       <div className="bg-white max-w-7xl rounded-lg shadow-xl p-6 relative">
-  //         <button
-  //           onClick={()=>handleClose(false)}
-  //           className="absolute cursor-pointer top-4 right-4 text-gray-500 hover:text-gray-700"
-  //         >
-  //           <X size={24} />
-  //         </button>
-  //         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Error</h2>
-  //         <p className="text-red-500">Missing required subscription details. Please select a plan first.</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!price || !userId || !packageName || !duration) {
+    return (
+      <div className={`${modal===false? 'hidden' : 'block'} fixed top-0 left-0 w-full h-screen z-[200000000] bg-[#0000002a] flex items-center justify-center`}>
+        <div className="bg-white max-w-7xl rounded-lg shadow-xl p-6 relative">
+          <button
+            onClick={()=>handleClose(false)}
+            className="absolute cursor-pointer top-4 right-4 text-gray-500 hover:text-gray-700"
+          >
+            <X size={24} />
+          </button>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Error</h2>
+          <p className="text-red-500">Missing required subscription details. Please select a plan first.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Validate PayPal clientId
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  console.log(clientId, 'clientId');
   if (!clientId) {
     return (
       <div className="fixed top-0 left-0 w-full h-screen z-[200000000] bg-[#0000002a] flex items-center justify-center">
