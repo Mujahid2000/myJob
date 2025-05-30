@@ -11,14 +11,21 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { Grid, List, SlidersHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { List, SlidersHorizontal } from 'lucide-react';
+import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { SlLocationPin } from 'react-icons/sl';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { RootState } from '@/Store/Store';
 import { setCategory, setItemsPerPage, setJobTitle, setLocation, setSortBy, setViewMode, toggleFilterOpen } from '@/Store/searchFilterSlice';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import Sidebar from './Sidebar';
+import { SliderDemo } from '../employee-Component/RangeSlider';
+import { RadioGroupItemsCandidate } from './CandidateLevel';
+import { RadioGroupItemsExperience } from './RadioGroup';
+import { CheckboxDemo } from './CheckBox';
+import { RadioGroupItemsGender } from './GenderRadioGroup';
 
 
 export default function HeaderSide() {
@@ -36,6 +43,7 @@ export default function HeaderSide() {
   const checkedItems = useSelector((state: RootState) => state.education.checkedItems);
   const selectedGender = useSelector((state: RootState) => state.gender.selectedGender);
   const selectedExperience = useSelector((state: RootState) => state.experience.selectedExperience);
+  const [values, setValues] = React.useState(50);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -206,7 +214,7 @@ export default function HeaderSide() {
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 px-4 lg:px-0 justify-between max-w-7xl mx-auto py-6">
         <div>
           <Button
-            className="bg-[#0A65CC] flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none"
+            className="bg-[#0A65CC] hidden lg:flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none"
             onClick={handleFilterToggle}
           >
             <SlidersHorizontal />
@@ -215,6 +223,49 @@ export default function HeaderSide() {
           {/* Simple filter panel (expand this as needed) */}
          
         </div>
+
+
+
+{/* mobile filter button with sidebar */}
+<Sheet>
+      <SheetTrigger asChild>
+       <Button
+            className="bg-[#0A65CC] w-21 lg:hidden flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none"
+            onClick={handleFilterToggle}
+          >
+            <SlidersHorizontal />
+            Filter
+          </Button>
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle className='text-[#0A65CC] text-xl font-bold'>Candidate Filter</SheetTitle>
+        </SheetHeader>
+       <div className="flex-1 flex flex-col gap-1 max-h-[90vh] overflow-y-scroll">
+                 {/* Filter section */}
+                 <div className=" max-h-56 rounded-lg lg:shadow-md lg:border py-3 px-3">
+                   <h2 className="pb-2">
+                     Location Radius:{" "}
+                     <span className="text-blue-600">{values} miles</span>
+                   </h2>
+                   <SliderDemo onValueChange={(newValue) => setValues(newValue[0])} />
+                  <RadioGroupItemsCandidate/>
+                 </div> 
+                 <div className="flex-1 max-h-66 rounded-lg lg:shadow-md lg:border py-2 px-3">
+                   <RadioGroupItemsExperience/>
+                 </div>
+                 <div className="flex-1 max-h-56 rounded-lg lg:shadow-md lg:border py-3 px-3">
+                   <CheckboxDemo
+                   />
+                 </div>
+                 <div className="flex-1 max-h-32 rounded-lg lg:shadow-md lg:border py-3 px-3">
+                  <RadioGroupItemsGender/>
+                 </div>
+               </div>
+              
+      </SheetContent>
+    </Sheet>
+
 
         {/* Sorting and view mode buttons */}
         <div className="flex gap-5 lg:gap-9">

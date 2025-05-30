@@ -39,7 +39,7 @@ export function RadioGroupItemsExperience() {
     <div className="">
       <h2 className="flex justify-between pb-2">
         Experience
-        <span className="cursor-pointer" onClick={() => setOpen(!open)}>
+        <span className="cursor-pointer hidden lg:flex" onClick={() => setOpen(!open)}>
           <ChevronDown
             className={`${open ? 'rotate-180 duration-400' : 'duration-400'}`}
             size={20}

@@ -32,7 +32,7 @@ export function CheckboxDemo() {
       <h2 className="flex justify-between">
         Education
         <span
-          className="cursor-pointer"
+          className="cursor-pointer hidden lg:flex"
           onClick={() => setArrow(!arrow)} // Toggle arrow state
         >
           <ChevronDown
