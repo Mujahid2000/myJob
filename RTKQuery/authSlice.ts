@@ -61,7 +61,7 @@ interface SignupResponse {
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://job-server-497l.vercel.app',
+    baseUrl: 'https://serverjob.vercel.app',
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({

@@ -41,7 +41,7 @@ interface PostJobRequest {
 export const postJobApi = createApi({
     reducerPath: "postJob",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://job-server-497l.vercel.app",
+        baseUrl: "https://serverjob.vercel.app",
     }),
     endpoints: (builder) => ({
         postJob: builder.mutation<PostJobApiResponse, PostJobRequest>({

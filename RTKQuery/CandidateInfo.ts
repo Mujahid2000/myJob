@@ -28,10 +28,42 @@ interface personalDataResponse {
     __v: number;
     }
 }
+
+
+export interface ProfileMessage {
+  message: string
+  data: Data
+}
+
+export interface Data {
+  userId: string
+  social: Social[]
+  location: string
+  email: string
+  phoneNumber: string
+  country: string
+  education: string
+  experience: string
+  dateOfBirth: string
+  gender: string
+  maritalStatus: string
+  biography: string
+  message: string
+}
+
+export interface Social {
+  platform: string
+  url: string
+  _id: string
+}
+
+
+
+
 export const CandidatePersonalData = createApi({
     reducerPath: 'candidateApi',
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'https://job-server-497l.vercel.app' 
+        baseUrl: 'https://serverjob.vercel.app' 
     }),
     tagTypes: ['candidate'],
     endpoints: builder =>({
@@ -42,8 +74,15 @@ export const CandidatePersonalData = createApi({
                 body: formData
             }),
             transformResponse: (response) => (response as personalDataResponse).data
+        }),
+        getProfileCompleteMessage: builder.query<ProfileMessage, string>({
+            query: (userId) => ({
+                url: `/applicantData/profileComplete/${userId}`,
+                method: 'GET'
+            }),
+            transformResponse: (response) => (response as ProfileMessage)
         })
     })
 })
 
-export const { usePostCandidatePersonalDataMutation } = CandidatePersonalData;
+export const { usePostCandidatePersonalDataMutation, useGetProfileCompleteMessageQuery } = CandidatePersonalData;

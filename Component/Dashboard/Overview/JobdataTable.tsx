@@ -1,6 +1,7 @@
 'use client'
 import { AuthContext } from "@/Authentication/AuthContext";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
+import { useGetProfileCompleteMessageQuery } from "@/RTKQuery/CandidateInfo";
 import { useGetCandidateJObApplyDataQuery } from "@/RTKQuery/CandidateJobApplyApiSlice";
 import { Check, DollarSign, MoveRight } from "lucide-react";
 import Image from "next/image";
@@ -30,6 +31,9 @@ const JobTable: React.FC = () => {
   const userId = userEmail?.user?._id || '';
   const {data:candidateJObApplyData} = useGetCandidateJObApplyDataQuery(userId)
   const jobData = candidateJObApplyData?.data
+  const {data:profileMessage} = useGetProfileCompleteMessageQuery(userId);
+  const messageProfile = profileMessage?.data?.message || '';
+  
   return (
     <div>
 <h1 className="text-2xl font-bold py-2">Hello, Esther Howard</h1>
@@ -84,9 +88,9 @@ const JobTable: React.FC = () => {
             </div>
           </div>
          
-          
         </div>
-        <div className="flex my-6 justify-between gap-7 border items-center px-4 py-5 rounded-sm  bg-[#E05151]">
+          {
+            messageProfile === "User not found or no data available." ?  <div className="flex my-6 justify-between gap-7 border items-center px-4 py-5 rounded-sm  bg-[#E05151]">
             <div className="flex items-center gap-5 justify-between">
               <img className="w-14 h-14 rounded-full" src="https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?t=st=1744468423~exp=1744472023~hmac=f6080d476eff1e42b77bdc424c4eda6e63a501be446fc3990a456b7ee48035b6&w=996" alt="" />
               <div className="flex flex-col gap-1">
@@ -97,7 +101,9 @@ const JobTable: React.FC = () => {
             <div className=" ">
             <button className="text-red hover:before:bg-redborder-red-500 relative h-[50px] w-40 overflow-hidden border border-red-500 bg-white px-3 text-red-500 shadow-2xl transition-all before:absolute before:bottom-0 before:left-0 before:top-0 before:z-0 before:h-full before:w-0 before:bg-red-500 before:transition-all before:duration-500 hover:text-white hover:shadow-red-500 hover:before:left-0 hover:before:w-full"><span className="relative z-10 flex gap-5 items-center  justify-between">Edit Profile <MoveRight size={16}/></span></button>
             </div>
-          </div>
+          </div> : ''
+          }
+       
     <div className="max-w-4xl mx-auto ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Recently Applied</h2>
