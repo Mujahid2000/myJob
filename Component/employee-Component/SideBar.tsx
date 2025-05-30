@@ -16,7 +16,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex-1 max-h-80 rounded-lg shadow-md border py-6 px-3">
+    <div className="hidden lg:block lg:flex-1 max-h-80 rounded-lg shadow-md border py-6 px-3">
       <h2 className="py-2">
         Location Radius: <span className="text-blue-600">{slider} miles</span>
       </h2>

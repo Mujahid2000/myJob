@@ -129,7 +129,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
         {/* Job listings section */}
         <div className="flex-2">
           {viewMode === 'list' ? (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-2">
               {paginatedJobs.map((job) => (
                 <Link href={`/employers/${job.userId}`} key={job._id}>
                   <Card className="border hover:shadow-lg transition">

@@ -17,6 +17,10 @@ import { SlLocationPin } from 'react-icons/sl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Store/Store';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import SideBar from './SideBar';
+import { RadioGroupItems } from './RadioGroup';
 
 const FilteringSide = () => {
   const router = useRouter();
@@ -46,6 +50,10 @@ const FilteringSide = () => {
     router.push(`/employers?${params.toString()}`);
   };
 
+  const HandleOpenSideBar = () => {
+    
+  }
+
   return (
     <div>
       <div className="bg-[#F1F2F4] px-2 py-6">
@@ -56,7 +64,7 @@ const FilteringSide = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="flex max-w-7xl mx-auto flex-wrap md:flex-nowrap items-center bg-white p-2 rounded-lg shadow-sm gap-2"
+          className="flex flex-col lg:flex-row item-start max-w-7xl mx-auto flex-wrap md:flex-nowrap lg:items-center bg-white p-2 rounded-lg shadow-sm gap-2"
         >
           <div className="flex flex-2 items-center rounded-md px-3 py-2">
             <FiSearch className="text-blue-500 text-lg mr-2" />
@@ -100,7 +108,7 @@ const FilteringSide = () => {
           <div>
             <Button
               type="submit"
-              className="bg-[#0A65CC] cursor-pointer h-10 px-6 text-white rounded-md hover:bg-[#0A65CC]/90"
+              className="bg-[#0A65CC] cursor-pointer h-8 text-sm lg:text-base lg:h-10 px-3 lg:px-6 text-white rounded-md hover:bg-[#0A65CC]/90"
             >
               Find Company
             </Button>
@@ -108,15 +116,27 @@ const FilteringSide = () => {
         </form>
       </div>
 
-      <div className="flex justify-between max-w-7xl mx-auto py-6">
+      <div className="flex flex-col lg:flex-row gap-3 justify-between max-w-7xl px-3 lg:px-0 mx-auto py-6">
         <div>
-          <Button className="bg-[#0A65CC] flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none">
+          <Button className='bg-[#0A65CC] hidden lg:flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none'>
+Filter
+          </Button>
+        </div>
+        <Sheet>
+      <SheetTrigger asChild>
+        <Button onClick={HandleOpenSideBar} className="bg-[#0A65CC] lg:hidden flex gap-2 text-base cursor-pointer px-5 py-2 rounded-none">
             <SlidersHorizontal />
             Filter
           </Button>
-        </div>
-
-        <div className="flex gap-9">
+      </SheetTrigger>
+      <SheetContent>
+       <SheetHeader>
+          <SheetTitle>Filter Employee</SheetTitle>
+       </SheetHeader>
+       <RadioGroupItems/>
+      </SheetContent>
+    </Sheet>
+        <div className="flex  items-start gap-3 lg:gap-9">
           <Select>
             <SelectTrigger className="w-[120px] cursor-pointer">
               <SelectValue placeholder="Latest" />
@@ -160,6 +180,7 @@ const FilteringSide = () => {
           </Button>
         </div>
       </div>
+      
     </div>
   );
 };
