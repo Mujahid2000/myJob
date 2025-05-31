@@ -79,7 +79,7 @@ export default async function JobDetails ({id}: {id:string}) {
 
 return (
     <><div className='bg-[#F1F2F4] py-2 '>
-        <div className='flex  justify-between items-center py-3 px-3 lg:px-0 max-w-7xl mx-auto'>
+        <div className='flex flex-col lg:flex-row justify-between items-center py-3 px-3 lg:px-0 max-w-7xl mx-auto'>
             <h3 className='text-xl lg:text-2xl font-semibold text-gray-800'>Job Details</h3>
             <p className='text-gray-500'>Home / Find Job/ Job Details</p>
         </div>
@@ -93,7 +93,7 @@ return (
                             <div>
                                 <div className='flex flex-row items-center gap-3'>
                                     <div>
-                                        <h2 className="text-[1.4rem] lg:text-[1.5rem] text[#18191C] font-bold">{singlePost.title} </h2>
+                                        <h2 className="text-[1.1rem] lg:text-[1.5rem] text[#18191C] font-bold">{singlePost.title} </h2>
                                     </div>
                                    
                                     <div className="flex gap-2">
@@ -153,7 +153,7 @@ return (
                 <SafeResponsibilities html={singlePost.responsibilities}/>
                 <div className="flex flex-col gap-2 px-3 lg:px-0 lg:flex-row  items-start lg:items-center space-x-2 py-[2rem]">
                     <span className="text-gray-700">Share this job:</span>
-                    <div className="flex gap-4">
+                    <div className="flex gap-1">
                     <Button variant="outline" className="flex items-center space-x-2">
                         <FaFacebook className="text-blue-600" />
                         <span>Facebook</span>

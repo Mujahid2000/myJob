@@ -216,14 +216,14 @@ export default function Navbar() {
                   <Menu className="w-5 h-5" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-80 px-5">
+              <SheetContent side="left" className="w-65 px-5">
                 <div className="flex flex-col space-y-4 mt-8">
                   <DialogTitle></DialogTitle>
                   {navigationLinks.map((link) => (
                     <a
                       key={link.name}
                       href={link.href}
-                      className={`text-lg font-medium py-2 transition-colors`}
+                      className={`text-base font-medium py-1 transition-colors`}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {link.name}

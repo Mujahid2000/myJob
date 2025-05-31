@@ -5,7 +5,7 @@ import Modal from "@/Component/signleJob/Modal";
     const { id } = await params;
 
     return (
-     <div className="pt-33">
+     <div className="pt-30 lg:pt-33">
       <JobDetails id={id} />
       <Modal  />
      </div>
