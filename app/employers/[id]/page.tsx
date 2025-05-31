@@ -162,18 +162,18 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
               <SafeHtml html={singleCompany?.companyVision || "<p>No vision statement available.</p>"} />
              
             </div>
-            <div className="flex flex-col gap-3 lg:flex-row items-start lg:items-center space-x-2 px-3 lg:px-3 lg:py-[2rem]">
+            <div className="flex flex-col gap-3 lg:flex-row items-start lg:items-center space-x-2 px-4 lg:px-3 ">
               <span className="text-gray-700">Share this job:</span>
               <div className="flex gap-3">
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
                 <FaFacebook className="text-blue-600" />
                 <span>Facebook</span>
               </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
                 <FaTwitter className="text-blue-400" />
                 <span>Twitter</span>
               </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
                 <FaPinterest className="text-red-600" />
                 <span>Pinterest</span>
               </Button>
