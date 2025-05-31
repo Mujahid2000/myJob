@@ -94,19 +94,19 @@ const Modal: React.FC = () => {
                     value
                         ? " scale-[1] opacity-100"
                         : " scale-[0] opacity-0"
-                } w-[27%]  rounded-lg transition-all duration-300 mx-auto mt-8`}
+                } w-full lg:w-[27%] px-2 lg:px-0 rounded-lg transition-all duration-300 mx-auto mt-8`}
             >
                 
                 <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg p-6 bg-white rounded-lg  space-y-6">
-      <h2 className="text-xl font-semibold">Apply Job: Senior UX Designer</h2>
+      <h2 className="text-base lg:text-xl font-semibold">Apply Job: Senior UX Designer</h2>
 
       {/* Resume Selection */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">Choose Resume</label>
+        <label className="block text-xs lg:text-sm font-medium text-gray-700">Choose Resume</label>
         <fieldset>
   <div className="relative border border-gray-300 text-gray-800 bg-white ">
     <label htmlFor="frm-whatever" className="sr-only">My field</label>
-    <select {...register('resume_id', { required: 'Resume is required' })} className="appearance-none w-full py-1 px-2 bg-white" >
+    <select {...register('resume_id', { required: 'Resume is required' })} className="appearance-none text-sm lg:text-base w-full py-1 px-2 bg-white" >
         <option value="">Select&hellip;</option>
               {
                 userResume?.map((res: { _id: string; resumeName: string })=>(
@@ -126,11 +126,11 @@ const Modal: React.FC = () => {
 
       {/* Cover Letter */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">Cover Letter</label>
+        <label className="block text-xs lg:text-sm font-medium text-gray-700">Cover Letter</label>
         <Textarea 
         {...register('coverLetter', { required: 'Cover letter is required' })}
           placeholder="Write down your biography here. Let the employers know who you are..." 
-          className="mt-1 h-28 w-full" 
+          className="mt-1 h-28 w-full text-sm lg:text-base" 
            
         />
 {errors.coverLetter && <p className="text-red-600 text-sm mt-1">{errors.coverLetter.message}</p>}
