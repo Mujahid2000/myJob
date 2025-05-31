@@ -64,11 +64,11 @@ export default async function SuggestJob() {
   }
 
   return (
-    <div className='max-w-7xl mx-auto py-7'>
+    <div className='max-w-7xl px-3 lg:px-0 mx-auto py-7'>
      <h1 className="text-3xl font-medium py-5">Open Position ({jobListings.length})</h1>
       {/* Job Listings */}
       
-          <div className={`grid grid-cols-3 gap-4`}>
+          <div className={`grid grid-cols-1  lg:grid-cols-3 gap-4`}>
         {jobListings.map((job) => (
           <Link href={`/find-job/${job._id}`} key={job._id}>
           <Card  className=' border hover:shadow-lg transition'>

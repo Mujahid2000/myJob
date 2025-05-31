@@ -3,12 +3,16 @@ import { createSlice } from '@reduxjs/toolkit';
 interface ProfileState {
   isModalOpen: boolean;
   activeDropdown: number | null;
+  positionOpenModal: boolean
 }
 
 const initialState: ProfileState = {
   isModalOpen: false,
   activeDropdown: null,
+  positionOpenModal: false
 };
+
+
 
 const profileSlice = createSlice({
   name: 'profile',
@@ -20,8 +24,11 @@ const profileSlice = createSlice({
     setActiveDropdown: (state, action: { payload: number | null }) => {
       state.activeDropdown = action.payload;
     },
+    setOpenPositionModal: (state, action: { payload: boolean }) => {
+      state.positionOpenModal = action.payload;
+    },
   },
 });
 
-export const { setModalOpen, setActiveDropdown } = profileSlice.actions;
+export const { setModalOpen, setActiveDropdown, setOpenPositionModal } = profileSlice.actions;
 export default profileSlice.reducer;

@@ -54,7 +54,11 @@ const BookMarkButton = ({ jobData }: { jobData: JobData }) => {
       }).unwrap()
 
       setIsBookmarked((prev) => !prev)
-      toast.success(isBookmarked && resultBookmark.message ? resultBookmark.message : "Bookmarked successfully")
+      if( resultBookmark.message === 'You already bookmarked this job post.') {
+        toast.warning( resultBookmark.message)
+      }else {
+        toast.success(resultBookmark.message)
+      }
     } catch (err) {
       toast.error("Something went wrong")
       console.error(err)
@@ -76,7 +80,7 @@ const BookMarkButton = ({ jobData }: { jobData: JobData }) => {
       ) : (
         <Bookmark
           className={`h-5 w-5 transition-colors ${
-            isBookmarked ? "fill-blue-500 text-blue-500" : "text-gray-500 hover:text-gray-700"
+            isBookmarked ? "fill-[#084899] text-[#084899]" : "text-gray-500 hover:text-gray-700"
           }`}
         />
       )}
