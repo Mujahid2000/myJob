@@ -24,7 +24,7 @@ export default function Navbar() {
     { name: "Find Job", href: "/find-job", active: false, id: 2 },
     { name: "Employers", href: "/employers", active: false, id: 3 },
     { name: "Candidates", href: "/candidates", active: false, id: 4 },
-    { name: "Pricing Plans", href: "/price-plans", active: false, id: 5 },
+    { name: "Pricing Plans", href: "/pricing-plans", active: false, id: 5 },
     { name: "Customer Supports", href: "/customer-supports", active: false, id: 6 },
   ]
   const [isMenuOpen, setIsMenuOpen] = useState(false)

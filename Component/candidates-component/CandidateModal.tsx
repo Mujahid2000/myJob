@@ -11,17 +11,22 @@ export default function CandidateModal() {
      const dispatch = useDispatch<AppDispatch>();
     const {value, candidateId} = useSelector((state: RootState) => state.candidateModal);
     
+    const handleClose = () =>{
+       dispatch(candidateModal( {value:!value, candidateId} ))
+    }
 
     return (
         <div
         className={`${
           value ? " visible" : " invisible"
-        } w-full  fixed top-0 left-0 z-[200000000] bg-[#0000002a]  transition-all duration-300 flex items-center justify-center`}
+        } w-full h-screen fixed top-0 left-0 z-[200000000] bg-[#0000002a] transition-all duration-300 flex items-center justify-center`}
+        
       >
         <div
           className={`${
             value ? " scale-[1] opacity-100" : " scale-[0] opacity-0"
-          } w-[50%] h-screen pt-6 rounded-lg transition-all duration-300  `}
+          } w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300   `}
+          
         >
           <div className="flex gap-3 ">
                       
