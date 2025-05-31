@@ -87,7 +87,7 @@ return (
             {/* Left Section */}
             <div className=" space-y-6">
                 <Card className=" rounded-none shadow-none border-none">
-                    <div className="flex flex-col lg:flex-row items-start gap-3 lg:gap-0 lg:items-center justify-between px-5">
+                    <div className="flex flex-col lg:flex-row items-start gap-3 lg:gap-0 lg:items-center justify-between px-5 lg:px-0">
                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
                             <img src={singlePost?.logo} alt="Instagram" className="w-[5rem] lg:w-[6rem] h-[5rem] lg:h-[6rem] rounded-full" />
                             <div>
