@@ -92,7 +92,7 @@ export interface SocialLink {
 export const jobApply = createApi({
     reducerPath: 'jobApply',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://serverjob.vercel.app'
+        baseUrl: 'http://localhost:5000'
     }),
     tagTypes: ['jobSlice'],
     endpoints: (builder) =>({

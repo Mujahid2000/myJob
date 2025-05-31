@@ -34,6 +34,8 @@ export interface Candidate {
   education: string;
   gender: string;
   location?: string;
+  resume_Id: string[];
+  userId: string;
   level?: string;
   category?: string;
   createdAt?: string;
@@ -179,7 +181,6 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
   // Validate itemsPerPage for pagination
   const validatedItemsPerPage = itemsPerPage && !isNaN(itemsPerPage) && itemsPerPage > 0 ? itemsPerPage : 10;
 
-
   return (
     <div className="pt-29 pb-5">
       <HeaderSide />
@@ -231,7 +232,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
           {/* Bottom Section: Action Button */}
           <div className="flex justify-end">
-            <OpenModalButton candidateId={job._id} />
+            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
           </div>
         </div>
 
@@ -269,7 +270,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
             <Button variant="ghost" className="cursor-pointer">
               <Bookmark size={16} />
             </Button>
-            <OpenModalButton candidateId={job._id} />
+            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
           </div>
         </div>
 
@@ -307,7 +308,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
             <Button variant="ghost" className="cursor-pointer">
               <Bookmark />
             </Button>
-            <OpenModalButton candidateId={job._id} />
+            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
           </div>
         </div>
       </CardContent>
@@ -319,7 +320,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
       </div>
 
       {filteredCandidates.length >= 12 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
-      <CandidateModal />
+      <CandidateModal/>
     </div>
   );
 }

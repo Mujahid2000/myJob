@@ -1,64 +1,81 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useGetJobPostApplicantDetailsQuery } from "@/RTKQuery/JobApplyApiSlice";
 import { candidateModal } from "@/Store/CandidateModal";
+import { setOpenPositionModal } from "@/Store/profileSlice";
 import { AppDispatch, RootState } from "@/Store/Store";
-import { Bookmark, Cake, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, MapPin, Phone } from "lucide-react";
+import { Bookmark, Cake, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, MapPin, Phone, X } from "lucide-react";
+import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function CandidateModal() {
      const dispatch = useDispatch<AppDispatch>();
-    const {value, candidateId} = useSelector((state: RootState) => state.candidateModal);
-    
-    const handleClose = () =>{
-       dispatch(candidateModal( {value:!value, candidateId} ))
+     const {isOpen, resume_Id, userId} = useSelector((state: RootState) => state.profile.positionOpenModal)
+     const applicantDetailsData = {userId, resume_Id};
+     const { data: applicantDetails, isLoading, isError, error, isSuccess } = useGetJobPostApplicantDetailsQuery(applicantDetailsData);
+     const applicantData = applicantDetails?.applicant
+    const handleCandidateModal = () =>{
+      dispatch(setOpenPositionModal({isOpen: false, resume_Id: resume_Id, userId}))
     }
+
+
+
 
     return (
         <div
         className={`${
-          value ? " visible" : " invisible"
+          isOpen ? " visible" : " invisible"
         } w-full h-screen fixed top-0 left-0 z-[200000000] bg-[#0000002a] transition-all duration-300 flex items-center justify-center`}
         
       >
         <div
           className={`${
-            value ? " scale-[1] opacity-100" : " scale-[0] opacity-0"
-          } w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300   `}
+            isOpen ? " scale-[1] opacity-100" : " scale-[0] opacity-0"
+          } w-[95%] lg:w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300   `}
           
         >
           <div className="flex gap-3 ">
                       
-          <div className="p-5 rounded-md bg-white ">
-            <div className="max-w-7xl mx-auto px-4">
-            
+          <div className="p-5  rounded-md bg-white ">
+          
+            <div className="max-w-7xl mx-auto lg:px-4">
               <div>
+           
                 {/* this is header */}
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col lg:flex-row justify-between gap-3 items-center">
+                  <div className="flex items-start lg:items-center justify-between gap-20">
+<div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
                   <div className="flex items-center space-x-4">
-                    <img src='https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?t=st=1744370221~exp=1744373821~hmac=bf9f0c7b9e4a2b2b0886b2278f2d6c5b8dcd60f7c3a72a3d4d2ba9f68c486866&w=996' className="w-16 h-16  rounded-full object-cover" />
+                    <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
                     <div>
-                      <h1 className="text-xl font-bold text-gray-800">
-                        Esther Howard
+                      <h1 className="text-base lg:text-xl font-bold text-gray-800">
+                        {applicantData?.fullName}
                       </h1>
                       <p className="text-sm text-gray-600">
-                        Website Designer (UI/UX)
+                       {applicantData?.title}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <Button variant="ghost" className="cursor-pointer">
+                    <Button  className="cursor-pointer text-white bg-[#0A65CC] hover:bg-blue-700 text-xs lg:text-base">
                       <Bookmark />
                     </Button>
 
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <Mail className="mr-2 h-4 w-4" /> Send Mail
+                    <Button className="bg-[#0A65CC]  text-xs lg:text-base hover:bg-blue-700 text-white cursor-pointer">
+                      <Mail className="mr-2 h-4 w-4 " />  Send Mail
                     </Button>
                   </div>
+                  </div>
+                  <div className="flex lg:hidden">
+                      <button onClick={handleCandidateModal}><X/></button>
+                  </div>
+                  </div>
+                  
                 </div>
 
-                <div className="flex gap-5 justify-between pt-6">
+                <div className="flex flex-col lg:flex-row gap-5 justify-between pt-6">
 {/* 1st parent div */}
 <div className="flex-1">
 <div className="pb-4">
@@ -108,11 +125,11 @@ export default function CandidateModal() {
         
         <div className="grid grid-cols-2 gap-2 text-gray-600">
           <p className="flex flex-col text-[#0A65CC] items-start "><Cake  size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Date of Birth:</span> <span className='text-black font-medium text-[14px]'>14 June, 2021</span></p>
-          <p className="flex flex-col items-start "><MapPin className="text-[#0A65CC]" size={16} strokeWidth={1.7}/> <span className="font-normal  text-[12px] text-[#767F8C]">Nationality:</span> <span className='text-black font-medium text-[14px]'>Bangladeshi</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><ClipboardList size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">marital Status:</span> <span className='text-black font-medium text-[14px]'>Single</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><CircleUserRound size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Gender:</span> <span className='text-black font-medium text-[14px]'>Male</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><Layers size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Experience:</span> <span className='text-black font-medium text-[14px]'>7 Years</span></p>
-          <p className="flex flex-col text-[#0A65CC] items-start "><GraduationCap size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Educations:</span> <span className='text-black font-medium text-[14px]'>Master Degree</span></p>
+          <p className="flex flex-col items-start "><MapPin className="text-[#0A65CC]" size={16} strokeWidth={1.7}/> <span className="font-normal  text-[12px] text-[#767F8C]">Nationality:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.country}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><ClipboardList size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">marital Status:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.maritalStatus}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><CircleUserRound size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Gender:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.gender}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><Layers size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Experience:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.experience}</span></p>
+          <p className="flex flex-col text-[#0A65CC] items-start "><GraduationCap size={16} strokeWidth={1.7}/> <span className="font-normal text-[12px] text-[#767F8C]">Educations:</span> <span className='text-black font-medium text-[14px]'>{applicantData?.education}</span></p>
         
         </div>
       </Card>
@@ -125,11 +142,13 @@ export default function CandidateModal() {
         <div className="flex justify-between items-center gap-2">
         <FileText className="text-[#E4E5E8]" size={40} />
         <div className="flex flex-col gap-1">
-          <h5 className="text-[#767F8C] text-sm">Esther Howard</h5>
+          <h5 className="text-[#767F8C] text-sm">{applicantData?.resumeName}</h5>
           <h5 className="text-[#18191C] text-sm font-medium">PDF</h5>
         </div>
         </div>
+        <Link href={applicantData?.resumeUrl || ''}>
         <button className="bg-[#E7F0FA] hover:bg-[#0A65CC] hover:text-white p-3 rounded-sm"><Download size={20}/></button>
+        </Link>
         </div>
       </Card>
 
@@ -141,7 +160,7 @@ export default function CandidateModal() {
     <MapPin className="text-blue-500"/>
       <div>
         <p className="text-sm">Website</p>
-        <p className="text-sm font-medium">www.estherhoward.com</p>
+        <p className="text-sm font-medium">{applicantData?.portfolio}</p>
       </div>
     </div>
     
@@ -150,7 +169,7 @@ export default function CandidateModal() {
     <MapPin className="text-blue-500"/>
       <div>
         <p className="text-sm">Location</p>
-        <p className="text-sm font-medium">Beverly Hills, California 90202</p>
+        <p className="text-sm font-medium">{applicantData?.mapLocation || 'Dhaka, Bangladesh'}</p>
       </div>
     </div>
     <p className="text-wrap px-6 py-1 text-[#5E6670] text-sm">Zone/Block Basement 1 Unit B2, 1372 <br /> Spring Avenue, Portland, </p>
@@ -161,9 +180,9 @@ export default function CandidateModal() {
     <Phone className="text-blue-500"/>
       <div>
         <p className="text-sm">Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0141</p>
+        <p className="text-sm font-medium">+880{applicantData?.phoneNumber}</p>
         <p className="text-sm font-medium text-[#767F8C] pt-1">Secondary Phone</p>
-        <p className="text-sm font-medium">+1-202-555-0189</p>
+        <p className="text-sm font-medium">+880{applicantData?.phoneNumber}</p>
       </div>
     </div>
     
@@ -174,10 +193,13 @@ export default function CandidateModal() {
                 </div>
               </div>
             </div>
+            
           </div>
-          <button onClick={() => dispatch(candidateModal( {value:!value, candidateId} ))} className="bg-white hover:bg-gray-200 w-5 h-5 flex justify-center items-center text-xl cursor-pointer text-black rounded-full p-5">X</button>
+          <button onClick={handleCandidateModal} className="bg-white hover:bg-gray-200 w-5 h-5 hidden lg:flex justify-center items-center text-xl cursor-pointer text-black rounded-full p-5">X</button>
           </div>
+           
         </div>
+        
       </div>
     )
 }
