@@ -12,14 +12,14 @@ const ApplyNowButton = ({ id }: { id: string }) => {
   };
 
   return (
-    <div>
+    <>
       <Button
         onClick={handleOpen}
-        className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white w-[13rem] px-[2rem] py-[1rem] rounded-none"
+        className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white  px-[2rem] py-[1rem] rounded-none"
       >
         Apply Now →
       </Button>
-    </div>
+    </>
   );
 };
 

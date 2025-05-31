@@ -124,8 +124,8 @@ return (
                         </div>
 
                         {/* bookmark and apply now button */}
-                        <div className=' '>
-                            <div className='flex gap-5'>
+                        <div className='w-full lg:w-auto '>
+                            <div className='flex gap-2  lg:gap-5'>
                                 <BookMarkButton jobData={singlePost}/>
                                <ApplyNowButton id={singlePost._id}/>
 
