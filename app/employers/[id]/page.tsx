@@ -153,12 +153,12 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
           <div className="max-w-[45.875rem]">
             
             <div className="mb-6 px-3">
-              <h2 className="py-4 text-xl text-[#18191C] font-medium">About Company</h2>
+              <h2 className="py-4 text-xl text-[#18191C] px-3 lg:px-0 font-medium">About Company</h2>
               <SafeResponsibilities html={singleCompany?.biography || "<p>No benefits description available.</p>"} />
               
             </div>
             <div className="mb-6 px-3">
-              <CardTitle className="text-xl text-[#18191C] font-medium">Company Vision</CardTitle>
+              <CardTitle className="text-xl px-3 lg:px-0 text-[#18191C] font-medium">Company Vision</CardTitle>
               <SafeHtml html={singleCompany?.companyVision || "<p>No vision statement available.</p>"} />
              
             </div>
