@@ -9,7 +9,6 @@ import { SlLocationPin } from 'react-icons/sl';
 
 const JobSearch = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [jobTitle, setJobTitle] = useState<string>('');
     const [location, setLocation] = useState<string>('')
     const handleSearch = () =>{

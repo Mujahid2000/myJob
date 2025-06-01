@@ -7,7 +7,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { BriefcaseBusiness, Calendar, DollarSign, Globe, GraduationCap, Mail, Timer, Wallet } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
