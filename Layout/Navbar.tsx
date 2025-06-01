@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut } from "lucide-react"
+import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut, Bell } from "lucide-react"
 import Image from "next/image"
 import { useContext, useEffect, useRef, useState } from "react"
 import { FiSearch } from "react-icons/fi"
@@ -18,6 +18,8 @@ import ButtonCommon from "@/Component/HomeComponent/Button"
 import { DialogTitle } from "@/components/ui/dialog"
 import { FaUsers } from "react-icons/fa"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useGetUserByIdQuery } from "@/RTKQuery/authSlice"
+import { Badge } from "@/components/ui/badge"
 export default function Navbar() {
   const navigationLinks = [
     { name: "Home", href: "/", active: true, id: 1 },
@@ -31,6 +33,8 @@ export default function Navbar() {
   const path = usePathname()
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
+  const {data:userData,} = useGetUserByIdQuery(currentUser?.email || '');
+  const role  = userData?.user.role
   const logOut: (() => Promise<void>) | undefined = authContext?.logout;
   const [isOpen, setIsOpen] = useState(false);
 
@@ -147,24 +151,105 @@ export default function Navbar() {
           {/* Action Buttons */}
           <div className="flex items-center gap-5">
             {
+              role === 'Applicant' ?
+                <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative focus:outline-none">
+              <Bell className="h-4 w-4" />
+              <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs">
+                3
+              </Badge>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <div className="p-2">
+              <h4 className="font-medium">Notifications</h4>
+            </div>
+            <DropdownMenuItem>
+              <div className="flex flex-col gap-1">
+                <p className="text-sm font-medium">New job match found</p>
+                <p className="text-xs text-muted-foreground">Frontend Developer at TechCorp matches your profile</p>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div className="flex flex-col gap-1">
+                <p className="text-sm font-medium">Application status update</p>
+                <p className="text-xs text-muted-foreground">Your application for UX Designer has been reviewed</p>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div className="flex flex-col gap-1">
+                <p className="text-sm font-medium">Profile view</p>
+                <p className="text-xs text-muted-foreground">3 companies viewed your profile today</p>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+              :
+              ''
+            }
+           
+            {
                     currentUser? 
                     
                     <div className="relative" ref={menuRef}>
                     {/* Profile button */}
-                    <button
-                      onClick={() => setIsOpen(!isOpen)}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
-                    >
-                      <span>{firstName}</span>
-                      <svg
-                        className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
+                    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+         <button className="border cursor-pointer rounded-full  w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+           {currentUser.displayName?.slice(0,1)}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Billing
+            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Settings
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Keyboard shortcuts
+            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Team</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>Email</DropdownMenuItem>
+                <DropdownMenuItem>Message</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>More...</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuItem>
+            New Team
+            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>GitHub</DropdownMenuItem>
+        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem disabled>API</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          Log out
+          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
               
                     {/* Dropdown menu */}
                     {isOpen && (
