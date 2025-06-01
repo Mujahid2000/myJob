@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const categories = [
   { name: "Graphics & Design", positions: 357, icon: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -112,7 +113,7 @@ export default function PopularCategory() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {categories.map((category, index) => (
-          <div
+          <Link  href={`/find-job?category=${category.name.toLocaleLowerCase()}`}
             key={index}
             className={`p-4 hover:shadow-md rounded-xl cursor-pointer flex items-center gap-4 transition-all 
             }`}
@@ -121,12 +122,14 @@ export default function PopularCategory() {
               <span className="text-2xl">{category.icon}</span>
             </div>
             <div>
+    
               <h3 className="text-lg font-medium">{category.name}</h3>
+             
               <p className="text-sm text-gray-500">
                 {category.positions} Open Position{category.positions > 1 ? "s" : ""}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

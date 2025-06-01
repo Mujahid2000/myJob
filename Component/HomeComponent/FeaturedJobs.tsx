@@ -1,142 +1,196 @@
-'use client';
-import { Bookmark, MapPin } from 'lucide-react';
-import React from 'react';
-import './feature.css';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import './BookmarkButtonstyle.css';
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MapPin, Clock, DollarSign, Star, ArrowRight, Bookmark } from "lucide-react"
 
-const FeaturedJobs = () => {
+export default function FeaturedJobs() {
+  const featuredJobs = [
+    {
+      id: 1,
+      title: "Senior Product Designer",
+      company: "Spotify",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "New York, NY",
+      type: "Full-time",
+      salary: "$120k - $150k",
+      tags: ["UI/UX", "Figma", "Design Systems"],
+      featured: true,
+      postedTime: "2 days ago",
+      applicants: 24,
+    },
+    {
+      id: 2,
+      title: "Frontend Developer",
+      company: "Airbnb",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "San Francisco, CA",
+      type: "Full-time",
+      salary: "$100k - $130k",
+      tags: ["React", "TypeScript", "Next.js"],
+      featured: true,
+      postedTime: "1 day ago",
+      applicants: 18,
+    },
+    {
+      id: 3,
+      title: "Data Scientist",
+      company: "Netflix",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "Los Angeles, CA",
+      type: "Full-time",
+      salary: "$140k - $180k",
+      tags: ["Python", "ML", "Analytics"],
+      featured: true,
+      postedTime: "3 days ago",
+      applicants: 31,
+    },
+    {
+      id: 4,
+      title: "DevOps Engineer",
+      company: "Uber",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "Austin, TX",
+      type: "Full-time",
+      salary: "$110k - $140k",
+      tags: ["AWS", "Docker", "Kubernetes"],
+      featured: false,
+      postedTime: "1 day ago",
+      applicants: 12,
+    },
+    {
+      id: 5,
+      title: "Mobile Developer",
+      company: "Instagram",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "Remote",
+      type: "Contract",
+      salary: "$90k - $120k",
+      tags: ["React Native", "iOS", "Android"],
+      featured: false,
+      postedTime: "4 days ago",
+      applicants: 27,
+    },
+    {
+      id: 6,
+      title: "Backend Engineer",
+      company: "Slack",
+      companyLogo: "/placeholder.svg?height=48&width=48",
+      location: "Seattle, WA",
+      type: "Full-time",
+      salary: "$130k - $160k",
+      tags: ["Node.js", "PostgreSQL", "GraphQL"],
+      featured: false,
+      postedTime: "2 days ago",
+      applicants: 19,
+    },
+  ]
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
-      <div className="flex flex-row md:items-center justify-between py-4">
-        <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#191F33]">
-          Featured Jobs
-        </h1>
-        <Button
-          className="px-4 cursor-pointer py-2 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors text-sm sm:text-base"
-        >
-          View All →
-        </Button>
-      </div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 sm:p-4 lg:p-5 rounded-md my-4 hover:shadow-md border transition-shadow">
-        <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 w-full sm:w-auto">
-          <img
-            src="https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png"
-            className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-md object-cover"
-            alt="Company logo"
-          />
-          <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 flex-1">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-              <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#191F33]">
-                Senior UX Designer
-              </h3>
-              <Badge className="bg-blue-100 text-[#0A65CC] text-xs sm:text-sm">
-                Contract Base
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-5 text-xs sm:text-sm lg:text-base">
-              <div className="flex items-center gap-1 sm:gap-2">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-                <p>Australia</p>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                >
-                  <g clipPath="url(#clip0_1647_32339)">
-                    <path
-                      d="M11 2.0625V19.9375"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M15.8125 7.5625C15.8125 7.11108 15.7236 6.66408 15.5508 6.24703C15.3781 5.82997 15.1249 5.45102 14.8057 5.13182C14.4865 4.81262 14.1075 4.55941 13.6905 4.38666C13.2734 4.21391 12.8264 4.125 12.375 4.125H9.28125C8.36957 4.125 7.49523 4.48716 6.85057 5.13182C6.20591 5.77648 5.84375 6.65082 5.84375 7.5625C5.84375 8.47418 6.20591 9.34852 6.85057 9.99318C7.49523 10.6378 8.36957 11 9.28125 11H13.0625C13.9742 11 14.8485 11.3622 15.4932 12.0068C16.1378 12.6515 16.5 13.5258 16.5 14.4375C16.5 15.3492 16.1378 16.2235 15.4932 16.8682C14.8485 17.5128 13.9742 17.875 13.0625 17.875H8.9375C8.02582 17.875 7.15148 17.5128 6.50682 16.8682C5.86216 16.2235 5.5 15.3492 5.5 14.4375"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1647_32339">
-                      <rect width="22" height="22" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <p>30K-35K</p>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                >
-                  <g clipPath="url(#clip0_1647_32345)">
-                    <path
-                      d="M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M15.125 2.0625V4.8125"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.875 2.0625V4.8125"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.4375 7.5625H18.5625"
-                      stroke="#C5C9D6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1647_32345">
-                      <rect width="22" height="22" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <p>4 Days Remaining</p>
-              </div>
-            </div>
+    <section className="py-0 lg:py-5 bg-white px-4 lg:px-0">
+      <div className="max-w-7xl mx-auto ">
+        {/* Section Header */}
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Featured Jobs</h2>
+            <p className="text-gray-600">Discover your next career opportunity</p>
           </div>
+          <Button variant="outline" className="hidden cursor-pointer text-[#0A65CC] sm:flex items-center gap-2">
+            View all jobs
+            <ArrowRight className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 pt-3 sm:pt-0">
-          <button className="cursor-pointer text-blue-600 group p-1 hover:bg-blue-50 rounded-md transition-colors">
-            <Bookmark className="bookmark-icon w-5 h-5 sm:w-6 sm:h-6 group-hover:fill-[#0A65CC] group-hover:text-[#0A65CC]" />
-          </button>
-          <button
-            className="text-xs cursor-pointer sm:text-sm lg:text-base bg-[#0A65CC] text-white px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 rounded-md hover:bg-gray-100 hover:text-[#0A65CC] font-medium transition-colors"
-            name="Apply Now"
-          >
-            Apply Now →
-          </button>
+
+        {/* Jobs Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {featuredJobs.map((job) => (
+            <Card
+              key={job.id}
+              className="group hover:shadow-lg transition-all duration-300  border-0 shadow-sm hover:-translate-y-1"
+            >
+              <CardContent className="p-6">
+                {/* Header with Company Info */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={job.companyLogo || "/placeholder.svg"} alt={job.company} />
+                      <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                        {job.company.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-[#0A65CC] transition-colors">
+                        {job.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">{job.company}</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="opacity-0 cursor-pointer group-hover:opacity-100 transition-opacity">
+                    <Bookmark className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Job Details */}
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>{job.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{job.type}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-sm">
+                    <DollarSign className="h-4 w-4 text-green-600" />
+                    <span className="font-medium text-green-600">{job.salary}</span>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {job.tags.map((tag, index) => (
+                    <Badge key={index} variant="secondary" className="bg-blue-50 text-[#0A65CC] bg-blue-100">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <span>{job.postedTime}</span>
+                    <span>•</span>
+                    <span>{job.applicants} applicants</span>
+                    {job.featured && (
+                      <>
+                        <span>•</span>
+                        <div className="flex items-center gap-1 text-yellow-600">
+                          <Star className="h-3 w-3 fill-current" />
+                          <span>Featured</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <Button size="sm" className="bg-[#0A65CC] cursor-pointer hover:bg-blue-700">
+                    Apply 
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Mobile View All Button */}
+        <div className="flex justify-center sm:hidden">
+          <Button variant="outline" className="w-full max-w-sm">
+            View all jobs
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default FeaturedJobs;
+    </section>
+  )
+}

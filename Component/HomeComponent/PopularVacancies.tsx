@@ -1,4 +1,9 @@
+import Link from "next/link";
+
+
+
 export default function PopularVacancies() {
+
     const vacancies = [
       { title: "Anesthesiologists", positions: 45904 },
       { title: "Surgeons", positions: 50364 },
@@ -20,12 +25,11 @@ export default function PopularVacancies() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-11 max-w-7xl mx-auto">
           {vacancies.map((vacancy, index) => (
             <div key={index} className="text-left">
-              <h3 className="text-lg cursor-pointer font-medium hover:underline hover:text-blue-500">
-                
+              <Link href={`/find-job?jobRole=${vacancy.title.toString()}`}>
+              <h3 className="text-lg cursor-pointer font-medium hover:underline hover:text-blue-500">               
                     {vacancy.title}
-                
-              
               </h3>
+              </Link>
               <p className="text-gray-500">{vacancy.positions.toLocaleString()} Open Positions</p>
             </div>
           ))}
