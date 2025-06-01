@@ -12,7 +12,6 @@ const sidebarDetails= [
     { "name": "My Jobs", "link": "/company-dashboard/my-jobs", "icon":<BriefcaseBusiness /> },
     { "name": "Saved Candidates", "link": "/company-dashboard/saved-candidates", "icon": <Bookmark /> },
     { "name": "Plans & Billing", "link": "/company-dashboard/plans-&-billing", "icon": <NotebookText /> },
-    { "name": "All Companies", "link": "/company-dashboard/all-companies", "icon": <List /> },
     { "name": "Settings", "link": "/company-dashboard/settings", "icon": <Settings />}
   ]
 const DashboardClientLayoutCompany: React.FC<{ children: ReactNode }> = ({ children }) => {

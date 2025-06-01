@@ -80,7 +80,7 @@ const page: React.FC = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-12">
         <div className="md:w-1/2 text-center md:text-left">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900">
             Buy Premium Subscription to Post a Job
           </h2>
           <p className="mt-4 text-gray-600">
@@ -101,7 +101,7 @@ const page: React.FC = () => {
       </div>
 
       {/* Pricing Plans */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-20 ">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-9 lg:gap-3 pt-20 ">
         {plans.map((plan: Plan) => (
           <div
             key={plan.name}

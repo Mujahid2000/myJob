@@ -2,7 +2,7 @@ export default function JobPilotSteps() {
   const steps = [
     {
       title: "Create account",
-      description: "Aliquam facilisis egestas sapien, nec tempor leo tristique at.",
+      description: "First go to the signup page and create an account.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
           <g clipPath="url(#clip0_1647_31987)">
@@ -38,7 +38,7 @@ export default function JobPilotSteps() {
     },
     {
       title: "Upload CV/Resume",
-      description: "Curabitur sit amet maximus ligula. Nam a nulla ante. Nam sodales.",
+      description: "Go to Dashboard → Settings, upload your CV to complete your profile.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
           <g clipPath="url(#clip0_1647_31999)">
@@ -87,7 +87,7 @@ export default function JobPilotSteps() {
     },
     {
       title: "Find suitable job",
-      description: "Phasellus quis eleifend ex. Morbi nec fringilla nibh.",
+      description: "Complete your profile and explore jobs on the Find Job page.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
           <g clipPath="url(#clip0_1647_32011)">
@@ -135,7 +135,7 @@ export default function JobPilotSteps() {
     },
     {
       title: "Apply job",
-      description: "Curabitur sit amet maximus ligula. Nam a nulla ante, Nam sodales purus.",
+      description: "Find a job, click Apply Now, select your CV, and submit.",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
           <g clipPath="url(#clip0_1647_32023)">
