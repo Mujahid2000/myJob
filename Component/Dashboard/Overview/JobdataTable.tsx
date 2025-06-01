@@ -212,10 +212,12 @@ const JobTable: React.FC = () => {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
          <h2 className="text-base sm:text-lg font-semibold">Recently Applied</h2>
-          <Button variant="ghost" className="text-blue-600 hover:text-blue-700 self-start sm:self-center">
+         <Link href={'/candidate-dashboard/applied-jobs'}>
+          <Button variant="ghost" className="text-blue-600 cursor-pointer hover:text-blue-700 self-start sm:self-center">
             View all
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
+         </Link>
         </div>
 
         {/* Responsive Table */}
