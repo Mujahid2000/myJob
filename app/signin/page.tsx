@@ -20,23 +20,28 @@ export default function Page() {
   const { register, handleSubmit } = useForm<Inputs>();
   const [showPassword, setShowpassword] = useState(false);
   const authContext = useContext(AuthContext);
+
   const [singIn, {isLoading:signInLoading} ] =useSingInMutation()
   if (!authContext) {
     throw new Error("AuthContext is undefined. Ensure it is properly provided.");
   }
+  const { currentUser, login, loading } = authContext;
 
-  const { currentUser, login } = authContext;
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     console.log(data)
     const singInResponse = await singIn(data).unwrap();
-    
     const singins = await login(data.email, data.password);
-    console.log(singins)
+    if (singInResponse && singins) {
+      console.log("Sign in successful");
+      redirect('/');
+    } else {
+      console.error("Sign in failed");
+    }
   };
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && currentUser.email) {
       redirect('/');
     }
   }, [currentUser]);
@@ -45,9 +50,9 @@ export default function Page() {
   return (
     <div className="flex h-screen">
       {/* Left Section */}
-      <div className="w-1/2 max-w-lg mx-auto flex flex-col justify-between px-16 bg-white">
+      <div className="w-full lg:w-1/2 max-w-lg mx-auto flex flex-col justify-between px-16 bg-white">
         <Link href='/' className="mb-8 py-2 flex items-center gap-2">
-          <Image src="https://res.cloudinary.com/diez3alve/image/upload/v1740570665/briefcase-duotone_1_woenpy.svg" alt="MyJob" width={32} height={32} />
+          <Image src="https://res.cloudinary.com/diez3alve/image/upload/v1740570665/briefcase-duotone_1_woenpy.svg" alt="MyJob" width={32} height={32} className=""/>
           <h2 className="text-xl font-semibold">MyJob</h2>
         </Link>
         
@@ -79,7 +84,7 @@ export default function Page() {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           <Button  className=" hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
             <Image src='https://res.cloudinary.com/diez3alve/image/upload/v1740758529/Employers_Logo_2_eyvdlw.png' alt="google"  width={18}  height={18}className="text-blue-500 hover:text-white"/> Sign in with Facebook
           </Button>
@@ -94,7 +99,7 @@ export default function Page() {
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 bg-cover bg-center relative" style={{ backgroundImage: 'url(https://res.cloudinary.com/diez3alve/image/upload/v1740750261/Image_p8otkz.png)' }}>
+      <div className="w-1/2 bg-cover bg-center relative hidden lg:flex" style={{ backgroundImage: 'url(https://res.cloudinary.com/diez3alve/image/upload/v1740750261/Image_p8otkz.png)' }}>
         <div className="absolute bottom-10 left-10 text-white">
           <h2 className="text-xl font-semibold">Over 1,75,324 candidates waiting for good employees.</h2>
           <div className="flex gap-6 mt-4">

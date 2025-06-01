@@ -65,7 +65,7 @@ export default function Navbar() {
   };
 
   const singleName = currentUser?.displayName?.split(' ');
-  const firstName = singleName ? singleName[0] : 'User';
+  const firstName = singleName ? singleName[0] : '';
 
   return (
     <>
@@ -155,7 +155,7 @@ export default function Navbar() {
                       onClick={() => setIsOpen(!isOpen)}
                       className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
                     >
-                      <span>{firstName || currentUser.email}</span>
+                      <span>{firstName}</span>
                       <svg
                         className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                         fill="none"

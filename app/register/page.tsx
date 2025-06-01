@@ -1,10 +1,10 @@
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,7 +46,7 @@ export default function SignUpPage() {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { signup } = authContext;
+  const { signup, currentUser } = authContext;
 
   // Form setup
   const {
@@ -115,19 +115,28 @@ export default function SignUpPage() {
       console.error('Signup error:', error);
     }
   };
+
+
+    useEffect(() => {
+      if (currentUser && currentUser.email) {
+        redirect('/');
+      }
+    }, [currentUser]);
+  
+    
   return (
     <div className="flex h-screen">
       {/* Left Section */}
-      <div className="w-1/2 max-w-xl mx-auto flex flex-col justify-between px-16 bg-white">
+      <div className="w-full lg:w-1/2 max-w-xl mx-auto flex flex-col justify-between px-10 lg:px-16 bg-white">
         <Link href='/' className="mb-8 py-2 flex items-center gap-2">
           <Image src="https://res.cloudinary.com/diez3alve/image/upload/v1740570665/briefcase-duotone_1_woenpy.svg" alt="MyJob" width={32} height={32} />
           <h2 className="text-xl font-semibold">MyJob</h2>
         </Link>
         
         <div className="">
-        <div className="flex items-center justify-between">
+        <div className="flex py-3 flex-col lg:flex-row items-start lg:items-center justify-between">
         <div>
-        <h1 className="text-[2rem] text-[#18191C] font-bold mb-2">Create account.</h1>
+        <h1 className="text-[1.6rem] lg:text-[2rem] text-[#18191C] font-bold mb-2">Create account.</h1>
         <p className="text-gray-500 mb-6">
         Already have account? <Link href="/signin" className="text-[#0A65CC]">Log In</Link>
         </p>
@@ -148,13 +157,13 @@ export default function SignUpPage() {
 
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex gap-8">
-                <div className='flex gap-8'>
+                <div className='flex w-full flex-col lg:flex-row gap-4 lg:gap-8'>
                 <div>
             <Input
                 {...register('firstName', { required: 'First name is required' })}
                 type="text"
                 placeholder="First Name"
-                className="w-[13rem] rounded-sm"
+                className="w-full lg:w-[13rem] rounded-sm"
                 aria-invalid={errors.firstName ? 'true' : 'false'}
                 />
 
@@ -170,7 +179,7 @@ export default function SignUpPage() {
                 {...register('lastName', { required: 'Last name is required' })}
                 type="text"
                 placeholder="Last Name"
-                className="w-[13rem] rounded-sm"
+                className="w-full lg:w-[13rem] rounded-sm"
                 aria-invalid={errors.lastName ? 'true' : 'false'}
                 />
                 {(errors.firstName || errors.lastName) && (
@@ -261,7 +270,7 @@ export default function SignUpPage() {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <div className="flex justify-between gap-4">
+        <div className="flex flex-col lg:flex-row justify-between gap-4">
           <Button  className=" hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
             <Image src='https://res.cloudinary.com/diez3alve/image/upload/v1740758529/Employers_Logo_2_eyvdlw.png' alt="google"  width={18}  height={18}className="text-blue-500 hover:text-white"/> Sign in with Facebook
           </Button>
@@ -276,7 +285,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 bg-cover bg-center relative" style={{ backgroundImage: 'url(https://res.cloudinary.com/diez3alve/image/upload/v1740750261/Image_p8otkz.png)' }}>
+      <div className="w-1/2 bg-cover bg-center hidden lg:flex relative" style={{ backgroundImage: 'url(https://res.cloudinary.com/diez3alve/image/upload/v1740750261/Image_p8otkz.png)' }}>
         <div className="absolute bottom-10 left-10 text-white">
           <h2 className="text-xl font-semibold">Over 1,75,324 candidates waiting for good employees.</h2>
           <div className="flex gap-6 mt-4">
