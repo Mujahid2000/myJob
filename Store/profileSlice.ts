@@ -11,7 +11,11 @@ interface ProfileState {
     companyLogo: string,
     companyName: string
   },
-  CompanyPositionOpenModal: boolean
+  CompanyPositionOpenModal: {
+    userId: string,
+    resume_Id: string,
+    isOpen: boolean
+  }
 }
 
 interface positionOpenModalT{
@@ -20,6 +24,13 @@ interface positionOpenModalT{
     companyIndustry: string,
     companyLogo: string,
     companyName: string
+}
+
+
+interface CandidateModalT {
+  isOpen : boolean,
+  userId: string,
+  resume_Id: string
 }
 
 const initialState: ProfileState = {
@@ -33,7 +44,11 @@ const initialState: ProfileState = {
     companyName: ''
 
   },
-  CompanyPositionOpenModal: false
+  CompanyPositionOpenModal: {
+    userId: '',
+    resume_Id: '',
+    isOpen: false
+  }
 };
 
 
@@ -55,8 +70,10 @@ const profileSlice = createSlice({
       state.positionOpenModal.companyLogo = action.payload.companyLogo;
       state.positionOpenModal.companyName = action.payload.companyName;
     },
-    setCompanyPositionModal: (state, action: { payload: boolean }) => {
-      state.CompanyPositionOpenModal = action.payload;
+    setCompanyPositionModal: (state, action: { payload: CandidateModalT }) => {
+      state.CompanyPositionOpenModal.userId = action.payload.userId;
+      state.CompanyPositionOpenModal.resume_Id = action.payload.resume_Id;
+      state.CompanyPositionOpenModal.isOpen = action.payload.isOpen
     },
   },
 });

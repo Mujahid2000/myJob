@@ -35,6 +35,7 @@ export interface Favortite {
   jobType: string
   postedDate: string
   jobStatus: string
+
 }
 
 

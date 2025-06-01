@@ -1,4 +1,5 @@
-import JobAlertList from '@/Component/Dashboard/AlertJobs/JobAlertList';
+
+import { JobAlertList } from '@/Component/Dashboard/AlertJobs/JobAlertList';
 import React from 'react';
 
 const page = () => {

@@ -1,8 +1,10 @@
 'use client'
 import { AuthContext } from "@/Authentication/AuthContext";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { useGetCandidateJObApplyDataQuery } from "@/RTKQuery/CandidateJobApplyApiSlice";
-import { Check, DollarSign, MoveRight } from "lucide-react";
+import { Calendar, Check, CheckCircle, DollarSign, MapPin, MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
@@ -68,78 +70,75 @@ const AppliedJobs: React.FC = () => {
         <h2 className="text-lg font-semibold">Applied Jobs ({jobData.length})</h2>
         
       </div>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          {/* Table Header */}
-          <thead>
-            <tr className="bg-gray-100 text-gray-600 font-semibold text-sm">
-              <th className="p-4">Job</th>
-              <th className="p-4">Date Applied</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Action</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            {jobData.map((job) => (
-              <tr
-                key={job._id}
-                className="border-b border-gray-200 hover:bg-gray-50"
-              >
-                {/* Job Column */}
-                <td className="p-4">
-                  <div className="flex items-center space-x-4">
-                    <Image
-                      src={job.logo || '/default-logo.png'} // Fallback logo
-                      alt={`${job.jobTitle} logo`}
-                      width={40}
-                      height={40}
-                      className="rounded"
-                    />
-                    <div>
-                      <div className="flex gap-3">
-                        <p className="font-semibold">{job.jobTitle}</p>
-                        <p className="text-sm bg-[#E7F0FA] rounded-full px-2 text-[#0A65CC]">
-                          {job.jobType}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-500 flex gap-1">
-                        {job.location}{' '}
-                        <span className="flex items-center">
-                          <DollarSign size={16} /> {job.minSalary}k-{job.maxSalary}k/month
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                {/* Date Applied Column */}
-                <td className="p-4 text-sm text-gray-600">
-                  {formatDate(job.date)}
-                </td>
-                {/* Status Column */}
-                <td className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-green-500">
-                      <Check size={16} />
-                    </span>
-                    <span className="text-sm text-green-500">
-                      {job.status === 'open' ? 'Active' : job.status}
-                    </span>
-                  </div>
-                </td>
-                {/* Action Column */}
-                <td className="p-4">
-                  <Link href={`/find-job/${job.jobId}`}>
-                    <button className="bg-[#F1F2F4] cursor-pointer hover:bg-[#0A65CC] duration-300 font-medium text-[#0A65CC] hover:text-white px-4 py-2 rounded">
-                      View Details
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+       <Card className="py-0">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px]">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">Job</th>
+                    <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">
+                      Date Applied
+                    </th>
+                    <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">Status</th>
+                    <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobData && jobData.map((job) => (
+                    <tr key={job._id} className="border-b last:border-b-0 hover:bg-gray-50">
+                      <td className="p-3 md:p-4">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <img src={job.logo} alt="" className="w-10 h-10"/>
+                          <div className="space-y-1 min-w-0">
+                            <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2">
+                              <h3 className="font-medium text-gray-900 text-sm md:text-base truncate">{job.jobTitle}</h3>
+                              <Badge className={`bg-[#E7F0FA] text-[#0A65CC] text-xs self-start lg:self-center`}>{job?.jobType}</Badge>
+                            </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs md:text-sm text-gray-500">
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{job.location}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <DollarSign className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{job.minSalary}-{job.maxSalary}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-3 md:p-4">
+                        <div className="flex items-center gap-1 text-xs md:text-sm text-gray-600">
+                          <Calendar className="h-3 w-3 flex-shrink-0" />
+                          <span className="whitespace-nowrap">{job.date}</span>
+                        </div>
+                      </td>
+                      <td className="p-3 md:p-4">
+                        <div className="flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3 md:h-4 md:w-4 text-green-500 flex-shrink-0" />
+                          <span className="text-xs md:text-sm text-green-600 font-medium whitespace-nowrap">
+                            {job.status=== 'open' ? 'Active' : 'Closed'}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-3 md:p-4">
+                       <Link href={`/find-job/${job.jobId}`}>
+                      <button
+                        className="mt-3 cursor-pointer w-full bg-[#F1F2F4] hover:bg-[#0A65CC] text-[#0A65CC] hover:text-white px-3 py-2 rounded text-xs font-medium transition-all duration-300 hover:shadow-md"
+                        aria-label={`View details for ${job.jobTitle}`}
+                      >
+                        View Details
+                      </button>
+                    </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
     </div>
   );
 };

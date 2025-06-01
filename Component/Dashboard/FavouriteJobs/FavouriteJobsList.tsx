@@ -1,9 +1,12 @@
 'use client'
 
 import { AuthContext } from "@/Authentication/AuthContext";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { useGetCandidateFavoriteJobListQuery } from "@/RTKQuery/CandidateJobApplyApiSlice";
-import { Bookmark, DollarSign } from "lucide-react";
+import { Bookmark, ChevronRight, Clock, DollarSign, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
@@ -79,58 +82,75 @@ const FavoriteJobsList: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-lg font-semibold mb-4">
+    <div className="max-w-7xl mx-auto p-0 md:p-6 lg:p-0">
+      {/* Header */}
+      <div className="mb-6">
+       <h2 className="text-lg font-semibold mb-4">
         Favorite Jobs ({jobs.length})
       </h2>
-      <div className="grid grid-cols-1 gap-2 rounded-lg overflow-hidden">
-        {jobs.map((job) => (
-          <div
-            key={job.jobId}
-            className="flex bg-white items-center justify-between p-5 border-b border-gray-200 hover:bg-gray-50"
-          >
-            {/* Job Details */}
-            <div className="flex items-center space-x-4">
-              <Image
-                src={job?.logo || 'https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png'}
-                alt={`${job?.jobTitle}`}
-                width={40}
-                height={40}
-                className="rounded"
-              />
-              <div>
-                <div className="flex items-center gap-3">
-                  <p className="font-semibold">{job.jobTitle}</p>
-                  <p className="text-sm text-gray-500 bg-[#E8F1FF] px-2 rounded-full">
-                    {job.jobType}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <p className="text-sm text-gray-500 flex gap-1">
-                    {job.location}
-                    <span className="flex items-center">
-                      <DollarSign size={16} /> {job.minSalary}k-{job.maxSalary}k/month
-                    </span>
-                  </p>
-                  <span
-                    className={`text-sm ${
-                      job.jobStatus === 'Job Expired'
-                        ? 'text-red-500'
-                        : 'text-gray-500'
-                    }`}
-                  >
-                    {job.jobStatus}
-                  </span>
-                </div>
-              </div>
-            </div>
+      </div>
 
-            {/* Action */}
-            <div className="flex items-center space-x-4">
-              <button className="hover:bg-gray-300 cursor-pointer p-1 rounded-sm">
-                <Bookmark size={20} />
-              </button>
-              <Link href={`/find-job/${job.jobId}`}>
+      {/* Table */}
+      <Card className="p-0">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[800px]">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">Job Details</th>
+                  <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">
+                    Location & Salary
+                  </th>
+                  <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">
+                    Time Remaining
+                  </th>
+                  <th className="text-left p-3 md:p-4 font-medium text-gray-600 text-sm md:text-base">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobs.map((job) => (
+                  <tr
+                    key={job.jobId}
+                    className={`border-b last:border-b-0 `}
+                  >
+                    {/* Job Details Column */}
+                    <td className="p-3 md:p-4">
+                      <div className="flex items-center gap-3">
+                        <img src={job.logo} alt={'companyLogo'} className="w-10 h-10"/>
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-gray-900 text-sm md:text-base truncate">{job.jobTitle}</h3>
+                            <Badge className="bg-blue-100 text-blue-700 text-xs">{job.jobType}</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600">Hello</p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Location & Salary Column */}
+                    <td className="p-3 md:p-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <MapPin className="h-4 w-4 flex-shrink-0" />
+                          <span className="truncate">{job.location}</span>
+                        </div>
+                        <div className="text-sm font-medium text-gray-900">${job.minSalary}-{job.maxSalary}</div>
+                      </div>
+                    </td>
+
+                    {/* Time Remaining Column */}
+                    <td className="p-3 md:p-4">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4 flex-shrink-0" />
+                        <span className={`text-sm ${job.jobStatus === "expired" ? "text-red-500" : "text-gray-600"}`}>
+                          {job.postedDate}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Actions Column */}
+                    <td className="p-3 md:p-4">
+                      <Link href={`/find-job/${job.jobId}`}>
                 <button
                   className={`px-4 py-2 rounded flex items-center space-x-2 ${
                     job.jobStatus === 'Job Expired'
@@ -139,14 +159,18 @@ const FavoriteJobsList: React.FC = () => {
                   }`}
                   disabled={job.jobStatus === 'Job Expired'}
                 >
-                  <span>Apply Now</span>
+                  <span className="text-sm xl:text-base">Apply Now</span>
                   <span>→</span>
                 </button>
               </Link>
-            </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ))}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

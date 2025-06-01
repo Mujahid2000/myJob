@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useGetJobPostApplicantDetailsQuery } from "@/RTKQuery/JobApplyApiSlice";
 import { candidateModal } from "@/Store/CandidateModal";
-import { setOpenPositionModal } from "@/Store/profileSlice";
+import { setCompanyPositionModal, setOpenPositionModal } from "@/Store/profileSlice";
 import { AppDispatch, RootState } from "@/Store/Store";
 import { Bookmark, Cake, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, MapPin, Phone, X } from "lucide-react";
 import Link from "next/link";
@@ -12,12 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function CandidateModal() {
      const dispatch = useDispatch<AppDispatch>();
-     const {isOpen, resume_Id, userId} = useSelector((state: RootState) => state.profile.positionOpenModal)
+     const {isOpen, resume_Id, userId} = useSelector((state: RootState) => state.profile.CompanyPositionOpenModal)
      const applicantDetailsData = {userId, resume_Id};
      const { data: applicantDetails, isLoading, isError, error, isSuccess } = useGetJobPostApplicantDetailsQuery(applicantDetailsData);
      const applicantData = applicantDetails?.applicant
     const handleCandidateModal = () =>{
-      dispatch(setOpenPositionModal({isOpen: false, resume_Id: resume_Id, userId}))
+      dispatch(setCompanyPositionModal({isOpen: false, userId:userId, resume_Id: resume_Id}))
     }
 
 

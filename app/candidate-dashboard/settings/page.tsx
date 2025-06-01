@@ -5,12 +5,12 @@ import Personal from '@/Component/Dashboard/Settings/Personal';
 import Profile from '@/Component/Dashboard/Settings/Profile';
 import SocialLinks from '@/Component/Dashboard/Settings/SocialLinks';
 import { useRouter } from "next/navigation";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Settings:React.FC = () => {
-    
+    const [settingA , setSettingA] = useState(false)
     const router = useRouter(); // Ensure this is from 'next/navigation'
-    const tabs = ["Personal", "Profile", "Social Links", "Account Setting"];
+    const tabs = ['Personal', 'Profile', 'Social Links', settingA ? 'Settings' : 'Account Setting'];
 
     const authContext = useAuth();
 
@@ -20,7 +20,15 @@ const Settings:React.FC = () => {
 
     const { currentUser,activeTab,handleTab, loading } = authContext;
 
-    
+    useEffect(()=>{
+      if(window.innerWidth<500 ){
+        setSettingA(true)
+      }else {
+        setSettingA(false)
+      }
+      
+    }  ,[settingA])
+
     useEffect(() => {
         if (loading) return;
         if (!currentUser) {
@@ -46,7 +54,7 @@ const Settings:React.FC = () => {
             <button
               key={tab}
               onClick={() => handleTab(tab)} // Use handleTab from context
-              className={`flex-1 py-4 px-6 text-center font-semibold ${
+              className={`flex-1 py-2 lg:py-4 px-0 lg:px-6 text-sm lg:text-base text-center font-semibold ${
                 activeTab === tab
                   ? "border-b-2 border-blue-600 text-blue-600"
                   : "text-gray-600 hover:text-blue-600"

@@ -99,18 +99,18 @@ const SocialLinks = () => {
     <div className="py-6 px-3 bg-white lg:h-screen rounded-lg max-w-7xl mx-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {socialLinks.map((link, index) => (
-          <div key={link.id} className="items-center">
+          <div key={link.id} className=" lg:items-center">
             {/* Label */}
             <div className="w-24">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block py-3 lg:py-0 text-sm font-medium text-gray-700">
                 Social Link {index + 1}
               </label>
             </div>
 
             {/* Platform Dropdown */}
             <div className="flex items-center gap-5">
-              <div className="flex items-center space-x-2 flex-1">
-                <div className="relative">
+              <div className="flex flex-col md:flex-row gap-3  items-center space-x-2 flex-1">
+                <div className="relative ">
                   <select
                     value={link.platform}
                     onChange={(e) => updateLink(link.id, 'platform', e.target.value)}

@@ -15,7 +15,7 @@ type JobAlertInputs = { jobRole: string; location: string };
 type ProfilePrivacyInputs = { profilePublic: boolean; resumePublic: boolean };
 type PasswordInputs = { currentPassword: string; newPassword: string; confirmPassword: string };
 
-// টোস্ট স্টাইল
+// toast styles 
 const toastStyles = {
   success: { backgroundColor: '#4CAF50', color: 'white' },
   error: { backgroundColor: '#f44336', color: 'white' },
@@ -43,7 +43,7 @@ const Settings = () => {
   const [updateJobAlerts, { isLoading: jobAlertsLoading }] = useUpdateJobAlertsMutation();
   const [updateProfilePrivacy, { isLoading: privacyLoading }] = useUpdateProfilePrivacyMutation();
   const [updatePassword, {isLoading:passwordChangeLoading}] =useUpdatePasswordMutation()
-  // ফর্ম ডেফিনিশন
+  // form validation
   const contactForm = useForm<ContactInputs>({
     defaultValues: { email: '', phoneNumber: '', mapLocation: '' },
   });
@@ -62,7 +62,7 @@ const Settings = () => {
 
   const [showPasswords, setShowPasswords] = useState({ currentPassword: false, newPassword: false, conFirmPassword: false });
 
-  // ডাটা লোড হওয়ার পর ফর্ম রিসেট
+  // form reset after loaded data
   useEffect(() => {
     if (userDataContact) {
       contactForm.reset({
@@ -103,7 +103,7 @@ const Settings = () => {
     }
   }, [privacyProfile, isPrivacyLoading, profilePrivacyForm]);
 
-  // API ফেচ এরর হ্যান্ডলিং
+  // API fetching error handling
   useEffect(() => {
     if (userEmailError) {
       toast.error('Failed to fetch user data', { style: toastStyles.error });
@@ -127,7 +127,7 @@ const Settings = () => {
     }
   }, [userEmailError, contactError, privacyError, jobAlertError, notificationError]);
 
-  // ফর্ম সাবমিশন হ্যান্ডলার
+  // form submission handlers
   const onSubmitContact: SubmitHandler<ContactInputs> = useCallback(async (data) => {
     try {
       if (!email || !userId) {

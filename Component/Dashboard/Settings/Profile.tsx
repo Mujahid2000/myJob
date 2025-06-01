@@ -141,7 +141,7 @@ const Profile = () => {
                     id="image-preview"
                     src={imagePreview || candidateInfo?.profilePicture}
                     alt="Preview"
-                    className="w-full h-full rounded-lg absolute"
+                    className="w-full h-full rounded-lg flex md:absolute"
                   />
                   {
                     !candidateInfo?.profilePicture ?  <button
