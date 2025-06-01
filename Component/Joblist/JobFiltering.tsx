@@ -84,7 +84,7 @@ const JobFiltering = () => {
                     />
                   </div>
                   <div className='flex gap-3 items-center '>
-                    <SlLocationPin className='text-blue-500 text-2xl' />
+                    <SlLocationPin className='text-blue-500 text-2xl' /> 
                     <Input 
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedLocation(e.target.value)} 
                       value={selectedLocation} 
