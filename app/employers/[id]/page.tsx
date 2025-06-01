@@ -142,7 +142,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
           {/* <Button className="hover:bg-[#D6E7FB] hover:text-[#0A65CC] bg-[#084899] text-white px-6 py-6 rounded-sm transition-colors duration-200">
             View Open Position →
           </Button> */}
-          <OpenPositionButton/>
+          <OpenPositionButton companyId={resolveId.id} companyindustry={singleCompany.industryTypes} logo={singleCompany.logo} companyname={singleCompany.companyName}/>
         </div>
       </CardContent>
     </Card>
@@ -274,7 +274,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
         </div>
       </div>
       <SuggestJob />
-      <OpenJobPositionsModal userId={resolveId.id} companyIndustry={singleCompany.industryTypes} companyLogo={singleCompany.logo} companyName="Hello"/>
+      <OpenJobPositionsModal />
     </div>
   );
 }

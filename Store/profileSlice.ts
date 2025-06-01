@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { stat } from 'fs';
 
 interface ProfileState {
   isModalOpen: boolean;
@@ -6,14 +7,19 @@ interface ProfileState {
   positionOpenModal: {
     isOpen: boolean,
     userId: string,
-    resume_Id: string
-  }
+    companyIndustry: string,
+    companyLogo: string,
+    companyName: string
+  },
+  CompanyPositionOpenModal: boolean
 }
 
 interface positionOpenModalT{
     isOpen: boolean,
     userId: string,
-    resume_Id: string
+    companyIndustry: string,
+    companyLogo: string,
+    companyName: string
 }
 
 const initialState: ProfileState = {
@@ -22,9 +28,12 @@ const initialState: ProfileState = {
   positionOpenModal: {
     isOpen: false,
     userId: '',
-    resume_Id: ''
+    companyIndustry: '',
+    companyLogo: '',
+    companyName: ''
 
-  }
+  },
+  CompanyPositionOpenModal: false
 };
 
 
@@ -41,11 +50,16 @@ const profileSlice = createSlice({
     },
     setOpenPositionModal: (state, action: { payload: positionOpenModalT }) => {
       state.positionOpenModal.isOpen = action.payload.isOpen;
-      state.positionOpenModal.resume_Id = action.payload.resume_Id;
       state.positionOpenModal.userId = action.payload.userId;
+      state.positionOpenModal.companyIndustry = action.payload.companyIndustry;
+      state.positionOpenModal.companyLogo = action.payload.companyLogo;
+      state.positionOpenModal.companyName = action.payload.companyName;
+    },
+    setCompanyPositionModal: (state, action: { payload: boolean }) => {
+      state.CompanyPositionOpenModal = action.payload;
     },
   },
 });
 
-export const { setModalOpen, setActiveDropdown, setOpenPositionModal } = profileSlice.actions;
+export const { setModalOpen, setActiveDropdown, setOpenPositionModal, setCompanyPositionModal } = profileSlice.actions;
 export default profileSlice.reducer;

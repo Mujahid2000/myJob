@@ -53,10 +53,10 @@ if(!currentUser){
 }
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-29">
+        <div className="min-h-screen  bg-gray-50 pt-29">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 pt-4">
           <div className="flex flex-col md:flex-row">
-            <div className="w-full  flex flex-col justify-between min-h-screen md:w-80 bg-white p-6">
+            <div className="w-full hidden lg:flex flex-col justify-between min-h-screen md:w-80 bg-white p-6">
               <div>
                 <h1 className="text-base uppercase text-[#9199A3] font-bold mb-6">Employee Dashboard</h1>
                 <nav className="space-y-2">
