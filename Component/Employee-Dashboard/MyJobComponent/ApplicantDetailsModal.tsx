@@ -15,7 +15,7 @@ import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
 
 const socket = io('https://serverjob.vercel.app', {
-  withCredentials: false,
+  withCredentials: true,
   extraHeaders: { 'Content-Type': 'application/json' },
 }); // socket server URL
 
@@ -84,9 +84,16 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
 
   const formattedDate = formatDateToOrdinal(date ?? '');
 
-  // const handleSocketConnection = () =>{
-  //   socket.emit();
-  // }
+    useEffect(() => {
+      if (!userId) return;
+  
+      socket.emit('join', userId);
+      console.log(`User ${userId} joined their room`);
+  
+      return () => {
+        socket.emit('leave', userId); // Optional: Leave room on cleanup
+      };
+    }, [userId]);
 
  const handleShortListed = async () => {
   if (!applicantData) {

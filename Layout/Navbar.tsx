@@ -37,7 +37,7 @@ import io from 'socket.io-client';
 
 // Socket.IO initialization
 const socket = io('https://serverjob.vercel.app', {
-  withCredentials: false,
+  withCredentials: true,
   extraHeaders: { 'Content-Type': 'application/json' },
 });
 
