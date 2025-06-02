@@ -14,8 +14,8 @@ import { FaUsersBetweenLines } from "react-icons/fa6";
 import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
 
-const socket = io('https://serverjob.vercel.app', {
-  withCredentials: true,
+const socket = io('https://job-server-1.onrender.com', {
+  withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 }); // socket server URL
 
@@ -117,7 +117,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
       toast.success(response.message);
 
       // Send notification via REST API
-      const notificationResponse = await fetch('https://serverjob.vercel.app/liveNotification/send', {
+      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

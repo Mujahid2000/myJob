@@ -73,7 +73,7 @@ export default async function JobDetails ({id}: {id:string}) {
     },
   ]
   
-  const data = await fetch(`https://serverjob.vercel.app/jobs/jobPost/${id}`);
+  const data = await fetch(`https://job-server-1.onrender.com/jobs/jobPost/${id}`);
   const posts = await data.json();
   const singlePost = posts?.data
 

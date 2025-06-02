@@ -22,7 +22,7 @@ interface ContactFormData {
 
 export const contact = createApi({
     reducerPath: "contactApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://serverjob.vercel.app" }),
+    baseQuery: fetchBaseQuery({ baseUrl: "https://job-server-1.onrender.com" }),
     tagTypes: ["contact"],
     endpoints: (builder) => ({
         postContactInfo: builder.mutation<ContactResponse, ContactFormData>({

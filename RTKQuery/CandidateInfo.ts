@@ -63,7 +63,7 @@ export interface Social {
 export const CandidatePersonalData = createApi({
     reducerPath: 'candidateApi',
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'https://serverjob.vercel.app' 
+        baseUrl: 'https://job-server-1.onrender.com' 
     }),
     tagTypes: ['candidate'],
     endpoints: builder =>({

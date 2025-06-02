@@ -57,7 +57,7 @@ interface ProfileDataResponse {
 export const profileApi = createApi({
   reducerPath: 'profileApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://serverjob.vercel.app',
+    baseUrl: 'https://job-server-1.onrender.com',
   }),
   tagTypes: ['Resumes', 'Profile'],
   endpoints: (builder) => ({

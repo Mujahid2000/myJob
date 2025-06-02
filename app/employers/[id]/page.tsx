@@ -36,7 +36,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
   // Fetch company data
   let singleCompany = null;
   try {
-    const response = await fetch(`https://serverjob.vercel.app/jobs/getSingleCompanyData/${resolveId.id}`, {
+    const response = await fetch(`https://job-server-1.onrender.com/jobs/getSingleCompanyData/${resolveId.id}`, {
       cache: 'no-store',
     });
 

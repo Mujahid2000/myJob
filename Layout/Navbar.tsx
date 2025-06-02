@@ -36,8 +36,8 @@ import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
 
 // Socket.IO initialization
-const socket = io('https://serverjob.vercel.app', {
-  withCredentials: true,
+const socket = io('https://job-server-1.onrender.com', {
+  withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 });
 
