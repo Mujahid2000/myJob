@@ -14,13 +14,15 @@ import { FaUsersBetweenLines } from "react-icons/fa6";
 import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
 
-const socket = io('https://serverjob.vercel.app', {
-  withCredentials: false,
-  extraHeaders: { 'Content-Type': 'application/json' },
+const socket = io.connect('https://serverjob.vercel.app', {
+  withCredential: false,
+  extraHeaders: {
+    'Content-Type': 'application/json',
+  }
 }); // socket server URL
 
 interface Notification {
-  id: string |undefined;
+  id: number;
   message: string;
   timestamp: string;
   companyUser: string,
@@ -48,7 +50,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
   const { data: applicantDetails, isLoading, isError, error, isSuccess } = useGetJobPostApplicantDetailsQuery(applicantDetailsData);
   const applicantData = applicantDetails?.applicant;
   const date = applicantData?.dateOfBirth;
-console.log(applicantDetails)
+
 
   // Initialize Socket.IO connection
 
