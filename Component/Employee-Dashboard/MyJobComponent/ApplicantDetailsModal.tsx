@@ -110,7 +110,7 @@ console.log(applicantDetails)
       toast.success(response.message);
 
       // Send notification via REST API
-      const notificationResponse = await fetch('http://localhost:5000/liveNotification/send', {
+      const notificationResponse = await fetch('https://serverjob.vercel.app/liveNotification/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

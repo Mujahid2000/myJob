@@ -24,7 +24,7 @@
 
 // export const notificationApiSlice = createApi({
 //     reducerPath: 'notificationApi',
-//     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+//     baseQuery: fetchBaseQuery({ baseUrl: 'https://serverjob.vercel.app/' }),
 //     endpoints: (builder) => ({
 //         postNotifications: builder.mutation<NotificationResponse, NotificationRequest>({
 //             query: (data) => ({
