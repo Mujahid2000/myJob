@@ -15,9 +15,8 @@ import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
 
 const socket = io('https://serverjob.vercel.app', {
-  withCredentials: false,
-  extraHeaders: {
-    'Content-Type': 'application/json',
+ withCredentials: true,
+  extraHeaders: { 'Content-Type': 'application/json' 
   }
 }); // socket server URL
 
