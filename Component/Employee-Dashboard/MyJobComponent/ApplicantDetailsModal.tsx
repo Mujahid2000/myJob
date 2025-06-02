@@ -14,11 +14,9 @@ import { FaUsersBetweenLines } from "react-icons/fa6";
 import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
 
-const socket = io.connect('https://serverjob.vercel.app', {
-  withCredential: true,
-  extraHeaders: {
-    'Content-Type': 'application/json',
-  }
+const socket = io('https://serverjob.vercel.app', {
+  withCredentials: false,
+  extraHeaders: { 'Content-Type': 'application/json' },
 }); // socket server URL
 
 interface Notification {
