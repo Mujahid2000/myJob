@@ -34,6 +34,7 @@ import experience from './experienceSlice'
 import sliderReducer from './range';
 import searchFilterParams from './searchFilterSlice'
 import CandidateModal from './CandidateModal'
+// import { notificationApiSlice } from '@/RTKQuery/NotificationApi';
 
 export const store = configureStore({
   reducer: {
@@ -54,6 +55,7 @@ export const store = configureStore({
     [jobApply.reducerPath]: jobApply.reducer,
     [shortListed.reducerPath]: shortListed.reducer,
     [candidateJObApplyData.reducerPath]: candidateJObApplyData.reducer,
+    // [notificationApiSlice.reducerPath]: notificationApiSlice.reducer,
     companyInfo: companyInfoReducer,
     foundingInfo: foundingInfoReducer,
     socialMedia: socialMediaReducer,
@@ -92,7 +94,8 @@ export const store = configureStore({
       notificationApi.middleware,
       jobApply.middleware,
       shortListed.middleware,
-      candidateJObApplyData.middleware
+      candidateJObApplyData.middleware,
+      // notificationApiSlice.middleware
     ),
 });
 
