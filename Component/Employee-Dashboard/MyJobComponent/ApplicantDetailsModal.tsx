@@ -20,7 +20,7 @@ const socket = io('https://serverjob.vercel.app', {
 }); // socket server URL
 
 interface Notification {
-  id: string;
+  id: string |undefined;
   message: string;
   timestamp: string;
   companyUser: string,
