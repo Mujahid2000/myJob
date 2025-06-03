@@ -423,6 +423,7 @@ export default function Navbar() {
 
                 {/* Mobile Action Buttons */}
                 <div className="flex items-center space-x-2">
+                  {/* bell icon for mobile */}
                  {role === 'Applicant' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
