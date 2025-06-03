@@ -69,7 +69,7 @@ const Settings:React.FC = () => {
           {activeTab === "Personal" && <Profile />}
           {activeTab === "Profile" && <Personal />}
           {activeTab === "Social Links" && <SocialLinks />}
-          {activeTab === "Account Setting" && <AccountSetting />}
+          {(activeTab === "Account Setting" || activeTab === "Settings") && <AccountSetting />}
         </div>
       </div>
     </div>
