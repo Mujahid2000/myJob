@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut, Bell } from "lucide-react";
+import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut, Bell, Settings } from "lucide-react";
 import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
@@ -256,7 +256,7 @@ export default function Navbar() {
                 )}
 {/* notification section end */}
 {/* condition sign in button if current user is not available  */}
-{/* profile dropdown start */}
+
 {!currentUser && <Link href="/signin" className="">
                     <button className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
                       Sign In
@@ -264,6 +264,7 @@ export default function Navbar() {
                   </Link>}
 
 
+{/* profile dropdown start */}
 {/* if user is applicant then show this dropdown  */}
 
 {currentUser && role === 'Applicant' &&   
@@ -277,46 +278,52 @@ export default function Navbar() {
                       <DropdownMenuContent className="w-56" align="start">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuGroup>
+
+                          <Link href={'/candidate-dashboard/settings'}>
                           <DropdownMenuItem>
                             Profile
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Billing
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Settings
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Keyboard shortcuts
-                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                          </DropdownMenuItem>
+                          </Link>
+
+                          <Link href="/candidate-dashboard/settings">
+                          <DropdownMenuItem>Settings<Settings/></DropdownMenuItem>
+                          </Link>
+
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                           <DropdownMenuItem>Team</DropdownMenuItem>
                           <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                <DropdownMenuItem>Email</DropdownMenuItem>
-                                <DropdownMenuItem>Message</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>More...</DropdownMenuItem>
+                                <Link href="/candidate-dashboard">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-dashboard/applied-jobs">
+                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-dashboard/favourite-jobs">
+                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-dashboard/job-alerts">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-dashboard/settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
                               </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
-                          <DropdownMenuItem>
-                            New Team
-                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                          </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>GitHub</DropdownMenuItem>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
-                        <DropdownMenuItem disabled>API</DropdownMenuItem>
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
+                        <Link href="/https://github.com/Mujahid2000">
+                          <DropdownMenuItem>GitHub</DropdownMenuItem>
+                        </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                           Log out
@@ -361,13 +368,24 @@ export default function Navbar() {
                         <DropdownMenuGroup>
                           <DropdownMenuItem>Team</DropdownMenuItem>
                           <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                <DropdownMenuItem>Email</DropdownMenuItem>
-                                <DropdownMenuItem>Message</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>More...</DropdownMenuItem>
+                                <Link href="/company-dashboard">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/applied-jobs">
+                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/favourite-jobs">
+                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/job-alerts">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
                               </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
@@ -377,9 +395,7 @@ export default function Navbar() {
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>GitHub</DropdownMenuItem>
                         <DropdownMenuItem>Support</DropdownMenuItem>
-                        <DropdownMenuItem disabled>API</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                           Log out
@@ -467,10 +483,17 @@ export default function Navbar() {
                     <span className="text-lg sm:text-xl font-bold text-gray-900">MyJob</span>
                   </div>
                 </div>
+                {/* if currentUser not available then show the signin button */}
+                      {!currentUser && <Link href="/signin" className="">
+                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                        Sign in
+                      </button>
+                    </Link>}
+
 
                 {/* Mobile Action Buttons */}
                 <div className="flex items-center space-x-2">
-                  {currentUser ? (
+                  {currentUser  && role === 'Applicant' &&  
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -499,19 +522,19 @@ export default function Navbar() {
                             <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                <Link href="/candidate">
+                                <Link href="/candidate-dashboard">
                                   <DropdownMenuItem>Overview</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-jobs">
+                                <Link href="/candidate-dashboard/applied-jobs">
                                   <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-jobs">
+                                <Link href="/candidate-dashboard/favourite-jobs">
                                   <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-job-alerts">
+                                <Link href="/candidate-dashboard/job-alerts">
                                   <DropdownMenuItem>Job Alert</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-settings">
+                                <Link href="/candidate-dashboard/settings">
                                   <DropdownMenuItem>Settings</DropdownMenuItem>
                                 </Link>
                               </DropdownMenuSubContent>
@@ -531,14 +554,78 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  ) : (
-                    <Link href="/signin" className="">
-                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
-                        Sign in
-                      </button>
-                    </Link>
-                  )}
+                  }
                 </div>
+                {/* if company user is available then show this  */}
+                <div className="flex items-center space-x-2">
+                  {currentUser  && role === 'Company' &&  
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56 mx-1" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>
+                              <User size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Team
+                            <DropdownMenuShortcut>
+                              <FaUsers />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <Link href="/company-dashboard">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/employer-profile">
+                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/post-job">
+                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/saved-candidates">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/plans-&-billing">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>
+                            <LogOut size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  }
+                </div>
+
+             
               </div>
 
               {/* Search Bar - Mobile & Tablet Full Width */}
