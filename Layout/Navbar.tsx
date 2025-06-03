@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
+import { useGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
 
 // Socket.IO initialization
 const socket = io('https://job-server-1.onrender.com', {
@@ -48,6 +49,17 @@ type Notification = {
   jobId: string;
   message: string;
   timestamp: string;
+};
+type NewNotification = {
+  _id: string
+  id: string
+  companyUser: string
+  applicantId: string
+  jobId: string
+  message: string
+  Name: string
+  timestamp: string
+  companyName: string
 };
 
 export default function Navbar() {
@@ -66,11 +78,16 @@ export default function Navbar() {
   const currentUser = authContext?.currentUser;
   const { data: userData } = useGetUserByIdQuery(currentUser?.email || '');
   const role = userData?.user.role;
-  const userId = userData?.user._id;
+  const userId = userData?.user._id || '';
   const logOut = authContext?.logout;
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [newNotification, setNewNotification] = useState<NewNotification[]>([])
   const menuRef = useRef<HTMLDivElement>(null);
+  const {data:notificationData} = useGetNotificationsQuery(userId);
+  // database notification data
+  const notData = notificationData?.data
+  const sumArray = notifications.concat(newNotification)
 
   // Join user to their room
   useEffect(() => {
@@ -103,7 +120,15 @@ export default function Navbar() {
     return () => {
       socket.off('receiveNotification', handleNotification);
     };
+    
   }, [userId]);
+
+
+ useEffect(() => {
+  if (Array.isArray(notData) && notData.length !== 0) {
+    setNewNotification((prev) => [...prev, ...notData]); // Correctly updating the state
+  }
+}, [notData]);
 
   // Handle outside click to close dropdown
   useEffect(() => {
@@ -222,24 +247,24 @@ export default function Navbar() {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="relative focus:outline-none">
                         <Bell className="h-4 w-4" />
-                        {notifications.length > 0 && (
+                        {sumArray.length  > 0 && (
                           <Badge
                             variant="destructive"
                             className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
                           >
-                            {notifications.length}
+                            {sumArray.length}
                           </Badge>
                         )}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80">
                       <div className="p-2 font-medium">Notifications</div>
-                      {notifications.length === 0 ? (
+                      {sumArray.length === 0 ? (
                         <DropdownMenuItem className="text-sm text-muted-foreground">
                           No new notifications
                         </DropdownMenuItem>
                       ) : (
-                        notifications.map((notification) => (
+                        sumArray.map((notification) => (
                           <DropdownMenuItem
                             key={notification.id}
                             className="flex flex-col items-start gap-1"

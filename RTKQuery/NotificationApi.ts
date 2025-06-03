@@ -1,40 +1,35 @@
-// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// interface NotificationRequest {
-//   message: string;
-//   timestamp: string;
-//   companyUser: string,
-//   applicantId?: string;
-//   jobId?: string;
-// }
+export interface NotificationResponse {
+  message: string
+  data: Daum[]
+}
 
-// export interface Notification {
-//   id: string | undefined;
-//   message: string;
-//   timestamp: string;
-//   companyUser: string,
-//   applicantId?: string;
-//   jobId?: string;
-// }
+export interface Daum {
+  _id: string
+  id: string
+  companyUser: string
+  applicantId: string
+  jobId: string
+  message: string
+  Name: string
+  timestamp: string
+  companyName: string
+}
 
-// interface NotificationResponse {
-//   message: string,
-//   data: Notification[]
-// }
 
-// export const notificationApiSlice = createApi({
-//     reducerPath: 'notificationApi',
-//     baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com/' }),
-//     endpoints: (builder) => ({
-//         postNotifications: builder.mutation<NotificationResponse, NotificationRequest>({
-//             query: (data) => ({
-//                 url: '/liveNotification/notification',
-//                 method: "POST",
-//                 body: data
-//             }),
-//         }),
+
+export const notificationApiSlice = createApi({
+    reducerPath: 'notificationApi',
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+    endpoints: (builder) => ({
+        getNotifications: builder.query<NotificationResponse, string>({
+            query: (userId) => ({
+                url: `/notification/notificationData/${userId}`,
+            }),
+        }),
        
-//     }),
-// });
+    }),
+});
 
-// export const { usePostNotificationsMutation } = notificationApiSlice;
+export const { useGetNotificationsQuery } = notificationApiSlice;
