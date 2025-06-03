@@ -142,39 +142,59 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
   }
 };
 
-  const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName }: { currentUsersId: string; SapplicantId: string, jobId:string, fullName:string }) => {
-    try {
-      const response = await saveProfileData({ userId: currentUsersId, applicantId: SapplicantId }).unwrap();
-      if (response?.message === 'Candidate profile already saved') {
-        toast.warning(response.message);
-      } else if (response?.message === 'Candidate profile saved successfully') {
-       // Send notification via REST API
-      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/sendSavedProfile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: socket.id,
-          companyUser: userid,
-          Name: fullName,
-          applicantId: applicantDetails?.applicant.userId,
-          jobId,
-          message: `Your profile saved by companyUser for this ${userid} job`,
-        }),
-      });
+const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName}: {currentUsersId: string; SapplicantId: string; jobId: string; fullName: string}) => {
+  try {
+    const response = await saveProfileData({
+      userId: currentUsersId,
+      applicantId: SapplicantId,
+    }).unwrap();
+
+    const message = response?.message;
+
+    if (message === 'Candidate profile already saved') {
+      toast.warning(message);
+      return;
+    }
+
+    if (message === 'Candidate profile saved successfully') {
+      const notificationPayload = {
+        id: socket.id,
+        companyUser: userid,
+        Name: fullName,
+        applicantId: applicantDetails?.applicant.userId,
+        jobId,
+        message: `Your profile was saved by company user ${userid} for job ${jobId}`,
+      };
+
+      const notificationResponse = await fetch(
+        'https://job-server-1.onrender.com/liveNotification/sendSavedProfile',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(notificationPayload),
+        }
+      );
 
       if (!notificationResponse.ok) {
         throw new Error('Failed to send notification');
       }
 
-      toast.success('Notification sent successfully');
-      } else if (response?.message) {
-        toast.warning(response.message);
-      }
-    } catch (error: any) {
-      toast.error(error?.data?.message || 'Failed to save candidate profile');
-      console.error('Save profile error:', error);
+      toast.success('Profile saved and notification sent successfully');
+      return;
     }
-  };
+
+    // Catch-all for any other message
+    if (message) {
+      toast.warning(message);
+    }
+  } catch (error: any) {
+    console.error('Save profile error:', error);
+    const errMsg =
+      error?.data?.message || error?.message || 'Failed to save candidate profile';
+    toast.error(errMsg);
+  }
+};
+
 
   if (isLoading) {
     return <div className="text-center text-gray-600">Loading...</div>;
