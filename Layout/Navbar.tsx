@@ -28,10 +28,12 @@ import { usePathname } from "next/navigation";
 import { AuthContext } from "@/Authentication/AuthContext";
 import { disableNavWithFooter } from "@/Hooks/disableNavWithFooter";
 import ButtonCommon from "@/Component/HomeComponent/Button";
+import { DialogTitle } from "@/components/ui/dialog";
 import { FaUsers } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
-import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 
 // Socket.IO initialization
 const socket = io('https://job-server-1.onrender.com', {
@@ -59,8 +61,6 @@ export default function Navbar() {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const path = usePathname();
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
@@ -68,6 +68,8 @@ export default function Navbar() {
   const role = userData?.user.role;
   const userId = userData?.user._id;
   const logOut = authContext?.logout;
+  const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Join user to their room
@@ -78,7 +80,7 @@ export default function Navbar() {
     console.log(`User ${userId} joined their room`);
 
     return () => {
-      socket.emit('leave', userId);
+      socket.emit('leave', userId); // Optional: Leave room on cleanup
     };
   }, [userId]);
 
@@ -130,84 +132,8 @@ export default function Navbar() {
     }
   };
 
-  // Reusable User Dropdown Component
-  const UserDropdown = ({ isMobile = false }: { isMobile?: boolean }) => {
-    const dashboardLinks =
-      role === 'Applicant'
-        ? [
-            { href: "/candidate-dashboard", label: "Overview" },
-            { href: "/candidate-dashboard/applied-jobs", label: "Applied Jobs" },
-            { href: "/candidate-dashboard/favourite-jobs", label: "Favorite Jobs" },
-            { href: "/candidate-dashboard/candidate-job-alerts", label: "Job Alert" },
-            { href: "/candidate-dashboard/candidate-settings", label: "Settings" },
-          ]
-        : [
-            { href: "/company-dashboard", label: "Overview" },
-            { href: "/company-dashboard/employer-profile", label: "Employee Profile" },
-            { href: "/company-dashboard/post-job", label: "Post a Job" },
-            { href: "/company-dashboard/my-jobs", label: "My Jobs" },
-            { href: "/company-dashboard/saved-candidates", label: "Saved Candidates" },
-            { href: "/company-dashboard/plans-&-billing", label: "Plans & Billing" },
-            { href: "/company-dashboard/settings", label: "Settings" },
-          ];
-
-    return (
-      <div className="relative" ref={isMobile ? null : menuRef}>
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-          <DropdownMenuTrigger asChild>
-            <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
-              {currentUser?.displayName?.slice(0, 1)}
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 mx-1" align="start">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link href={role === 'Applicant' ? '/candidate-dashboard' : '/company-dashboard/employer-profile'}>
-                  Profile
-                </Link>
-                <DropdownMenuShortcut>
-                  <User size={16} />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                Team
-                <DropdownMenuShortcut>
-                  <FaUsers />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent>
-                    {dashboardLinks.map((link) => (
-                      <Link key={link.href} href={link.href}>
-                        <DropdownMenuItem>{link.label}</DropdownMenuItem>
-                      </Link>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <Link href="/customer-support">
-              <DropdownMenuItem>Support</DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              Log out
-              <DropdownMenuShortcut>
-                <LogOut size={16} />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    );
-  };
+  const singleName = currentUser?.displayName?.split(' ');
+  const firstName = singleName ? singleName[0] : '';
 
   return (
     <>
@@ -290,6 +216,7 @@ export default function Navbar() {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-5">
+                {/* notification section start */}
                 {role === 'Applicant' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -327,20 +254,147 @@ export default function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-
-                {currentUser && (role === 'Applicant' || role === 'Company') ? (
-                  <UserDropdown />
-                ) : (
-                  <Link href="/signin">
-                    <Button variant="ghost" className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
+{/* notification section end */}
+{/* condition sign in button if current user is not available  */}
+{/* profile dropdown start */}
+{!currentUser && <Link href="/signin" className="">
+                    <button className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
                       Sign In
-                    </Button>
-                  </Link>
-                )}
+                    </button>
+                  </Link>}
 
-                <Link href="/company-dashboard/Post-a-Job">
-                  <ButtonCommon name="Post A Job" />
-                </Link>
+
+{/* if user is applicant then show this dropdown  */}
+
+{currentUser && role === 'Applicant' &&   
+<div className="relative" ref={menuRef}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="border cursor-pointer rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Billing
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Settings
+                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Keyboard shortcuts
+                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>Team</DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <DropdownMenuItem>Email</DropdownMenuItem>
+                                <DropdownMenuItem>Message</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>More...</DropdownMenuItem>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                          <DropdownMenuItem>
+                            New Team
+                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>GitHub</DropdownMenuItem>
+                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuItem disabled>API</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    
+                  </div>}
+
+{/* if user is company then show this dropdown */}
+               {currentUser && role === 'Company' && 
+               <div className="relative" ref={menuRef}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="border cursor-pointer rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Billing
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Settings
+                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Keyboard shortcuts
+                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>Team</DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <DropdownMenuItem>Email</DropdownMenuItem>
+                                <DropdownMenuItem>Message</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>More...</DropdownMenuItem>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                          <DropdownMenuItem>
+                            New Team
+                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>GitHub</DropdownMenuItem>
+                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuItem disabled>API</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    
+                  </div>}
+               {/* if user is company then show this button  */}
+               {currentUser && role === 'Company' && <Link href="/company-dashboard/Post-a-Job">
+                  <ButtonCommon name="Post A Post" />
+                </Link>}
+                
               </div>
             </div>
 
@@ -356,6 +410,7 @@ export default function Navbar() {
                   </SheetTrigger>
                   <SheetContent side="left" className="w-65 px-5">
                     <div className="flex flex-col space-y-4 mt-8">
+                      <DialogTitle></DialogTitle>
                       {navigationLinks.map((link) => (
                         <a
                           key={link.name}
@@ -415,51 +470,72 @@ export default function Navbar() {
 
                 {/* Mobile Action Buttons */}
                 <div className="flex items-center space-x-2">
-                  {role === 'Applicant' && (
+                  {currentUser ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="relative focus:outline-none">
-                          <Bell className="h-4 w-4" />
-                          {notifications.length > 0 && (
-                            <Badge
-                              variant="destructive"
-                              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                            >
-                              {notifications.length}
-                            </Badge>
-                          )}
-                        </Button>
+                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-40">
-                        <div className="p-2 font-medium">Notifications</div>
-                        {notifications.length === 0 ? (
-                          <DropdownMenuItem className="text-sm text-muted-foreground">
-                            No new notifications
+                      <DropdownMenuContent className="w-56 mx-1" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>
+                              <User size={16} />
+                            </DropdownMenuShortcut>
                           </DropdownMenuItem>
-                        ) : (
-                          notifications.map((notification) => (
-                            <DropdownMenuItem
-                              key={notification.id}
-                              className="flex flex-col items-start gap-1"
-                            >
-                              <span className="text-sm font-medium">{notification.message}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {notification.timestamp}
-                              </span>
-                            </DropdownMenuItem>
-                          ))
-                        )}
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Team
+                            <DropdownMenuShortcut>
+                              <FaUsers />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <Link href="/candidate">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-jobs">
+                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-jobs">
+                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-job-alerts">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>
+                            <LogOut size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  )}
-
-                  {currentUser && (role === 'Applicant' || role === 'Company') ? (
-                    <UserDropdown isMobile />
                   ) : (
-                    <Link href="/signin">
-                      <Button variant="ghost" className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                    <Link href="/signin" className="">
+                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
                         Sign in
-                      </Button>
+                      </button>
                     </Link>
                   )}
                 </div>
