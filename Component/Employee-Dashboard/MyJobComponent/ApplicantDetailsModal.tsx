@@ -141,7 +141,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
     toast.error('Failed to process shortlist or notification');
   }
 };
-
+// save profile and send notification
 const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName}: {currentUsersId: string; SapplicantId: string; jobId: string; fullName: string}) => {
   try {
     const response = await saveProfileData({
