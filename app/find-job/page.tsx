@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
       </div>
     );
   }
-
+// get for view mode value
    const params = resolvedSearchParams || { viewMode: 'grid' }; 
 
   return (

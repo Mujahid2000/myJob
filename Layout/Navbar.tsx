@@ -254,95 +254,156 @@ export default function Navbar() {
                   </DropdownMenu>
                 )}
 
-                {currentUser ? (
+                {currentUser && role === 'Application' ? (
                   <div className="relative" ref={menuRef}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="border cursor-pointer rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
                           {currentUser.displayName?.slice(0, 1)}
                         </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56" align="start">
+                      <DropdownMenuContent className="w-56 mx-1" align="start">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuGroup>
                           <DropdownMenuItem>
                             Profile
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Billing
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Settings
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Keyboard shortcuts
-                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                            <DropdownMenuShortcut>
+                              <User size={16} />
+                            </DropdownMenuShortcut>
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuItem>Team</DropdownMenuItem>
+                          <DropdownMenuItem>
+                            Team
+                            <DropdownMenuShortcut>
+                              <FaUsers />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
                           <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                <DropdownMenuItem>Email</DropdownMenuItem>
-                                <DropdownMenuItem>Message</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>More...</DropdownMenuItem>
+                                <Link href="/candidate">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-jobs">
+                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-jobs">
+                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-job-alerts">
+                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                </Link>
+                                <Link href="/candidate-settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
                               </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
-                          <DropdownMenuItem>
-                            New Team
-                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                          </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>GitHub</DropdownMenuItem>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
-                        <DropdownMenuItem disabled>API</DropdownMenuItem>
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                           Log out
-                          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                          <DropdownMenuShortcut>
+                            <LogOut size={16} />
+                          </DropdownMenuShortcut>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {isOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
-                        <Link
-                          href="/company-dashboard/employer-profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          Profile
-                        </Link>
-                        <Link
-                          href="/company-dashboard/Post-a-Job"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          Post A Job
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <Link href="/signin" className="">
-                    <button className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
+                    <Button variant='ghost' className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
                       Sign In
-                    </button>
+                    </Button>
+                  </Link>
+                )}
+
+                {currentUser && role === 'Company' ? (
+                  <div className="relative" ref={menuRef}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56 mx-1" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          
+                          <DropdownMenuItem>
+                            <Link href={'/company-dashboard/employer-profile'}>
+                            Profile
+                          </Link>
+                            <DropdownMenuShortcut>
+                              <User size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Team
+                            <DropdownMenuShortcut>
+                              <FaUsers />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                <Link href="/company-dashboard">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/employer-profile">
+                                  <DropdownMenuItem>Employee Profile</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/post-job">
+                                  <DropdownMenuItem>Post a Job</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/my-jobs">
+                                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/saved-candidates">
+                                  <DropdownMenuItem>Saved Candidates</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/plans-&-billing">
+                                  <DropdownMenuItem>Plans & Billing</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>
+                            <LogOut size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                  </div>
+                ) : (
+                  <Link href="/signin" className="">
+                    <Button variant='ghost' className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
+                      Sign In
+                    </Button>
                   </Link>
                 )}
                 <Link href="/company-dashboard/Post-a-Job">
@@ -461,7 +522,7 @@ export default function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-                  {currentUser ? (
+                  {currentUser && role === 'Applicant' ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -524,9 +585,83 @@ export default function Navbar() {
                     </DropdownMenu>
                   ) : (
                     <Link href="/signin" className="">
-                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                      <Button variant='ghost' className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
                         Sign in
-                      </button>
+                      </Button>
+                    </Link>
+                  )}
+                  {currentUser && role === 'Company' ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          {currentUser.displayName?.slice(0, 1)}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56 mx-1" align="start">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Profile
+                            <DropdownMenuShortcut>
+                              <User size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem>
+                            Team
+                            <DropdownMenuShortcut>
+                              <FaUsers />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                               <DropdownMenuSubContent>
+                                <Link href="/company-dashboard">
+                                  <DropdownMenuItem>Overview</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/employer-profile">
+                                  <DropdownMenuItem>Employee Profile</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/post-job">
+                                  <DropdownMenuItem>Post a Job</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/my-jobs">
+                                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/saved-candidates">
+                                  <DropdownMenuItem>Saved Candidates</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/plans-&-billing">
+                                  <DropdownMenuItem>Plans & Billing</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/settings">
+                                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                          </DropdownMenuSub>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <Link href="/customer-support">
+                          <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Log out
+                          <DropdownMenuShortcut>
+                            <LogOut size={16} />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Link href="/signin" className="">
+                      <Button variant='ghost' className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                        Sign in
+                      </Button>
                     </Link>
                   )}
                 </div>
