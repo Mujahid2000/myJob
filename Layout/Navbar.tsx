@@ -351,18 +351,18 @@ export default function Navbar() {
                             Profile
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                           </DropdownMenuItem>
+                          <Link href={'/company-dashboard/plans-&-billing'}>
                           <DropdownMenuItem>
                             Billing
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Settings
+                          </Link>
+                          <Link href={'/company-dashboard/settings'}>
+                          <DropdownMenuItem className="flex justify-between">
+                            Settings <Settings size={16}/>
                             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Keyboard shortcuts
-                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                          </DropdownMenuItem>
+                          </Link>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
@@ -389,13 +389,11 @@ export default function Navbar() {
                               </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
-                          <DropdownMenuItem>
-                            New Team
-                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                          </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
+                        <Link href={'/customer-supports'}>
                         <DropdownMenuItem>Support</DropdownMenuItem>
+                        </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                           Log out
