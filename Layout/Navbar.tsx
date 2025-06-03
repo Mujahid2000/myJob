@@ -423,6 +423,43 @@ export default function Navbar() {
 
                 {/* Mobile Action Buttons */}
                 <div className="flex items-center space-x-2">
+                 {role === 'Applicant' && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="relative focus:outline-none">
+                        <Bell className="h-4 w-4" />
+                        {notifications.length > 0 && (
+                          <Badge
+                            variant="destructive"
+                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                          >
+                            {notifications.length}
+                          </Badge>
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40">
+                      <div className="p-2 font-medium">Notifications</div>
+                      {notifications.length === 0 ? (
+                        <DropdownMenuItem className="text-sm text-muted-foreground">
+                          No new notifications
+                        </DropdownMenuItem>
+                      ) : (
+                        notifications.map((notification) => (
+                          <DropdownMenuItem
+                            key={notification.id}
+                            className="flex flex-col items-start gap-1"
+                          >
+                            <span className="text-sm font-medium">{notification.message}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {notification.timestamp}
+                            </span>
+                          </DropdownMenuItem>
+                        ))
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
                   {currentUser ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
