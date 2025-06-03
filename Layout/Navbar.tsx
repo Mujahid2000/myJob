@@ -31,6 +31,7 @@ import ButtonCommon from "@/Component/HomeComponent/Button";
 import { FaUsers } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
+import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 
 // Socket.IO initialization
 const socket = io('https://job-server-1.onrender.com', {
