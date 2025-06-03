@@ -149,7 +149,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
         toast.warning(response.message);
       } else if (response?.message === 'Candidate profile saved successfully') {
        // Send notification via REST API
-      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/send', {
+      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/sendSavedProfile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,7 +158,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
           Name: fullName,
           applicantId: applicantDetails?.applicant.userId,
           jobId,
-          message: `You have been shortlisted for job ${jobId}`,
+          message: `Your profile saved by companyUser for this ${userid} job`,
         }),
       });
 
