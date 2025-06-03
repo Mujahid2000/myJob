@@ -359,8 +359,8 @@ export default function Navbar() {
                           </Link>
                           <Link href={'/company-dashboard/settings'}>
                           <DropdownMenuItem className="flex justify-between">
-                            Settings <Settings size={16}/>
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                            Settings 
+                            <DropdownMenuShortcut><Settings size={16}/></DropdownMenuShortcut>
                           </DropdownMenuItem>
                           </Link>
                         </DropdownMenuGroup>
