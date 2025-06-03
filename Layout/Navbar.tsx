@@ -287,7 +287,7 @@ export default function Navbar() {
                           </Link>
 
                           <Link href="/candidate-dashboard/settings">
-                          <DropdownMenuItem>Settings<Settings/></DropdownMenuItem>
+                          <DropdownMenuItem className="flex justify-between">Settings<Settings size={16}/></DropdownMenuItem>
                           </Link>
 
                         </DropdownMenuGroup>
