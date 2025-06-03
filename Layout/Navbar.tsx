@@ -374,14 +374,17 @@ export default function Navbar() {
                                 <Link href="/company-dashboard">
                                   <DropdownMenuItem>Overview</DropdownMenuItem>
                                 </Link>
-                                <Link href="/company-dashboard/applied-jobs">
-                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                <Link href="/company-dashboard/employer-profile">
+                                  <DropdownMenuItem>Profile</DropdownMenuItem>
                                 </Link>
-                                <Link href="/company-dashboard/favourite-jobs">
-                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                <Link href="/company-dashboard/post-job">
+                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
                                 </Link>
-                                <Link href="/company-dashboard/job-alerts">
-                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                <Link href="/company-dashboard/saved-candidates">
+                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/plans-&-billing">
+                                  <DropdownMenuItem>Plans & Billings</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/settings">
                                   <DropdownMenuItem>Settings</DropdownMenuItem>
