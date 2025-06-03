@@ -142,24 +142,31 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
   }
 };
 
-  const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId }: { currentUsersId: string; SapplicantId: string, jobId:string }) => {
+  const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName }: { currentUsersId: string; SapplicantId: string, jobId:string, fullName:string }) => {
     try {
       const response = await saveProfileData({ userId: currentUsersId, applicantId: SapplicantId }).unwrap();
       if (response?.message === 'Candidate profile already saved') {
         toast.warning(response.message);
       } else if (response?.message === 'Candidate profile saved successfully') {
-        toast.success(response.message);
-         if (socket) {
-          const notification: Notification = {
-            id: socket.id,
-            companyUser: currentUsersId,
-            applicantId: SapplicantId,
-            jobId: jobId,
-            message: `Profile of candidate ${applicantData?.fullName || 'unknown'} saved by user ${currentUsersId}`,
-            timestamp: new Date().toISOString(),
-          };
-          socket.emit('sendNotification', notification);
-        }
+       // Send notification via REST API
+      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: socket.id,
+          companyUser: userid,
+          Name: fullName,
+          applicantId: applicantDetails?.applicant.userId,
+          jobId,
+          message: `You have been shortlisted for job ${jobId}`,
+        }),
+      });
+
+      if (!notificationResponse.ok) {
+        throw new Error('Failed to send notification');
+      }
+
+      toast.success('Notification sent successfully');
       } else if (response?.message) {
         toast.warning(response.message);
       }
@@ -213,7 +220,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
                       <Button
                         title="save candidate profile"
                         className="cursor-pointer"
-                        onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId })}
+                        onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId , fullName: applicantData?.fullName})}
                         disabled={saveProfileLoading}
                       >
                         <Bookmark />
