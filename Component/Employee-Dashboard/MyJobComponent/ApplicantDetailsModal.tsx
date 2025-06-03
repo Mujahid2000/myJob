@@ -220,7 +220,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
                       <Button
                         title="save candidate profile"
                         className="cursor-pointer"
-                        onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId , fullName: applicantData?.fullName})}
+                        onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId , fullName: applicantData?.fullName || ''})}
                         disabled={saveProfileLoading}
                       >
                         <Bookmark />
