@@ -551,19 +551,19 @@ export default function Navbar() {
                             <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                <Link href="/candidate">
+                                <Link href="/candidate-dashboard">
                                   <DropdownMenuItem>Overview</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-jobs">
+                                <Link href="/candidate-dashboard/applied-jobs">
                                   <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-jobs">
+                                <Link href="/candidate-dashboard/favourite-jobs">
                                   <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-job-alerts">
+                                <Link href="/candidate-dashboard/candidate-job-alerts">
                                   <DropdownMenuItem>Job Alert</DropdownMenuItem>
                                 </Link>
-                                <Link href="/candidate-settings">
+                                <Link href="/candidate-dashboard/candidate-settings">
                                   <DropdownMenuItem>Settings</DropdownMenuItem>
                                 </Link>
                               </DropdownMenuSubContent>
