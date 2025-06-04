@@ -24,6 +24,7 @@ interface Applicant {
   userId: string;
   resume_Id: string;
   profilePicture?: string;
+  companyName:string,
   // applicantId is optional if not always present in allApplicants
   applicantId?: string;
 }
@@ -40,6 +41,7 @@ interface SortApplicant {
   resume_Id: string;
   profilePicture?: string;
   applicantId: string;
+  companyName: string
 }
 
 // Define the interface for the modal state
@@ -48,6 +50,8 @@ interface Modal {
   userId: string;
   resume_Id: string;
   jobId: string;
+  companyName?: string;
+  title: string
 }
 
 const ApplicationDetails = ({ jobId }: { jobId: string }) => {
@@ -58,12 +62,18 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
     userId: '',
     resume_Id: '',
     jobId: '',
+    companyName: '',
+    title: ''
+
   });
   const [sortedApplicantDetails, setSortedApplicantDetails] = useState<Modal>({
     modalValue: false,
     userId: '',
     resume_Id: '',
     jobId: '',
+    companyName: "",
+    title: ''
+
   });
   const [shortlistedData, setShortlistedData] = useState<SortApplicant[]>([]);
 
@@ -103,6 +113,7 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
           resume_Id: item.resume_Id,
           profilePicture: item.profilePicture,
           applicantId: item.applicantId || '',
+          companyName: item.companyName || ''
         }))
       );
     }
@@ -130,23 +141,26 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
     setIsSortOpen(false);
   };
 
-  const handleApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
+  const handleApplicationDetails = ({ userId, resume_Id, companyName,jobTItle }: { userId: string; resume_Id: string, companyName:string,jobTItle:string }) => {
     setSortedApplicantDetails((prev) => ({ ...prev, modalValue: false }));
     setApplicantDetails({
       modalValue: true,
       userId,
       resume_Id,
       jobId,
+      companyName,
+      title: jobTItle
     });
   };
 
-  const handleSortedApplicationDetails = ({ userId, resume_Id }: { userId: string; resume_Id: string }) => {
+  const handleSortedApplicationDetails = ({ userId, resume_Id,jobTItle }: { userId: string; resume_Id: string,jobTItle:string }) => {
     setApplicantDetails((prev) => ({ ...prev, modalValue: false }));
     setSortedApplicantDetails({
       modalValue: true,
       userId,
       resume_Id,
       jobId,
+      title: jobTItle
     });
   };
 
@@ -232,7 +246,7 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
                 <div
                   title="click here"
                   onClick={() =>
-                    handleApplicationDetails({ userId: applicant.userId, resume_Id: applicant.resume_Id })
+                    handleApplicationDetails({ userId: applicant.userId, resume_Id: applicant.resume_Id, companyName: applicant.companyName, jobTItle: applicant.title })
                   }
                   className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer"
                 >
@@ -278,7 +292,7 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
                 <div
                   title="click here"
                   onClick={() =>
-                    handleSortedApplicationDetails({ userId: applicant.applicantId, resume_Id: applicant.resume_Id })
+                    handleSortedApplicationDetails({ userId: applicant.applicantId, resume_Id: applicant.resume_Id, jobTItle:applicant.title })
                   }
                   className="flex justify-start border-b pb-4 items-center gap-5 cursor-pointer"
                 >
@@ -318,6 +332,8 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
         userId={applicantDetails.userId}
         resume_Id={applicantDetails.resume_Id}
         jobId={applicantDetails.jobId}
+        companyname={applicantDetails.companyName}
+        jobTitle={applicantDetails.title}
       />
       <ApplicantShortlistDetailsModal
         newopen={sortedApplicantDetails.modalValue}
@@ -325,6 +341,8 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
         userId={sortedApplicantDetails.userId}
         resume_Id={sortedApplicantDetails.resume_Id}
         jobId={sortedApplicantDetails.jobId}
+        companyname={sortedApplicantDetails.companyName}
+        jobTitle={sortedApplicantDetails.title}
       />
     </div>
   );

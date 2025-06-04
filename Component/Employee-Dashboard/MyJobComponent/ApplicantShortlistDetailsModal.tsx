@@ -11,7 +11,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube 
 import { toast, Toaster } from 'sonner';
 import { FaUsersBetweenLines } from "react-icons/fa6";
 
-const ApplicantShortlistDetailsModal = ({ newopen, setnewopen, userId, resume_Id, jobId}:{newopen: any, setnewopen:any, userId: string, resume_Id:string, jobId:string}) => {
+const ApplicantShortlistDetailsModal = ({ newopen, setnewopen, userId, resume_Id, jobId, companyname, jobTitle}:{newopen: any, setnewopen:any, userId: string, resume_Id:string, jobId:string, companyname:string | undefined, jobTitle:string}) => {
     const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
     const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });

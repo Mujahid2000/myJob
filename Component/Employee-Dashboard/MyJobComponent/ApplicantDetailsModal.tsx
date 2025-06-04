@@ -34,12 +34,15 @@ interface ApplicantDetailsModalProps {
   userId: string;
   resume_Id: string;
   jobId: string;
+  companyname: string | undefined;
+  jobTitle: string
 }
 
-const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, setnewopen, userId, resume_Id, jobId }) => {
+const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, setnewopen, userId, resume_Id, jobId, companyname ,jobTitle}) => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+  const company_Name = userEmail?.user.name
   const userid = userEmail?.user?._id || '';
   const email = userEmail?.user?.email || '';
   const applicantDetailsData = { userId, resume_Id };
@@ -126,7 +129,7 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
           Name: applicantDetails.applicant.fullName,
           applicantId: applicantDetails?.applicant.userId,
           jobId,
-          message: `You have been shortlisted for job ${jobId}`,
+          message: `You have been shortlisted for ${jobTitle} role in ${companyname}  `,
         }),
       });
 
@@ -163,7 +166,7 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
         Name: fullName,
         applicantId: applicantDetails?.applicant.userId,
         jobId,
-        message: `Your profile was saved by company user ${userid} for job ${jobId}`,
+        message: `Your profile was saved by ${companyname} company for ${jobTitle} role`,
       };
 
       const notificationResponse = await fetch(

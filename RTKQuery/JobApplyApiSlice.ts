@@ -37,8 +37,10 @@ export interface ApplicantListByJobPost {
 }
 
 export interface Applicant {
-  _id: string
+    _id: string
   userId: string
+  jobId: string
+  resume_Id: string
   date: string
   profilePicture: string
   experience: string
@@ -46,7 +48,8 @@ export interface Applicant {
   fullName: string
   title: string
   resumeLink: string
-  resume_Id: string
+  companyUserId: string
+  companyName: string
 }
 
 export interface ApplicantDetails {
