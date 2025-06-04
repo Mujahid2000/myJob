@@ -1,10 +1,18 @@
+'use client'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MapPin, Clock, DollarSign, Star, ArrowRight, Bookmark } from "lucide-react"
+import { Daum, useGetJobPostDataForHomeQuery } from "@/RTKQuery/JobApplyApiSlice"
+import Link from "next/link"
+
+
 
 export default function FeaturedJobs() {
+  const {data:jobData} = useGetJobPostDataForHomeQuery('');
+  const featuredJobData: Daum[] = jobData?.data ?? [];
+  console.log(featuredJobData)
   const featuredJobs = [
     {
       id: 1,
@@ -95,17 +103,19 @@ export default function FeaturedJobs() {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Featured Jobs</h2>
             <p className="text-gray-600">Discover your next career opportunity</p>
           </div>
+          <Link href={'/find-job'}>
           <Button variant="outline" className="hidden cursor-pointer text-[#0A65CC] sm:flex items-center gap-2">
             View all jobs
             <ArrowRight className="h-4 w-4" />
           </Button>
+          </Link>
         </div>
 
         {/* Jobs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {featuredJobs.map((job) => (
+          {featuredJobData.map((job) => (
             <Card
-              key={job.id}
+              key={job._id}
               className="group hover:shadow-lg transition-all duration-300  border-0 shadow-sm hover:-translate-y-1"
             >
               <CardContent className="p-6">
@@ -113,16 +123,16 @@ export default function FeaturedJobs() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={job.companyLogo || "/placeholder.svg"} alt={job.company} />
+                      <AvatarImage src={job.logo || "/placeholder.svg"} alt={job.companyName} />
                       <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
-                        {job.company.charAt(0)}
+                        {job.companyName}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className="font-semibold text-gray-900 group-hover:text-[#0A65CC] transition-colors">
                         {job.title}
                       </h3>
-                      <p className="text-gray-600 text-sm">{job.company}</p>
+                      <p className="text-gray-600 text-sm">{job.companyName}</p>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" className="opacity-0 cursor-pointer group-hover:opacity-100 transition-opacity">
@@ -139,13 +149,13 @@ export default function FeaturedJobs() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      <span>{job.type}</span>
+                      <span>{job.jobType}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1 text-sm">
                     <DollarSign className="h-4 w-4 text-green-600" />
-                    <span className="font-medium text-green-600">{job.salary}</span>
+                    <span className="font-medium text-green-600">{job.minSalary}-{job.maxSalary}</span>
                   </div>
                 </div>
 
@@ -161,10 +171,10 @@ export default function FeaturedJobs() {
                 {/* Footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-4 text-xs text-gray-500">
-                    <span>{job.postedTime}</span>
+                    <span>{job.postedDate.slice(0,10)}</span>
                     <span>•</span>
-                    <span>{job.applicants} applicants</span>
-                    {job.featured && (
+                    <span>{job?.applicationCount} applicants</span>
+                    {job.Featured && (
                       <>
                         <span>•</span>
                         <div className="flex items-center gap-1 text-yellow-600">
@@ -174,9 +184,11 @@ export default function FeaturedJobs() {
                       </>
                     )}
                   </div>
+                  <Link href={`/find-job/${job._id}`}>
                   <Button size="sm" className="bg-[#0A65CC] cursor-pointer hover:bg-blue-700">
                     Apply 
                   </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

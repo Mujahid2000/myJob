@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function RegisterCards() {
   return (
@@ -9,9 +10,11 @@ export default function RegisterCards() {
         <p className="text-gray-600 mt-2 text-base md:text-lg">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras cursus a dolor convallis efficitur.
         </p>
-        <Button className="mt-4 p-6 text-base md:text-lg rounded-sm bg-white text-blue-600 hover:bg-blue-600 hover:text-white flex items-center gap-2">
+        <Link href={'/register'}>
+        <Button className="mt-4 cursor-pointer p-6 text-base md:text-lg rounded-sm bg-white text-blue-600 hover:bg-blue-600 hover:text-white flex items-center gap-2">
           Register Now →
         </Button>
+        </Link>
       </div>
       {/* Employer Card */}
       <div className="max-w-[40rem] max-h-[18rem] p-9 bg-[#0A65CC] rounded-lg text-white">
@@ -19,9 +22,11 @@ export default function RegisterCards() {
         <p className="mt-2 text-base md:text-lg">
           Cras in massa pellentesque, mollis ligula non, luctus dui. Morbi sed efficitur dolor. Pelque augue risus, aliquet.
         </p>
-        <Button className="mt-4 p-6 text-base md:text-lg rounded-sm bg-white hover:bg-blue-600 hover:text-white text-blue-700 flex items-center gap-2">
+        <Link href={'/register'}>
+        <Button className="mt-4 cursor-pointer p-6 text-base md:text-lg rounded-sm bg-white hover:bg-blue-600 hover:text-white text-blue-700 flex items-center gap-2">
           Register Now →
         </Button>
+        </Link>
       </div>
     </div>
   );

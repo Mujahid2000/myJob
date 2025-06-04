@@ -88,6 +88,29 @@ export interface SocialLink {
   _id: string
 }
 
+export interface FeaturedJobs {
+  success: boolean
+  count: number
+  data: Daum[]
+}
+
+export interface Daum {
+  _id: string
+  userId: string
+  title: string
+  tags: string[]
+  salaryType: string
+  minSalary: number
+  maxSalary: number
+  jobType: string
+  location: string
+  status: string
+  postedDate: string
+  logo?: string
+  companyName?: string
+  applicationCount: number
+  Featured?: string
+}
 
 
 
@@ -127,9 +150,13 @@ export const jobApply = createApi({
             params: { userId, resumeId: resume_Id }
         })
        }),
+    //   একজন আবেদনকারীর বিবরনী যে পোস্টে সে আবেদন করেছে
+       getJobPostDataForHome: builder.query<FeaturedJobs, string>({
+            query: () => '/appliedJobs/getJobDataWithJobCount',
+        }),
        
     })
 })
 
 
-export const {usePostJobApplyDataMutation, useGetJobPostDataQuery, useGetJobPostApplicantListByJobIdQuery, useGetJobPostApplicantDetailsQuery} = jobApply
+export const {usePostJobApplyDataMutation, useGetJobPostDataQuery, useGetJobPostApplicantListByJobIdQuery, useGetJobPostApplicantDetailsQuery, useGetJobPostDataForHomeQuery} = jobApply
