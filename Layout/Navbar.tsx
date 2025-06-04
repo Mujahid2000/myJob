@@ -538,6 +538,44 @@ export default function Navbar() {
                     <span className="text-lg sm:text-xl font-bold text-gray-900">MyJob</span>
                   </div>
                 </div>
+                 {/* notification section start */}
+                {currentUser && role === 'Applicant' && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="relative focus:outline-none">
+                        <Bell className="h-4 w-4" />
+                        {sumArray.length > 0 && (
+                          <Badge
+                            variant="destructive"
+                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                          >
+                            {sumArray.length}
+                          </Badge>
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-60">
+                      <div className="p-2 font-medium">Notifications</div>
+                      {sumArray.length === 0 ? (
+                        <DropdownMenuItem className="text-sm text-muted-foreground">
+                          No new notifications
+                        </DropdownMenuItem>
+                      ) : (
+                        sumArray.map((notification, index) => (
+                          <DropdownMenuItem
+                            key={index}
+                            className="flex flex-col items-start gap-1"
+                          >
+                            <span className="text-sm font-medium">{notification.message}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {notification.time}
+                            </span>
+                          </DropdownMenuItem>
+                        ))
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
                 {/* if currentUser not available then show the signin button */}
                 {!currentUser && (
                   <Link href="/signin" className="">
