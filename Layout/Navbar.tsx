@@ -430,6 +430,9 @@ export default function Navbar() {
                                 <Link href="/company-dashboard/post-job">
                                   <DropdownMenuItem>Post Job</DropdownMenuItem>
                                 </Link>
+                                <Link href="/company-dashboard/my-jobs">
+                                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
+                                </Link>
                                 <Link href="/company-dashboard/saved-candidates">
                                   <DropdownMenuItem>Post Job</DropdownMenuItem>
                                 </Link>
@@ -647,6 +650,9 @@ export default function Navbar() {
                                 </Link>
                                 <Link href="/company-dashboard/post-job">
                                   <DropdownMenuItem>Post Job</DropdownMenuItem>
+                                </Link>
+                                <Link href="/company-dashboard/my-jobs">
+                                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/saved-candidates">
                                   <DropdownMenuItem>Post Job</DropdownMenuItem>

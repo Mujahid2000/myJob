@@ -39,10 +39,7 @@ export interface jobItem {
 }
 
 
-/**
- * Page component for displaying job listings with filtering and pagination.
- * @param searchParams - A promise that resolves to query parameters for filtering jobs.
- */
+
 export default async function Page({ searchParams }: { searchParams: Promise<PageProps> }) {
   // Resolve searchParams
   let resolvedSearchParams: PageProps;
