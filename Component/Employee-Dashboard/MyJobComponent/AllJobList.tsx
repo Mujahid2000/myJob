@@ -1,6 +1,10 @@
 'use client';
 
 import { AuthContext } from '@/Authentication/AuthContext';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { useGetJobPostDataQuery } from '@/RTKQuery/JobApplyApiSlice';
@@ -87,97 +91,148 @@ const AllJobList: React.FC = () => {
           </Select>
         </div>
       </div>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          {/* Table Header */}
-          <thead>
-            <tr className="bg-gray-100 text-gray-600 text-sm">
-              <th className="p-4 uppercase">Job</th>
-              <th className="p-4 uppercase">Status</th>
-              <th className="p-4 uppercase">Applications</th>
-              <th className="p-4 uppercase">Action</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            {jobsData.jobs.map((job: Job) => (
-              <tr key={job._id} className="border-b border-gray-200 hover:bg-gray-50">
-                {/* Job Column */}
-                <td className="p-4">
-                  <div className="flex items-center space-x-4">
-                    <Image
-                      src={job.logo || 'https://via.placeholder.com/40'}
-                      alt={`${job.title} logo`}
-                      width={40}
-                      height={40}
-                      className="rounded"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40';
-                      }}
-                    />
-                    <div>
-                      <div className="flex gap-3">
-                        <p className="font-semibold">{job.title}</p>
-                        <p className="text-sm bg-[#E7F0FA] rounded-full px-2 text-[#0A65CC]">{job.jobType}</p>
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        {job.location} • {job.minSalary} - {job.maxSalary}/{job.salaryType}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                {/* Status Column */}
-                <td className="p-3">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-green-500">
-                      <Check size={16} />
-                    </span>
-                    <span className="text-sm text-green-500">{job.status === 'open' ? 'Active' : 'Expired'}</span>
-                  </div>
-                </td>
-                {/* Applications Column */}
-                <td className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Users />
-                    <p>{job.applicationCount} Applications</p>
-                  </div>
-                </td>
-                {/* Action Column */}
-                <td className="p-4 flex gap-5 relative">
-                  <Link href={`/company-dashboard/my-jobs/${job._id}`}>
-                    <button className="bg-[#F1F2F4] hover:bg-[#0A65CC] hover:text-white duration-300 font-medium text-[#0A65CC] px-4 py-2 rounded">
-                      View Details
-                    </button>
-                  </Link>
-                  <button onClick={() => handle3Dot(job._id)} className="cursor-pointer">
-                    <BsThreeDots />
-                  </button>
-                  {openModalId === job._id && (
-                    <div
-                      className="absolute mt-10 w-48 bg-white shadow-lg rounded-lg z-10 right-0"
-                      style={{ top: '100%' }}
-                    >
-                      <button className="flex gap-2 hover:bg-[#E7F0FA] hover:text-[#0A65CC] px-3 py-2 cursor-pointer w-full text-left">
-                        <PlusCircle size={16} />
-                        Promote Job
-                      </button>
-                      <Link href={`/company-dashboard/my-jobs/${job._id}`}>
-                        <button className="flex gap-2 hover:bg-[#E7F0FA] hover:text-[#0A65CC] px-3 py-2 cursor-pointer w-full text-left">
-                          <Eye size={16} />
-                          View Details
-                        </button>
-                      </Link>
-                      <button className="flex gap-2 hover:bg-[#E7F0FA] hover:text-[#0A65CC] px-3 py-2 cursor-pointer w-full text-left">
-                        <CircleX size={16} />
-                        Mark as Expired
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+       <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center my-5">
+          <h2 className="text-base sm:text-lg font-semibold">Recently Posted</h2>
+          <Link href="/company-dashboard/my-jobs">
+            <button className="text-blue-600 hover:underline flex items-center gap-2 text-sm sm:text-base">
+              View all <MoveRight size={16} />
+            </button>
+          </Link>
+        </div>
+
+        {/* Loading State */}
+        {jobsLoading && (
+          <div className="text-center p-4 text-sm sm:text-base text-gray-600 bg-white rounded-lg shadow-md">
+            Loading jobs...
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!jobsLoading && (!jobsData?.jobs || jobsData.jobs.length === 0) && (
+          <div className="text-center p-4 text-sm sm:text-base text-gray-600 bg-white rounded-lg shadow-md">
+            No jobs posted yet.
+          </div>
+        )}
+
+        {/* Table */}
+        {!jobsLoading && jobsData.jobs?.length > 0 && (
+          <Card className="p-0">
+            <CardContent className="p-0">
+              <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+                <table className="w-full text-left min-w-[600px]" role="grid">
+                  <thead>
+                    <tr className="bg-gray-100 text-gray-600 text-xs sm:text-sm font-semibold uppercase">
+                      <th className="p-2 sm:p-3 min-w-[200px] sm:min-w-[250px]">Job</th>
+                      <th className="p-2 sm:p-3 min-w-[100px]">Status</th>
+                      <th className="p-2 sm:p-3 min-w-[120px]">Applications</th>
+                      <th className="p-2 sm:p-3 min-w-[180px]">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jobsData.jobs.map((job: Job) => (
+                      <tr
+                        key={job._id}
+                        className="border-b border-gray-200 hover:bg-gray-50"
+                        role="row"
+                      >
+                        <td className="p-2 sm:p-3">
+                          <div className="flex items-center space-x-2 sm:space-x-3">
+                            <Image
+                              src={job.logo || '/default-logo.png'}
+                              alt={`${job.title} logo`}
+                              width={32}
+                              height={32}
+                              className="w-8 h-8 sm:w-10 sm:h-10 rounded object-cover"
+                            />
+                            <div>
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <p className="font-semibold text-xs sm:text-sm truncate max-w-[150px] sm:max-w-[200px]">
+                                  {job.title}
+                                </p>
+                                <p className="text-xs bg-[#E7F0FA] rounded-full px-2 py-1 text-[#0A65CC]">
+                                  {job.jobType}
+                                </p>
+                              </div>
+                              <p className="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-[200px]">
+                                {job.location} • ${job.minSalary}k-${job.maxSalary}k
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-2 sm:p-3">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-green-500">
+                              <Check size={12} className="sm:h-4 sm:w-4" />
+                            </span>
+                            <Badge className="text-xs sm:text-sm text-green-500">
+                              {job.status === 'open' ? 'Active' : job.status}
+                            </Badge>
+                          </div>
+                        </td>
+                        <td className="p-2 sm:p-3">
+                          <div className="flex items-center space-x-1">
+                            <Users size={12} className="sm:h-4 sm:w-4" />
+                            <p className="text-xs sm:text-sm">{job.applicationCount} Applications</p>
+                          </div>
+                        </td>
+                        <td className="p-2 sm:p-3">
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <Link href={`/company-dashboard/my-jobs/${job._id}`}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-[#0A65CC] hover:bg-[#0A65CC] hover:text-white px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm"
+                                aria-label={`View details for ${job.title}`}
+                              >
+                                View Details
+                              </Button>
+                            </Link>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  aria-label="More actions"
+                                  className="p-1 sm:p-2"
+                                >
+                                  <BsThreeDots className="h-4 w-4 sm:h-5 sm:w-5" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-40 sm:w-48">
+                                <DropdownMenuItem asChild>
+                                  <button className="flex items-center gap-2 w-full text-left text-xs sm:text-sm">
+                                    <PlusCircle size={14} className="sm:h-4 sm:w-4" />
+                                    Promote Job
+                                  </button>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <Link
+                                    href={`/company-dashboard/my-jobs/${job._id}`}
+                                    className="flex items-center gap-2 w-full text-xs sm:text-sm"
+                                  >
+                                    <Eye size={14} className="sm:h-4 sm:w-4" />
+                                    View Details
+                                  </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <button className="flex items-center gap-2 w-full text-left text-xs sm:text-sm">
+                                    <CircleX size={14} className="sm:h-4 sm:w-4" />
+                                    Mark as Expired
+                                  </button>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
