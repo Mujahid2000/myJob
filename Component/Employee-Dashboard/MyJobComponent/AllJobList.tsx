@@ -91,16 +91,8 @@ const AllJobList: React.FC = () => {
           </Select>
         </div>
       </div>
-       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center my-5">
-          <h2 className="text-base sm:text-lg font-semibold">Recently Posted</h2>
-          <Link href="/company-dashboard/my-jobs">
-            <button className="text-blue-600 hover:underline flex items-center gap-2 text-sm sm:text-base">
-              View all <MoveRight size={16} />
-            </button>
-          </Link>
-        </div>
-
+      <div className="max-w-4xl mx-auto">
+    
         {/* Loading State */}
         {jobsLoading && (
           <div className="text-center p-4 text-sm sm:text-base text-gray-600 bg-white rounded-lg shadow-md">
