@@ -190,7 +190,7 @@ const jobDatas = jobsData?.jobs || []
                             <span className="text-green-500">
                               <Check size={12} className="sm:h-4 sm:w-4" />
                             </span>
-                            <Badge className="text-xs sm:text-sm text-green-500">
+                            <Badge className="text-xs bg-[#E7F0FA] sm:text-sm text-[#0A65CC">
                               {job.status === 'open' ? 'Active' : job.status}
                             </Badge>
                           </div>
