@@ -52,7 +52,7 @@ const page: React.FC = () => {
 
   return (
     <div className=" min-h-screen">
-      <div className='flex gap-3'>
+      <div className='flex flex-col lg:flex-row gap-3'>
 {/* Current Plan and Plan Benefits */}
 <div className="grid grid-row-1 md:grid-row-2  gap-6 mb-6">
         {/* Current Plan */}
@@ -83,7 +83,7 @@ const page: React.FC = () => {
             <br />
             We have to pay this payment every month.
           </p>
-          <button className="px-4 flex text-base items-center justify-center gap-5  w-full py-3 bg-[#0A65CC] text-white rounded-sm hover:bg-blue-700 transition">
+          <button className="px-3 lg:px-4 flex text-base items-center justify-center gap-5  w-full py-2 lg:py-3 bg-[#0A65CC] text-white rounded-sm hover:bg-blue-700 transition">
             Pay Now <MoveRight />
           </button>
         </div>
