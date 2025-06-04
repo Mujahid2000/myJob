@@ -18,7 +18,7 @@ export interface Daum {
 }
 
 
-
+//notification data get
 export const notificationApiSlice = createApi({
     reducerPath: 'notificationApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
