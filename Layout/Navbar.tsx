@@ -50,6 +50,7 @@ type Notification = {
   jobId: string;
   message: string;
   timestamp: string;
+  time: string
 };
 
 type NewNotification = {
@@ -60,7 +61,7 @@ type NewNotification = {
   jobId: string;
   message: string;
   Name: string;
-  timestamp: string;
+  time: string;
   companyName: string;
 };
 
@@ -298,7 +299,7 @@ export default function Navbar() {
                           >
                             <span className="text-sm font-medium">{notification.message}</span>
                             <span className="text-xs text-muted-foreground">
-                              {notification.timestamp}
+                              {notification.time}
                             </span>
                           </DropdownMenuItem>
                         ))

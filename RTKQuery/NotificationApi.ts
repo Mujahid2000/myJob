@@ -13,7 +13,7 @@ export interface Daum {
   jobId: string
   message: string
   Name: string
-  timestamp: string
+  time: string
   companyName: string
 }
 
