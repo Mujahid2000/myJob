@@ -73,19 +73,19 @@ const AllJobList: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">My Jobs ({jobsData.jobs.length})</h2>
+        <h2 className="text-sm lg:text-lg font-semibold">My Jobs ({jobsData.jobs.length})</h2>
         <div className="flex items-center gap-5">
-          <p>Job status</p>
+          <p className='text-sm lg:text-base'>Job status</p>
           <Select>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Select an option" />
+            <SelectTrigger className="w-full lg:w-[150px]">
+              <SelectValue style={{ fontSize: 10 }} className='sm:text-xs lg:text-sm' placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Filter</SelectLabel>
-                <SelectItem value="all">All Jobs</SelectItem>
-                <SelectItem value="new">New to Old</SelectItem>
-                <SelectItem value="old">Old to New</SelectItem>
+                <SelectLabel className='text-xs'>Filter</SelectLabel>
+                <SelectItem value="all" className='sm:text-xs lg:text-sm'>All Jobs</SelectItem>
+                <SelectItem value="new" className='sm:text-xs lg:text-sm'>New to Old</SelectItem>
+                <SelectItem value="old" className='sm:text-xs lg:text-sm'>Old to New</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -142,9 +142,9 @@ const AllJobList: React.FC = () => {
                                 <p className="font-semibold text-xs sm:text-sm truncate max-w-[150px] sm:max-w-[200px]">
                                   {job.title}
                                 </p>
-                                <p className="text-xs bg-[#E7F0FA] rounded-full px-2 py-1 text-[#0A65CC]">
+                                <Badge className="text-xs bg-[#E7F0FA] rounded-full px-2 py-1 text-[#0A65CC]">
                                   {job.jobType}
-                                </p>
+                                </Badge>
                               </div>
                               <p className="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-[200px]">
                                 {job.location} • ${job.minSalary}k-${job.maxSalary}k
@@ -157,7 +157,7 @@ const AllJobList: React.FC = () => {
                             <span className="text-green-500">
                               <Check size={12} className="sm:h-4 sm:w-4" />
                             </span>
-                            <Badge className="text-xs w-10 bg-[#E7F0FA] sm:text-sm text-[#0A65CC]">
+                            <Badge className="text-xs bg-[#E7F0FA] sm:text-sm text-[#0A65CC]">
                               {job.status === 'open' ? 'Active' : job.status}
                             </Badge>
                           </div>

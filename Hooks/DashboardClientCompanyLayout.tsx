@@ -53,7 +53,7 @@ if(!currentUser){
 
     return (
         <div className="min-h-screen  bg-gray-50 pt-29">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 pt-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-0 pt-4">
           <div className="flex flex-col md:flex-row">
             <div className="w-full hidden lg:flex flex-col justify-between min-h-screen md:w-80 bg-white p-6">
               <div>

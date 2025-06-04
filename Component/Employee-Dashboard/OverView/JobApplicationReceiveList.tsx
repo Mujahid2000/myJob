@@ -175,9 +175,9 @@ const jobDatas = jobsData?.jobs || []
                                 <p className="font-semibold text-xs sm:text-sm truncate max-w-[150px] sm:max-w-[200px]">
                                   {job.title}
                                 </p>
-                                <p className="text-xs bg-[#E7F0FA] rounded-full px-2 py-1 text-[#0A65CC]">
+                                <Badge className="text-xs bg-[#E7F0FA] rounded-full px-2 py-1 text-[#0A65CC]">
                                   {job.jobType}
-                                </p>
+                                </Badge>
                               </div>
                               <p className="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-[200px]">
                                 {job.location} • ${job.minSalary}k-${job.maxSalary}k
