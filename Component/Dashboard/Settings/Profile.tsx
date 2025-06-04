@@ -1,3 +1,4 @@
+'use client'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CirclePlus, CloudUpload, FileText } from 'lucide-react';
@@ -70,7 +71,21 @@ const Profile = () => {
     },
   });
 
-
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRefs.current.every(
+          (ref) => ref && !ref.contains(event.target as Node)
+        )
+      ) {
+        dispatch(setActiveDropdown(null));
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dispatch]);
 
   const onBasicInfoSubmit = async (data: BasicInfoFormData) => {
     const profilePicture = data.profilePicture?.[0];
