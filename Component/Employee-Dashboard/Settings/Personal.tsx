@@ -26,7 +26,7 @@ const EmployeeCompanyInfo: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Organization Type, Industry Types, Team Size */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         {/* Organization Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -81,7 +81,7 @@ const EmployeeCompanyInfo: React.FC = () => {
       </div>
 
       {/* Year of Establishment, Company Website */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         {/* Year of Establishment */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -128,7 +128,7 @@ const EmployeeCompanyInfo: React.FC = () => {
             </div>
 
       {/* Save Button */}
-      <div className="flex justify-start pt-12">
+      <div className="flex justify-start pt-16 lg:pt-12">
          <button className="bg-[#0A65CC] text-white px-6 py-3 rounded-sm cursor-pointer hover:bg-blue-500">
           Save Change
         </button>

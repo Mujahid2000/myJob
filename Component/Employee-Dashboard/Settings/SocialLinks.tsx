@@ -98,12 +98,12 @@ const SocialLink: React.FC = () => {
 
             {/* Platform Dropdown and URL Input */}
             <div className="flex items-center gap-5">
-              <div className="flex items-center space-x-2 flex-1">
-                <div className="relative">
+              <div className="flex flex-col lg:flex-row gap-6 items-center space-x-2 flex-1">
+                <div className="relative w-full lg:w-48 ">
                   <select
                     value={link.platform}
                     onChange={(e) => updateLink(link.id, 'platform', e.target.value)}
-                    className="appearance-none w-48 bg-white border border-gray-300 rounded-md py-2 pl-10 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="appearance-none w-full lg:w-48 mt-2 lg:mt-0 bg-white border border-gray-300 rounded-md py-2 pl-10 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     {platforms.map((platform) => (
                       <option key={platform} value={platform}>
@@ -138,7 +138,7 @@ const SocialLink: React.FC = () => {
                   value={link.url}
                   onChange={(e) => updateLink(link.id, 'url', e.target.value)}
                   placeholder="Profile link/url..."
-                  className="flex-1 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
