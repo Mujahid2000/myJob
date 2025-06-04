@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -50,16 +51,17 @@ type Notification = {
   message: string;
   timestamp: string;
 };
+
 type NewNotification = {
-  _id: string
-  id: string
-  companyUser: string
-  applicantId: string
-  jobId: string
-  message: string
-  Name: string
-  timestamp: string
-  companyName: string
+  _id: string;
+  id: string;
+  companyUser: string;
+  applicantId: string;
+  jobId: string;
+  message: string;
+  Name: string;
+  timestamp: string;
+  companyName: string;
 };
 
 export default function Navbar() {
@@ -82,12 +84,13 @@ export default function Navbar() {
   const logOut = authContext?.logout;
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [newNotification, setNewNotification] = useState<NewNotification[]>([])
+  const [newNotification, setNewNotification] = useState<NewNotification[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const {data:notificationData} = useGetNotificationsQuery(userId);
-  // database notification data
-  const notData = notificationData?.data
-  const sumArray = notifications.concat(newNotification)
+  const { data: notificationData } = useGetNotificationsQuery(userId);
+  const notData = notificationData?.data;
+
+  // Combine notifications
+  const sumArray = [...notifications, ...newNotification];
 
   // Join user to their room
   useEffect(() => {
@@ -97,7 +100,7 @@ export default function Navbar() {
     console.log(`User ${userId} joined their room`);
 
     return () => {
-      socket.emit('leave', userId); // Optional: Leave room on cleanup
+      socket.emit('leave', userId);
     };
   }, [userId]);
 
@@ -106,12 +109,37 @@ export default function Navbar() {
     if (!userId) return;
 
     const handleNotification = (data: Notification) => {
-      console.log('Received notification:', data);
+      console.log("Received notification:", data);
       if (data.applicantId === userId) {
-        setNotifications((prev) => [
-          ...prev,
-          { ...data, timestamp: new Date(data.timestamp).toLocaleTimeString() },
-        ]);
+        const formattedNotification = {
+          ...data,
+          timestamp: new Date(data.timestamp).toLocaleTimeString(),
+        };
+
+        // Check if jobId matches with any database notification
+        const matchingDbNotification = Array.isArray(notData)
+          ? notData.find((dbNot: NewNotification) => dbNot.jobId === formattedNotification.jobId)
+          : null;
+
+        const keywords = ["saved", "shortlisted"];
+        const realTimeMessageHasKeyword = keywords.some((keyword) =>
+          formattedNotification.message.toLowerCase().includes(keyword)
+        );
+
+        if (matchingDbNotification) {
+          // If jobId matches, check if both messages have the same keyword
+          const dbMessageHasKeyword = keywords.some((keyword) =>
+            matchingDbNotification.message.toLowerCase().includes(keyword)
+          );
+
+          // If both messages have the same keyword (both have "saved" or "shortlisted"), skip adding
+          if (realTimeMessageHasKeyword === dbMessageHasKeyword) {
+            return;
+          }
+        }
+
+        // If no matching jobId or keywords don't match, add to notifications
+        setNotifications((prev) => [...prev, formattedNotification]);
       }
     };
 
@@ -120,15 +148,14 @@ export default function Navbar() {
     return () => {
       socket.off('receiveNotification', handleNotification);
     };
-    
-  }, [userId]);
+  }, [userId, notData]);
 
-
- useEffect(() => {
-  if (Array.isArray(notData) && notData.length !== 0) {
-    setNewNotification((prev) => [...prev, ...notData]); // Correctly updating the state
-  }
-}, [notData]);
+  // Handle database notifications
+  useEffect(() => {
+    if (Array.isArray(notData) && notData.length !== 0) {
+      setNewNotification(notData); // Directly set database notifications
+    }
+  }, [notData]);
 
   // Handle outside click to close dropdown
   useEffect(() => {
@@ -247,7 +274,7 @@ export default function Navbar() {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="relative focus:outline-none">
                         <Bell className="h-4 w-4" />
-                        {sumArray.length  > 0 && (
+                        {sumArray.length > 0 && (
                           <Badge
                             variant="destructive"
                             className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
@@ -264,9 +291,9 @@ export default function Navbar() {
                           No new notifications
                         </DropdownMenuItem>
                       ) : (
-                        sumArray.map((notification) => (
+                        sumArray.map((notification, index) => (
                           <DropdownMenuItem
-                            key={notification.id}
+                            key={index}
                             className="flex flex-col items-start gap-1"
                           >
                             <span className="text-sm font-medium">{notification.message}</span>
@@ -279,21 +306,19 @@ export default function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-{/* notification section end */}
-{/* condition sign in button if current user is not available  */}
-
-{!currentUser && <Link href="/signin" className="">
+                {/* notification section end */}
+                {/* condition sign in button if current user is not available  */}
+                {!currentUser && (
+                  <Link href="/signin" className="">
                     <button className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
                       Sign In
                     </button>
-                  </Link>}
-
-
-{/* profile dropdown start */}
-{/* if user is applicant then show this dropdown  */}
-
-{currentUser && role === 'Applicant' &&   
-<div className="relative" ref={menuRef}>
+                  </Link>
+                )}
+                {/* profile dropdown start */}
+                {/* if user is applicant then show this dropdown  */}
+                {currentUser && role === 'Applicant' && (
+                  <div className="relative" ref={menuRef}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border cursor-pointer rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -303,18 +328,18 @@ export default function Navbar() {
                       <DropdownMenuContent className="w-56" align="start">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuGroup>
-
                           <Link href={'/candidate-dashboard/settings'}>
-                          <DropdownMenuItem>
-                            Profile
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                          </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Profile
+                              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                            </DropdownMenuItem>
                           </Link>
-
                           <Link href="/candidate-dashboard/settings">
-                          <DropdownMenuItem className="flex justify-between">Settings<Settings size={16}/></DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-between">
+                              Settings
+                              <Settings size={16} />
+                            </DropdownMenuItem>
                           </Link>
-
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
@@ -356,13 +381,11 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    
-                  </div>}
-
-{/* if user is company then show this dropdown */}
-               {currentUser && role === 'Company' && 
-               <div className="relative" ref={menuRef}>
+                  </div>
+                )}
+                {/* if user is company then show this dropdown */}
+                {currentUser && role === 'Company' && (
+                  <div className="relative" ref={menuRef}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border cursor-pointer rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -377,16 +400,18 @@ export default function Navbar() {
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                           </DropdownMenuItem>
                           <Link href={'/company-dashboard/plans-&-billing'}>
-                          <DropdownMenuItem>
-                            Billing
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                          </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Billing
+                              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                            </DropdownMenuItem>
                           </Link>
                           <Link href={'/company-dashboard/settings'}>
-                          <DropdownMenuItem className="flex justify-between">
-                            Settings 
-                            <DropdownMenuShortcut><Settings size={16}/></DropdownMenuShortcut>
-                          </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-between">
+                              Settings
+                              <DropdownMenuShortcut>
+                                <Settings size={16} />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
                           </Link>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
@@ -420,7 +445,7 @@ export default function Navbar() {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <Link href={'/customer-supports'}>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
+                          <DropdownMenuItem>Support</DropdownMenuItem>
                         </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
@@ -429,14 +454,14 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    
-                  </div>}
-               {/* if user is company then show this button  */}
-               {currentUser && role === 'Company' && <Link href="/company-dashboard/Post-a-Job">
-                  <ButtonCommon name="Post A Post" />
-                </Link>}
-                
+                  </div>
+                )}
+                {/* if user is company then show this button  */}
+                {currentUser && role === 'Company' && (
+                  <Link href="/company-dashboard/Post-a-Job">
+                    <ButtonCommon name="Post A Post" />
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -510,16 +535,17 @@ export default function Navbar() {
                   </div>
                 </div>
                 {/* if currentUser not available then show the signin button */}
-                      {!currentUser && <Link href="/signin" className="">
-                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
-                        Sign in
-                      </button>
-                    </Link>}
-
+                {!currentUser && (
+                  <Link href="/signin" className="">
+                    <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                      Sign in
+                    </button>
+                  </Link>
+                )}
 
                 {/* Mobile Action Buttons */}
                 <div className="flex items-center space-x-2">
-                  {currentUser  && role === 'Applicant' &&  
+                  {currentUser && role === 'Applicant' && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -580,11 +606,11 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  }
+                  )}
                 </div>
                 {/* if company user is available then show this  */}
                 <div className="flex items-center space-x-2">
-                  {currentUser  && role === 'Company' &&  
+                  {currentUser && role === 'Company' && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
@@ -617,16 +643,16 @@ export default function Navbar() {
                                   <DropdownMenuItem>Overview</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/employer-profile">
-                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                  <DropdownMenuItem>Employer Profile</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/post-job">
-                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/saved-candidates">
-                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/plans-&-billing">
-                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                  <DropdownMenuItem>Plans & Billings</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/settings">
                                   <DropdownMenuItem>Settings</DropdownMenuItem>
@@ -648,10 +674,8 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  }
+                  )}
                 </div>
-
-             
               </div>
 
               {/* Search Bar - Mobile & Tablet Full Width */}

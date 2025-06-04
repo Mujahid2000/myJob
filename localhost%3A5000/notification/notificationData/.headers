@@ -1,0 +1,11 @@
+[
+  {
+    "applyTo": "index.html",
+    "headers": [
+      {
+        "name": "access-control-allow-origin",
+        "value": "*"
+      }
+    ]
+  }
+]
