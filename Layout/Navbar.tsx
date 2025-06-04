@@ -471,7 +471,7 @@ export default function Navbar() {
 
             {/* Mobile & Tablet Layout */}
             <div className="lg:hidden">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between gap-9  mb-4">
                 {/* Mobile Menu Button */}
                 <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                   <SheetTrigger asChild>
@@ -538,6 +538,7 @@ export default function Navbar() {
                     <span className="text-lg sm:text-xl font-bold text-gray-900">MyJob</span>
                   </div>
                 </div>
+
                 <div className="flex gap-2 items-center">
  {/* notification section start */}
                 {currentUser && role === 'Applicant' && (
