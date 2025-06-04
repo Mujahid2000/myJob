@@ -538,7 +538,8 @@ export default function Navbar() {
                     <span className="text-lg sm:text-xl font-bold text-gray-900">MyJob</span>
                   </div>
                 </div>
-                 {/* notification section start */}
+                <div className="flex gap-2 items-center">
+ {/* notification section start */}
                 {currentUser && role === 'Applicant' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -576,6 +577,8 @@ export default function Navbar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
+
+                
                 {/* if currentUser not available then show the signin button */}
                 {!currentUser && (
                   <Link href="/signin" className="">
@@ -721,6 +724,8 @@ export default function Navbar() {
                     </DropdownMenu>
                   )}
                 </div>
+                </div>
+                
               </div>
 
               {/* Search Bar - Mobile & Tablet Full Width */}
