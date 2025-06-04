@@ -79,7 +79,7 @@ if(!currentUser){
                 <LogOut /> Logout
               </button>
             </div>
-            <div className="flex-1 bg-white p-6 shadow">{children}</div>
+            <div className="flex-1 bg-white p-3 lg:p-6 shadow">{children}</div>
           </div>
         </div>
         <p className="font-sans py-4 bg-white text-[#767F8C] border-t text-start md:text-center md:text-lg">
