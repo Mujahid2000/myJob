@@ -95,7 +95,7 @@ export const store = configureStore({
       jobApply.middleware,
       shortListed.middleware,
       candidateJObApplyData.middleware,
-      // notificationApiSlice.middleware
+      notificationApiSlice.middleware
     ),
 });
 
