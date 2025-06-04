@@ -435,7 +435,7 @@ export default function Navbar() {
                                   <DropdownMenuItem>My Jobs</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/saved-candidates">
-                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
+                                  <DropdownMenuItem>Saved Candidates</DropdownMenuItem>
                                 </Link>
                                 <Link href="/company-dashboard/plans-&-billing">
                                   <DropdownMenuItem>Plans & Billings</DropdownMenuItem>
