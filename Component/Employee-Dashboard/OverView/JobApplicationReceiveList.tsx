@@ -1,6 +1,7 @@
 'use client';
 
 import { AuthContext } from '@/Authentication/AuthContext';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -189,9 +190,9 @@ const jobDatas = jobsData?.jobs || []
                             <span className="text-green-500">
                               <Check size={12} className="sm:h-4 sm:w-4" />
                             </span>
-                            <span className="text-xs sm:text-sm text-green-500">
+                            <Badge className="text-xs sm:text-sm text-green-500">
                               {job.status === 'open' ? 'Active' : job.status}
-                            </span>
+                            </Badge>
                           </div>
                         </td>
                         <td className="p-2 sm:p-3">
