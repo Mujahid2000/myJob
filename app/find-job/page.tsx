@@ -2,12 +2,11 @@ import React from 'react';
 import JobFiltering from '@/Component/Joblist/JobFiltering';
 import JobListings from '@/Component/Joblist/Joblist';
 
-// Define the props for searchParams
-
-
 interface PageProps {
   viewMode?: string;
 }
+
+export const dynamic = 'force-dynamic';
 
 export default async function Page({ searchParams }: { searchParams: Promise<PageProps> }) {
   let resolvedSearchParams: PageProps;
@@ -21,8 +20,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
       </div>
     );
   }
-// get for view mode value
-   const params = resolvedSearchParams || { viewMode: 'grid' }; 
+
+  const params = resolvedSearchParams || { viewMode: 'grid' };
 
   return (
     <>

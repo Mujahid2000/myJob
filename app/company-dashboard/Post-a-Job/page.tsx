@@ -70,7 +70,7 @@ const page: React.FC = () => {
     const currentUser = authContext?.currentUser;
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
     const id = userEmail?.user?._id;
-
+    
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen);
     }
