@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useContext, useMemo, useState, useEffect, JSX } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -111,7 +111,7 @@ const SocialLinks: React.FC = () => {
   );
 
   const updateLink = useCallback(
-    (id: number, field: keyof SocialLink, value: string) => {
+    (id: number, field: 'url' | 'platform', value: string) => {
       dispatch(updateSocialLinks({ id, field, value }));
     },
     [dispatch]
