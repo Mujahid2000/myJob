@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useContext, useMemo, useEffect, useState, JSX } from 'react';
+import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,6 @@ import { setSocialLinks, updateSocialLinks, resetSocialLinks } from '@/Store/soc
 import { RootState } from '@/Store/Store';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
-import { toast } from 'sonner';
 
 interface SocialLink {
   id: number;
@@ -47,15 +46,20 @@ const SocialLinks: React.FC = () => {
   });
   const userId = userEmail?.user?._id;
 
-  // ডায়নামিকভাবে Toaster লোড করার জন্য স্টেট
-  const [Toaster, setToaster] = useState<React.FC<{ richColors?: boolean }> | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // ক্লায়েন্ট-সাইডে Toaster লোড করা
   useEffect(() => {
-    import('sonner').then((module) => {
-      setToaster(() => module.Toaster);
-    });
-  }, []);
+    let timer: NodeJS.Timeout;
+    if (isToastVisible) {
+      timer = setTimeout(() => {
+        setIsToastVisible(false);
+        setToastMessage(null);
+      }, 3000); // Toast will disappear after 3 seconds
+    }
+    return () => clearTimeout(timer);
+  }, [isToastVisible]);
 
   const defaultValues = useMemo(
     () =>
@@ -76,7 +80,9 @@ const SocialLinks: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = useCallback(
     async (data) => {
       if (!userId) {
-        toast.error('User ID is required!');
+        setToastMessage('User ID is required!');
+        setIsToastVisible(true);
+        setIsSuccess(false);
         return;
       }
 
@@ -88,20 +94,24 @@ const SocialLinks: React.FC = () => {
       try {
         dispatch(setSocialLinks(updatedLinks));
         await postSocialMediaInfo({ userId, socialLinks: updatedLinks }).unwrap();
-        toast.success('Social media info saved successfully!');
+        setToastMessage('Social media info saved successfully!');
+        setIsToastVisible(true);
+        setIsSuccess(true);
         reset();
         dispatch(resetSocialLinks());
         dispatch(setRenderState('Contact'));
       } catch (err) {
         console.error('Failed to update social media info:', err);
-        toast.error('Failed to update social media info!');
+        setToastMessage('Failed to update social media info!');
+        setIsToastVisible(true);
+        setIsSuccess(false);
       }
     },
     [dispatch, postSocialMediaInfo, reset, socialLinks, userId]
   );
 
   const updateLink = useCallback(
-    (id: number, field: 'platform' | 'url', value: string) => {
+    (id: number, field: keyof SocialLink, value: string) => {
       dispatch(updateSocialLinks({ id, field, value }));
     },
     [dispatch]
@@ -117,7 +127,7 @@ const SocialLinks: React.FC = () => {
   }, [error]);
 
   return (
-    <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm">
+    <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm relative">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {socialLinks.map((link: SocialLink, index: number) => (
           <div key={link.id} className="flex flex-col gap-2">
@@ -166,7 +176,7 @@ const SocialLinks: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-[#0A65CC] text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2 transition-colors"
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
             {!isLoading && (
@@ -178,7 +188,15 @@ const SocialLinks: React.FC = () => {
         </div>
         {renderError}
       </form>
-      {Toaster && <Toaster richColors />}
+      {isToastVisible && (
+        <div
+          className={`fixed top-4 right-4 p-4 rounded-md shadow-lg transition-opacity duration-300 ${
+            isSuccess ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+          } ${isToastVisible ? 'opacity-100' : 'opacity-0'}`}
+        >
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };
