@@ -32,7 +32,7 @@ const NavSearch = () => {
             <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] px-3 py-1">
                   <Input
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Job tittle, keyword..."
                     onChange={(e) => setSearchValue(e.target.value)}
                     className="flex-1 border-none focus:outline-none outline-none px-2"
                     onKeyDown={handleInputKeyDown}
