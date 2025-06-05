@@ -258,7 +258,7 @@ export default function Navbar() {
               {/* Action Buttons */}
               <div className="flex items-center gap-5">
                 {/* notification section start */}
-                {role === 'Applicant' && (
+                {currentUser && role === 'Applicant' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="relative focus:outline-none">
