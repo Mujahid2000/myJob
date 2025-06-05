@@ -299,9 +299,9 @@ export default function Navbar() {
                 {/* condition sign in button if current user is not available  */}
                 {!currentUser && (
                   <Link href="/signin" className="">
-                    <button className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm text-gray-700">
+                    <Button variant='ghost' className="px-3 text-sm lg:px-6 py-4 border-gray-300 rounded-sm bg-gray-100 text-gray-500 cursor-pointer">
                       Sign In
-                    </button>
+                    </Button>
                   </Link>
                 )}
                 {/* profile dropdown start */}
