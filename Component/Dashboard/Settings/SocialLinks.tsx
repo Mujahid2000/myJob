@@ -1,4 +1,4 @@
-'use client';
+
 
 import React, { JSX, useCallback, useContext, useMemo } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
@@ -107,7 +107,7 @@ const SocialLinks: React.FC = () => {
   }, [error]);
 
   return (
-    <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm">
+    <div className="p-6 bg-white h-screen rounded-lg max-w-7xl mx-auto shadow-sm">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {socialLinks.map((link: SocialLink, index: number) => (
           <div key={link.id} className="flex flex-col gap-2">

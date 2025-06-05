@@ -1,4 +1,4 @@
-'use client'
+
 
 import ResponsiveDashboard from "@/Hooks/DashboardClientLayoutCandidate"
 import type React from "react"

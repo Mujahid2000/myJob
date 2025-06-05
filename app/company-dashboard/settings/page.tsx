@@ -4,9 +4,14 @@ import { useAuth } from '@/Authentication/AuthContext';
 import Settings from '@/Component/Employee-Dashboard/Settings/AccountSettings';
 import EmployeeCompanyInfo from '@/Component/Employee-Dashboard/Settings/Personal';
 import Profile from '@/Component/Employee-Dashboard/Settings/Profile';
-import SocialLink from '@/Component/Employee-Dashboard/Settings/SocialLinks';
-import { useRouter } from "next/navigation";
+// ✅ Dynamic import with ssr: false
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+
+const SocialLink = dynamic(() => import('@/Component/Employee-Dashboard/Settings/SocialLinks'), {
+  ssr: false,
+});
 
 const Page: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);

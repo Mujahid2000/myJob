@@ -1,219 +1,162 @@
-'use client';
-
-import React, { useCallback, useContext, useMemo, useState, useEffect, JSX } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRenderState } from '@/Store/accountSetupTabs';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { usePostSocialMediaInfoMutation } from '@/RTKQuery/socialMediaApiSlice';
-import { setSocialLinks, updateSocialLinks, resetSocialLinks } from '@/Store/socialMediaSlice';
-import { RootState } from '@/Store/Store';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import { useGetCompanySocialLinksQuery } from '@/RTKQuery/companySlice';
 
 interface SocialLink {
-  id: number;
+  id: string; // Use string to support MongoDB _id
   platform: string;
   url: string;
 }
 
-interface Inputs {
-  facebook?: string;
-  twitter?: string;
-  instagram?: string;
-  youtube?: string;
-  [key: string]: string | undefined;
-}
-
-const platforms = ['Facebook', 'Twitter', 'Instagram', 'YouTube'] as const;
-type Platform = typeof platforms[number];
-
-const platformIcons: Record<Platform, JSX.Element> = {
-  Facebook: <FaFacebookF className="text-blue-600" />,
-  Twitter: <FaTwitter className="text-blue-400" />,
-  Instagram: <FaInstagram className="text-pink-500 text-xl" />,
-  YouTube: <BsYoutube className="text-red-600" />,
-};
-
-const SocialLinks: React.FC = () => {
-  const dispatch = useDispatch();
-  const { socialLinks } = useSelector((state: RootState) => state.socialMedia);
-  const [postSocialMediaInfo, { isLoading, error }] = usePostSocialMediaInfoMutation();
+const SocialLink: React.FC = () => {
   const authContext = useContext(AuthContext);
-  const { data: userEmail } = useGetUserByIdQuery(authContext?.currentUser?.email || '', {
-    skip: !authContext?.currentUser?.email,
-  });
-  const userId = userEmail?.user?._id;
+  const currentUser = authContext?.currentUser;
+  const { data: userEmail, error: userEmailError, isLoading: isUserLoading } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+  const userId = userEmail?.user?._id || '';
+  const { data: companySocialData, isLoading:isSocialLoading, error: socialError } = useGetCompanySocialLinksQuery(userId);
 
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isToastVisible, setIsToastVisible] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const defaultLinks: SocialLink[] = [
+    { id: '1', platform: 'Facebook', url: '' },
+    { id: '2', platform: 'Twitter', url: '' },
+    { id: '3', platform: 'Instagram', url: '' },
+    { id: '4', platform: 'YouTube', url: '' },
+  ];
 
-  // Ensure the component only runs on the client
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(defaultLinks);
+
+  const platforms = ['Facebook', 'Twitter', 'Instagram', 'YouTube'];
+
+  // Initialize socialLinks with server data if available
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isToastVisible && isClient) {
-      timer = setTimeout(() => {
-        setIsToastVisible(false);
-        setToastMessage(null);
-      }, 3000); // Toast will disappear after 3 seconds
-    }
-    return () => clearTimeout(timer);
-  }, [isToastVisible, isClient]);
-
-  const defaultValues = useMemo(
-    () =>
-      socialLinks.reduce((acc, link) => {
-        acc[link.platform.toLowerCase()] = link.url;
-        return acc;
-      }, {} as Inputs),
-    [socialLinks]
-  );
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<Inputs>({ defaultValues });
-
-  const onSubmit: SubmitHandler<Inputs> = useCallback(
-    async (data) => {
-      if (!userId) {
-        setToastMessage('User ID is required!');
-        setIsToastVisible(true);
-        setIsSuccess(false);
-        return;
-      }
-
-      const updatedLinks = socialLinks.map((link) => ({
-        ...link,
-        url: data[link.platform.toLowerCase()] || '',
+    if (companySocialData?.socialLinks && companySocialData.socialLinks.length > 0) {
+      const normalizedLinks = companySocialData.socialLinks.map((link: any, index: number) => ({
+        id: link._id || String(index + 1), // Use _id from server or fallback to index
+        platform: platforms.includes(link.platform) ? link.platform : platforms[0],
+        url: link.url || '',
       }));
+      setSocialLinks(normalizedLinks);
+    } else {
+      setSocialLinks(defaultLinks); // Fallback to default links if no server data
+    }
+  }, [companySocialData]);
 
-      try {
-        dispatch(setSocialLinks(updatedLinks));
-        await postSocialMediaInfo({ userId, socialLinks: updatedLinks }).unwrap();
-        setToastMessage('Social media info saved successfully!');
-        setIsToastVisible(true);
-        setIsSuccess(true);
-        reset();
-        dispatch(resetSocialLinks());
-        dispatch(setRenderState('Contact'));
-      } catch (err) {
-        console.error('Failed to update social media info:', err);
-        setToastMessage('Failed to update social media info!');
-        setIsToastVisible(true);
-        setIsSuccess(false);
-      }
-    },
-    [dispatch, postSocialMediaInfo, reset, socialLinks, userId]
-  );
-
-  const updateLink = useCallback(
-    (id: number, field: 'url' | 'platform', value: string) => {
-      dispatch(updateSocialLinks({ id, field, value }));
-    },
-    [dispatch]
-  );
-
-  const renderError = useMemo(() => {
-    if (!error) return null;
-    return (
-      <p className="text-red-500 text-sm mt-2">
-        {'data' in error ? (error as any).data?.message : 'An error occurred'}
-      </p>
+  const updateLink = (id: string, field: 'platform' | 'url', value: string) => {
+    setSocialLinks(
+      socialLinks.map((link) =>
+        link.id === id ? { ...link, [field]: value } : link
+      )
     );
-  }, [error]);
+  };
 
-  // If not on the client, render a minimal version or nothing
-  if (!isClient) {
-    return (
-      <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm">
-        <div>Loading...</div>
-      </div>
-    );
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Basic URL validation
+    const invalidLinks = socialLinks.filter(link => link.url && !/^(https?:\/\/)/.test(link.url));
+    if (invalidLinks.length > 0) {
+      alert('Please enter valid URLs starting with http:// or https://');
+      return;
+    }
+    console.log('Social Links:', socialLinks);
+    // Add API call here to save socialLinks, e.g.:
+    /*
+    try {
+      await fetch('/api/social-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(socialLinks),
+      });
+      console.log('Social Links saved successfully');
+    } catch (error) {
+      console.error('Error saving social links:', error);
+    }
+    */
+  };
+
+  // Handle loading and error states
+  if (isUserLoading || isSocialLoading) {
+    return <div className="py-6 px-3 text-center">Loading...</div>;
+  }
+
+  if (userEmailError || socialError) {
+    return <div className="py-6 px-3 text-center text-red-500">Error loading social links. Please try again.</div>;
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm relative">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {socialLinks.map((link: SocialLink, index: number) => (
-          <div key={link.id} className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">
-              Social Link {index + 1}
-            </label>
-            <div className="flex flex-col md:flex-row items-center gap-3">
-              <div className="relative w-full md:w-48">
-                <select
-                  value={link.platform}
-                  onChange={(e) => updateLink(link.id, 'platform', e.target.value)}
-                  className="appearance-none w-full bg-white border border-gray-300 rounded-md py-2 pl-10 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {platforms.map((platform) => (
-                    <option key={platform} value={platform}>
-                      {platform}
-                    </option>
-                  ))}
-                </select>
-                <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                  {platformIcons[link.platform as Platform]}
-                </span>
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">▼</span>
-              </div>
-              <input
-                type="url"
-                {...register(link.platform.toLowerCase(), {
-                  required: `${link.platform} URL is required`,
-                  pattern: {
-                    value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-                    message: `Please enter a valid ${link.platform} URL`,
-                  },
-                })}
-                value={link.url}
-                onChange={(e) => updateLink(link.id, 'url', e.target.value)}
-                placeholder="Profile link/url..."
-                className="flex-1 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+    <div className="py-6 px-3 bg-white rounded-lg shadow-md max-w-7xl mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {socialLinks.map((link, index) => (
+          <div key={link.id} className="items-center">
+            {/* Label */}
+            <div className="w-24">
+              <label className="block text-sm font-medium text-gray-700">
+                Social Link {index + 1}
+              </label>
             </div>
-            {errors[link.platform.toLowerCase()] && (
-              <p className="text-red-500 text-sm mt-1">{errors[link.platform.toLowerCase()]?.message}</p>
-            )}
+
+            {/* Platform Dropdown and URL Input */}
+            <div className="flex items-center gap-5">
+              <div className="flex flex-col lg:flex-row gap-6 items-center space-x-2 flex-1">
+                <div className="relative w-full lg:w-48 ">
+                  <select
+                    value={link.platform}
+                    onChange={(e) => updateLink(link.id, 'platform', e.target.value)}
+                    className="appearance-none w-full lg:w-48 mt-2 lg:mt-0 bg-white border border-gray-300 rounded-md py-2 pl-10 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {platforms.map((platform) => (
+                      <option key={platform} value={platform}>
+                        {platform}
+                      </option>
+                    ))}
+                  </select>
+                  {/* Platform Icon */}
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                    {link.platform === 'Facebook' && (
+                      <FaFacebookF className="text-blue-600" />
+                    )}
+                    {link.platform === 'Twitter' && (
+                      <FaTwitter className="text-blue-400" />
+                    )}
+                    {link.platform === 'Instagram' && (
+                      <FaInstagram className="text-pink-500 text-xl" />
+                    )}
+                    {link.platform === 'YouTube' && (
+                      <BsYoutube className="text-red-600" />
+                    )}
+                  </span>
+                  {/* Dropdown Arrow */}
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    ▼
+                  </span>
+                </div>
+
+                {/* URL Input */}
+                <input
+                  type="text"
+                  value={link.url}
+                  onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                  placeholder="Profile link/url..."
+                  className="flex-1 w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
           </div>
         ))}
-        <div className="flex justify-start mt-6">
+
+        {/* Save Changes Button */}
+        <div className="mt-6">
           <button
             type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2 transition-colors"
+            className="text-base bg-[#0A65CC] text-white px-5 py-3 rounded-md hover:bg-gray-100 hover:text-[#0A65CC] font-medium cursor-pointer transition-colors"
           >
-            {isLoading ? 'Saving...' : 'Save Changes'}
-            {!isLoading && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            )}
+            SAVE CHANGES
           </button>
         </div>
-        {renderError}
       </form>
-      {isToastVisible && (
-        <div
-          className={`fixed top-4 right-4 p-4 rounded-md shadow-lg transition-opacity duration-300 ${
-            isSuccess ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-          } ${isToastVisible ? 'opacity-100' : 'opacity-0'}`}
-        >
-          {toastMessage}
-        </div>
-      )}
     </div>
   );
 };
 
-export default SocialLinks;
+export default SocialLink;

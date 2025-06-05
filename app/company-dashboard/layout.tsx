@@ -1,4 +1,3 @@
-'use client'
 import DashboardClientLayoutCompany from "@/Hooks/DashboardClientCompanyLayout";
 
 
