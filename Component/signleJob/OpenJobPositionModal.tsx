@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { X, MapPin, Clock, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenPositionModal } from "@/Store/profileSlice";
 import { RootState } from "@/Store/Store";
 import Image from "next/image";
+import { useGetSpecificCompanyJobDataQuery } from "@/RTKQuery/companySlice";
+import SafeHtml from "./SafeHtml";
 
 interface JobPosition {
   id: number;
@@ -19,7 +21,9 @@ interface JobPosition {
   description: string;
 }
 
-const OpenJobPositionsModal: React.FC = () => {
+const OpenJobPositionsModal = ({ companyId }: { companyId: string }): JSX.Element => {
+  const {data: companyJobData} = useGetSpecificCompanyJobDataQuery(companyId);
+  const specificCompanyData = companyJobData?.data;
   const openPositions: JobPosition[] = [
     {
       id: 1,
@@ -145,10 +149,10 @@ const OpenJobPositionsModal: React.FC = () => {
 
               {/* Job listings */}
               <div className="space-y-3 sm:space-y-4 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2">
-                {openPositions.length > 0 ? (
-                  openPositions.map((position, index) => (
+                {specificCompanyData && specificCompanyData.length > 0 ? (
+                  specificCompanyData.map((position, index) => (
                     <div
-                      key={position.id}
+                      key={position._id}
                       className="border border-gray-200 rounded-lg p-3 sm:p-6 hover:border-blue-300 hover:shadow-md transition-all duration-200"
                       style={{
                         animation: `slideInFromLeft 0.4s ease-out ${index * 0.1}s both`,
@@ -161,7 +165,7 @@ const OpenJobPositionsModal: React.FC = () => {
                           </h4>
                           <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-2">
                             <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded hover:bg-blue-200 whitespace-nowrap">
-                              {position.department}
+                              {position.jobRole}
                             </span>
                             <div className="flex items-center space-x-1">
                               <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -169,17 +173,17 @@ const OpenJobPositionsModal: React.FC = () => {
                             </div>
                             <div className="flex items-center space-x-1">
                               <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                              <span>{position.type}</span>
+                              <span>{position.jobType}</span>
                             </div>
                           </div>
                           <div className="flex items-center space-x-1 text-xs sm:text-sm text-green-600 mb-2 sm:mb-3">
                             <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                            <span>{position.salary}</span>
+                            <span>{position.minSalary}-{position.maxSalary}</span>
                           </div>
                         </div>
                         <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start sm:text-right space-x-3 sm:space-x-0">
                           <p className="text-xs sm:text-sm text-gray-500 mb-0 sm:mb-2 whitespace-nowrap">
-                            Posted {position.posted}
+                            Posted 3 days ago
                           </p>
                           <Button
                             className="bg-[#084899] hover:bg-blue-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg"
@@ -189,7 +193,8 @@ const OpenJobPositionsModal: React.FC = () => {
                           </Button>
                         </div>
                       </div>
-                      <p className="text-gray-600 text-xs sm:text-sm line-clamp-2">{position.description}</p>
+                      
+                      <p className="text-gray-600 text-xs sm:text-sm line-clamp-2">We're seeking a talented...</p>
                     </div>
                   ))
                 ) : (

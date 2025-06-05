@@ -273,7 +273,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
         </div>
       </div>
       <SuggestJob />
-      <OpenJobPositionsModal />
+      <OpenJobPositionsModal companyId={resolveId.id}/>
     </div>
   );
 }

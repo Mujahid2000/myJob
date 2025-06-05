@@ -87,6 +87,21 @@ export interface CompanyProfileHome {
   employee:string
 }
 
+export interface SpecificJobs {
+  message: string
+  data: SpecificJobsData[]
+}
+
+export interface SpecificJobsData {
+  _id: string
+  title: string
+  jobRole: string
+  minSalary: number
+  maxSalary: number
+  jobType: string
+  biography: string
+  location: string
+}
 
 
 export const companyApiSlice = createApi({
@@ -128,8 +143,13 @@ export const companyApiSlice = createApi({
       query: () =>({
         url: '/getCompanyData/getCompanyDataForHome'
       })
+    }),
+    getSpecificCompanyJobData: builder.query<SpecificJobs, string>({
+      query: (companyId) =>({
+        url: `/jobs/getSpecificCompanyData/${companyId}`
+      })
     })
   }),
 });
 
-export const { useUpdateCompanyInfoMutation, useGetCompanyPersonalQuery, useGetCompanyProfileQuery, useGetCompanySocialLinksQuery, useGetCompanyContactsQuery, useGetCompanyDataForHomeQuery } = companyApiSlice;
+export const { useUpdateCompanyInfoMutation, useGetCompanyPersonalQuery, useGetCompanyProfileQuery, useGetCompanySocialLinksQuery, useGetCompanyContactsQuery, useGetCompanyDataForHomeQuery, useGetSpecificCompanyJobDataQuery } = companyApiSlice;
