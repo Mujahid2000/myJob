@@ -36,6 +36,7 @@ import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
 import { useGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
+import NavSearch from "@/Component/NavbarComponent/NavSearch";
 
 // Socket.IO initialization
 const socket = io('https://job-server-1.onrender.com', {
@@ -251,20 +252,7 @@ export default function Navbar() {
                   <span className="text-2xl font-bold text-gray-900">MyJob</span>
                 </div>
 
-                <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] px-3 py-1">
-                  <Input type="text" placeholder="Search..." className="flex-1 border-none focus:outline-none outline-none px-2" />
-                  <FiSearch className="text-blue-500 text-lg" />
-                  <Select>
-                    <SelectTrigger className="w-32 shadow-none focus:outline-none border-none bg-transparent">
-                      <SelectValue placeholder="Country" />
-                    </SelectTrigger>
-                    <SelectContent className="border-none shadow-md focus:outline-none">
-                      <SelectItem value="Bangladesh">Bangladesh</SelectItem>
-                      <SelectItem value="usa">United States</SelectItem>
-                      <SelectItem value="Nepal">Nepal</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <NavSearch/>
               </div>
 
               {/* Action Buttons */}
