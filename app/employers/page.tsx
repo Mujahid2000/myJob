@@ -38,7 +38,7 @@ export interface jobItem {
   totalCompanyJobs: number
 }
 
-
+export const dynamic = 'force-dynamic';
 
 export default async function Page({ searchParams }: { searchParams: Promise<PageProps> }) {
   // Resolve searchParams

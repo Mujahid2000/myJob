@@ -8,6 +8,8 @@ import Sidebar from '@/Component/candidates-component/Sidebar';
 import OpenModalButton from '@/Component/candidates-component/OpenModalButton';
 import CandidateModal from '@/Component/candidates-component/CandidateModal';
 
+
+export const dynamic = 'force-dynamic';
 interface CandidateFilteringList {
   level: string;
   education: string | string[];
