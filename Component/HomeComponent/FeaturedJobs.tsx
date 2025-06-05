@@ -12,7 +12,6 @@ import Link from "next/link"
 export default function FeaturedJobs() {
   const {data:jobData} = useGetJobPostDataForHomeQuery('');
   const featuredJobData: Daum[] = jobData?.data ?? [];
-  console.log(featuredJobData)
   const featuredJobs = [
     {
       id: 1,

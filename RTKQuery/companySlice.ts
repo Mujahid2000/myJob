@@ -65,6 +65,27 @@ export interface CompanyContacts {
   __v: number
 }
 
+export interface CompanyDatProfileForHome {
+  success: boolean
+  data: CompanyProfileHome[]
+}
+
+export interface CompanyProfileHome {
+  _id: string
+  userId: string
+  title: string
+  tags: string[]
+  jobRole: string
+  location?: string
+  postedDate: string
+  companyName?: string
+  logo?: string
+  organizationType?: string
+  industryType?: string
+  totalCompanyJobs: number,
+  featured: string,
+  employee:string
+}
 
 
 
@@ -102,8 +123,13 @@ export const companyApiSlice = createApi({
       query: (userId) =>({
         url: `/getCompanyData/companyContacts/${userId}`
       })
+    }),
+    getCompanyDataForHome: builder.query<CompanyDatProfileForHome, string>({
+      query: () =>({
+        url: '/getCompanyData/getCompanyDataForHome'
+      })
     })
   }),
 });
 
-export const { useUpdateCompanyInfoMutation, useGetCompanyPersonalQuery, useGetCompanyProfileQuery, useGetCompanySocialLinksQuery, useGetCompanyContactsQuery } = companyApiSlice;
+export const { useUpdateCompanyInfoMutation, useGetCompanyPersonalQuery, useGetCompanyProfileQuery, useGetCompanySocialLinksQuery, useGetCompanyContactsQuery, useGetCompanyDataForHomeQuery } = companyApiSlice;
