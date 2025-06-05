@@ -19,7 +19,7 @@ export const SubscriptionDataByUserId = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
   tagTypes: ['SubscriptionDataByUserId'],
     endpoints: builder =>({
-        getSubscriptionDataByUserId: builder.query<paymentsDataByUserId[], string>({
+        getSubscriptionDataByUserId: builder.query<paymentsDataByUserId, string>({
             query: userId => `/data/payments/subscription/${userId}`
           }),
     })

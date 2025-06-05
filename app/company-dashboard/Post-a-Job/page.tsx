@@ -2,11 +2,13 @@
 import Image from 'next/image';
 import { ArrowRight, Check, MoveRight } from 'lucide-react';
 import CheckoutModal from '@/Component/Employee-Dashboard/postajob/CheckoutModal';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPlanDetails } from '@/Store/Subscription';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import { useGetSubscriptionDataByUserIdQuery } from '@/RTKQuery/SubscriptionDataByUserId';
+import { useRouter } from 'next/navigation';
 
 
 // Define the interface for a single plan
@@ -65,16 +67,41 @@ const plans: Plan[] = [
 // Define the PricingPlans component with TypeScript
 const page: React.FC = () => {
   const dispatch = useDispatch();
+  const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-    const id = userEmail?.user?._id;
+    const id = userEmail?.user?._id || '';
+    const {data:modalData, isLoading:paymentCheckLoading} =useGetSubscriptionDataByUserIdQuery(id || '',{
+        skip: !id
+      })
     
+    useEffect(() => {
+        if (!paymentCheckLoading && !modalData) {
+          // Redirect to a different route, e.g., a subscription page, instead of the same route
+          router.push('/company-dashboard/post-job'); // Adjust the route as needed
+        }
+      }, [paymentCheckLoading, modalData, router]);
+    
+      // Render loading spinner while checking payment status
+      if (paymentCheckLoading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            loading...
+          </div>
+        );
+      }
+    
+      // If paymentCheckLoading is false and modalData exists, render the form
+      // If modalData is undefined, the useEffect will handle the redirect
+      if (!modalData) {
+        return null; // Prevent rendering the form until redirect happens
+      }
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen);
     }
-
+    
   return (
     <div className="max-w-7xl mx-auto p5-5 ">
       {/* Header Section */}

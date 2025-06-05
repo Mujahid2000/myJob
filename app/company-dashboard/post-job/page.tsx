@@ -13,7 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import './custom.css';
-
+import { useGetSubscriptionDataByUserIdQuery } from '@/RTKQuery/SubscriptionDataByUserId';
+import { Ring } from 'ldrs/react'
+import 'ldrs/react/Ring.css'
 type Inputs = {
   title: string;
   tags: string[];
@@ -65,6 +67,7 @@ const PostAJob: React.FC = () => {
   const [jobId, setJobId] = useState<string | undefined>(undefined);
   const [descriptionValues, setDescriptionValues] = useState<string>('');
   const [responsibilityValues, setResponsibilityValues] = useState<string>('');
+  
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (userEmail?.user?.role !== 'Company' || !id || !companyId || !location) {
