@@ -49,17 +49,23 @@ const SocialLinks: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure the component only runs on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isToastVisible) {
+    if (isToastVisible && isClient) {
       timer = setTimeout(() => {
         setIsToastVisible(false);
         setToastMessage(null);
       }, 3000); // Toast will disappear after 3 seconds
     }
     return () => clearTimeout(timer);
-  }, [isToastVisible]);
+  }, [isToastVisible, isClient]);
 
   const defaultValues = useMemo(
     () =>
@@ -125,6 +131,15 @@ const SocialLinks: React.FC = () => {
       </p>
     );
   }, [error]);
+
+  // If not on the client, render a minimal version or nothing
+  if (!isClient) {
+    return (
+      <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm">
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm relative">

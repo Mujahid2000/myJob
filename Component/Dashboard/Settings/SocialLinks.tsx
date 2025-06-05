@@ -107,7 +107,7 @@ const SocialLinks: React.FC = () => {
   }, [error]);
 
   return (
-    <div className="p-6 bg-white h-screen rounded-lg max-w-7xl mx-auto shadow-sm">
+    <div className="p-6 bg-white rounded-lg max-w-7xl mx-auto shadow-sm">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {socialLinks.map((link: SocialLink, index: number) => (
           <div key={link.id} className="flex flex-col gap-2">
@@ -152,11 +152,11 @@ const SocialLinks: React.FC = () => {
             )}
           </div>
         ))}
-        <div className="flex justify-start mt-6">
+        <div className="flex justify-end mt-6">
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-[#0A65CC] text-white rounded-xs hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2 transition-colors"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2 transition-colors"
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
             {!isLoading && (
