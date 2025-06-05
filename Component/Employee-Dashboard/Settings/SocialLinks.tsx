@@ -59,20 +59,8 @@ const SocialLink: React.FC = () => {
       alert('Please enter valid URLs starting with http:// or https://');
       return;
     }
-    console.log('Social Links:', socialLinks);
-    // Add API call here to save socialLinks, e.g.:
-    /*
-    try {
-      await fetch('/api/social-links', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(socialLinks),
-      });
-      console.log('Social Links saved successfully');
-    } catch (error) {
-      console.error('Error saving social links:', error);
-    }
-    */
+   
+   
   };
 
   // Handle loading and error states
