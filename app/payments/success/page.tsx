@@ -28,7 +28,7 @@ const Success: React.FC = () => {
   const { data: subscriptionData, isLoading, error: subscriptionError } = useGetSubscriptionDataByUserIdQuery(userId, {
     skip: !userId,
   });
-
+console.log(subscriptionData)
   useEffect(() => {
     if (pathName === '/company-dashboard/Post-a-Job/success') {
       dispatch(setDisableSideBar({ isDisabled: true }));
@@ -36,7 +36,7 @@ const Success: React.FC = () => {
   }, [pathName, dispatch]);
 
   // Get the latest subscription record (last index after sorting by createdAt)
-  const latestSubscription = subscriptionData && subscriptionData.length > 0
+  const latestSubscription = subscriptionData && subscriptionData?.length > 0
     ? [...subscriptionData].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
     : null;
 
