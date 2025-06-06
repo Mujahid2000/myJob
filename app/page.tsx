@@ -6,12 +6,13 @@ import PopularVacancies from "@/Component/HomeComponent/PopularVacancies";
 import TopCompany from "@/Component/HomeComponent/TopCompany";
 import RegisterCards from "@/Component/HomeComponent/RegisterCards";
 import ClientsTestimonials from "@/Component/HomeComponent/ClientsTestimonials";
-
+import {ReactLenis} from '@/lib/lenis'
 
 
 export default function Home() {
   return (
-    <div className="">
+      <ReactLenis root>
+        <div className="">
      <Banner/>
      <PopularVacancies/>
      <JobPilotSteps/>
@@ -21,5 +22,7 @@ export default function Home() {
      <ClientsTestimonials/>
      <RegisterCards/>
     </div>
+  </ReactLenis>
+    
   );
 }

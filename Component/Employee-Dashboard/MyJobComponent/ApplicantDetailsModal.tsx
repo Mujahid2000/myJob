@@ -430,17 +430,7 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
         </div>
       </div>
       <Toaster richColors />
-      Notification Display
-      {/* <div className="fixed bottom-4 right-4 bg-white p-4 rounded-md shadow-md max-w-sm">
-        <h3 className="text-sm font-medium">Notifications ({isConnected ? 'Connected' : 'Disconnected'})</h3>
-        <ul className="mt-2 max-h-40 overflow-y-auto">
-          {notifications.map((notif, index) => (
-            <li key={index} className="text-sm text-gray-600">
-              {notif.message} - {new Date(notif.timestamp).toLocaleString()}
-            </li>
-          ))}
-        </ul>
-      </div> */}
+
     </div>
   );
 };

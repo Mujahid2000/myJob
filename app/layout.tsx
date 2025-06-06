@@ -5,7 +5,7 @@ import Navbar from "@/Layout/Navbar";
 import FooterSection from "@/components/sections/footer/default";
 import { store } from "@/Store/Store";
 import StoreProvider from "./StoreProvider";
-import {ReactLenis} from '@/lib/lenis'
+
 
 
 const geistSans = Geist({
@@ -41,7 +41,7 @@ export default function RootLayout({
     <meta name="description" content='My Job' />
     <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/diez3alve/image/upload/v1740414466/briefcase_1_l2uamk.png" />
   </head>
-  <ReactLenis root>
+
  <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -53,7 +53,7 @@ export default function RootLayout({
         
       </body>
 
-  </ReactLenis>
+
      
     </html>
   );

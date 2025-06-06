@@ -1,6 +1,5 @@
-
 'use client';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Mail, Phone, Send, X } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -19,13 +18,22 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-
+import io from 'socket.io-client';
+import { AuthContext } from '@/Authentication/AuthContext';
+import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
+import { useForm } from 'react-hook-form';
 // ChatBubble কম্পোনেন্ট
 interface ChatBubbleProps {
   message: string;
   sender: 'user' | 'support';
 }
 
+
+// Socket.IO initialization
+const socket = io('http://localhost:5000', {
+  withCredentials: false,
+  extraHeaders: { 'Content-Type': 'application/json' },
+});
 const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
   return (
     <div
@@ -45,53 +53,57 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
 };
 
 export default function SupportPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatMessage, setChatMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState<
-    { message: string; sender: 'user' | 'support' }[]
-  >([]);
+  const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
+    const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
+    const company_Name = userEmail?.user.name
+    const userid = userEmail?.user?._id || '';
+    const email = userEmail?.user?.email || '';
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  useEffect(() =>{
+    if(!userid) return
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      toast.error('Please fill in all fields.');
-      return;
+    socket.emit('join', userid);
+    console.log(`User ${userid} joined theirngfntgn room`);
+
+    const handleConnect = () =>{
+      console.log('connect user')
     }
-    toast.success('Your message has been sent successfully! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-  };
 
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatMessage.trim()) {
-      toast.error('Please enter a message.');
-      return;
+    const handleDisconnect = () =>{
+      console.log('user disconnect')
     }
-    // ব্যবহারকারীর মেসেজ যোগ
-    setChatMessages((prev) => [...prev, { message: chatMessage, sender: 'user' }]);
-    // সিমুলেটেড সাপোর্ট টিমের উত্তর
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        { message: 'Thank you for your message! Our team will assist you shortly.', sender: 'support' },
-      ]);
-    }, 1000);
-    toast.success('Message sent! We will respond shortly.');
-    setChatMessage('');
-  };
 
-  const faqs = [
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect)
+    return () =>{
+      socket.emit('leave', handleDisconnect)
+      socket.off('connect', handleConnect)
+      socket.off('disconnect', handleDisconnect)
+
+    }
+
+  },[userid])
+
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+    const onSubmit = (data:any) => {
+    const response =  fetch("http://localhost:5000/liveNotification/customerMessage", {
+    method: "POST",
+    body: JSON.stringify({
+    senderId: userid,
+    message: data.message,
+    roomId: socket.id
+    
+  }),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8"
+  }
+});
+      reset()
+    }
+    const faqs = [
     {
       question: 'How do I post a job?',
       answer: 'Log in to your account, go to the "Post Job" section, fill in the job details, and submit.',
@@ -109,6 +121,57 @@ export default function SupportPage() {
       answer: 'Our plans are typically valid for 30 days. Visit the "Pricing" page for more details.',
     },
   ];
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatMessages, setChatMessages] = useState<
+    { message: string; sender: 'user' | 'support' }[]
+  >([]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+  //     toast.error('Please fill in all fields.');
+  //     return;
+  //   }
+  //   toast.success('Your message has been sent successfully! We will get back to you soon.');
+  //   setFormData({ name: '', email: '', subject: '', message: '' });
+  // };
+
+
+
+  const handleChatSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatMessage.trim()) {
+      toast.error('Please enter a message.');
+      return;
+    }
+
+
+    // ব্যবহারকারীর মেসেজ যোগ
+    setChatMessages((prev) => [...prev, { message: chatMessage, sender: 'user' }]);
+    // সিমুলেটেড সাপোর্ট টিমের উত্তর
+    setTimeout(() => {
+      setChatMessages((prev) => [
+        ...prev,
+        { message: 'Thank you for your message! Our team will assist you shortly.', sender: 'support' },
+      ]);
+    }, 1000);
+    toast.success('Message sent! We will respond shortly.');
+    setChatMessage('');
+  };
+
+
 
   return (
     <div className="min-h-screen bg-white pt-30">
@@ -224,7 +287,7 @@ export default function SupportPage() {
                   className="p-0 text-[#0A65CC] hover:underline cursor-pointer"
                   onClick={() => setIsChatOpen(true)}
                 >
-                  Start Chat
+                  Start Support
                 </Button>
               </div>
             </div>
@@ -265,10 +328,10 @@ export default function SupportPage() {
                 ))
               )}
             </div>
-            <form onSubmit={handleChatSubmit} className="flex gap-2">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
               <Input
-                value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
+                
+                {...register("message", { required: true })}
                 placeholder="Type your message"
                 className="flex-1"
               />
