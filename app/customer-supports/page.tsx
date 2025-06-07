@@ -57,14 +57,23 @@ export default function SupportPage() {
     const currentUser = authContext?.currentUser;
     const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
     const company_Name = userEmail?.user.name
+    const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [customerChatMessage, setCustomerChatMessage] = useState('');
+  const [adminChatMessages, setAdminChatMessages] = useState< { message: string; sender: 'user' | 'support' }[]>([]);
     const userid = userEmail?.user?._id || '';
     const email = userEmail?.user?.email || '';
-
+    const roomId = socket.id;
   useEffect(() =>{
     if(!userid) return
 
     socket.emit('join', userid);
-    console.log(`User ${userid} joined theirngfntgn room`);
+    console.log(`User ${userid} joined the room`);
 
     const handleConnect = () =>{
       console.log('connect user')
@@ -87,21 +96,25 @@ export default function SupportPage() {
 
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    socket.on('message',(params) => {
 
-    const onSubmit = (data:any) => {
-    const response =  fetch("http://localhost:5000/liveNotification/customerMessage", {
+    })
+    const onSubmit =async (data:any) => {
+    const response =await  fetch("http://localhost:5000/liveNotification/customerMessage", {
     method: "POST",
     body: JSON.stringify({
     senderId: userid,
     message: data.message,
-    roomId: socket.id
+    id: roomId
     
   }),
   headers: {
     "Content-type": "application/json; charset=UTF-8"
   }
-});
+}
+);
       reset()
+      console.log(response)
     }
     const faqs = [
     {
@@ -121,57 +134,33 @@ export default function SupportPage() {
       answer: 'Our plans are typically valid for 30 days. Visit the "Pricing" page for more details.',
     },
   ];
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatMessage, setChatMessage] = useState('');
-  const [chatMessages, setChatMessages] = useState<
-    { message: string; sender: 'user' | 'support' }[]
-  >([]);
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-  //     toast.error('Please fill in all fields.');
-  //     return;
-  //   }
-  //   toast.success('Your message has been sent successfully! We will get back to you soon.');
-  //   setFormData({ name: '', email: '', subject: '', message: '' });
-  // };
+const handleEmailSubmit = () =>{
+
+}
 
 
+useEffect(() => {
 
-  const handleChatSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatMessage.trim()) {
-      toast.error('Please enter a message.');
-      return;
-    }
+  if (!userid) return;
 
-
-    // ব্যবহারকারীর মেসেজ যোগ
-    setChatMessages((prev) => [...prev, { message: chatMessage, sender: 'user' }]);
-    // সিমুলেটেড সাপোর্ট টিমের উত্তর
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        { message: 'Thank you for your message! Our team will assist you shortly.', sender: 'support' },
-      ]);
-    }, 1000);
-    toast.success('Message sent! We will respond shortly.');
-    setChatMessage('');
+  const handleMessage = (msg:any) => {
+    console.log('📨 New message:', msg);
+    setAdminChatMessages(msg)
   };
 
+  socket.on('message', handleMessage);
 
+  return () => {
+    socket.off('message', handleMessage);
+  };
+}, [userid]);
 
   return (
     <div className="min-h-screen bg-white pt-30">
@@ -191,7 +180,7 @@ export default function SupportPage() {
           {/* Contact Form */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Send Us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleEmailSubmit} className="space-y-5">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Name
@@ -316,10 +305,10 @@ export default function SupportPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="max-h-64 overflow-y-auto p-4 bg-gray-50 rounded-lg">
-              {chatMessages.length === 0 ? (
+              {adminChatMessages.length === 0 ? (
                 <p className="text-gray-500">No messages yet. Type your message here.</p>
               ) : (
-                chatMessages.map((msg, index) => (
+                adminChatMessages.map((msg, index) => (
                   <ChatBubble
                     key={index}
                     message={msg.message}
