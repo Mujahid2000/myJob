@@ -316,25 +316,25 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="flex items-center space-x-2">
-                  <input {...notificationForm.register('shortlist')} type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                  <input {...notificationForm.register('shortlist')} type="checkbox" className="h-4 w-4 accent-[#0a65cc] border border-gray-400 rounded appearance-none checked:appearance-auto" />
                   <span className="text-sm text-gray-700">Notify me when employers shortlist me</span>
                 </label>
                 <label className="flex items-center space-x-2">
-                  <input {...notificationForm.register('jobsExpire')} type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                  <input {...notificationForm.register('jobsExpire')} type="checkbox" className="h-4 w-4 accent-[#0a65cc] border border-gray-400 rounded appearance-none checked:appearance-auto" />
                   <span className="text-sm text-gray-700">Notify me when applied jobs are expire</span>
                 </label>
                 <label className="flex items-center space-x-2">
-                  <input {...notificationForm.register('jobAlerts')} type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                  <input {...notificationForm.register('jobAlerts')} type="checkbox" className="h-4 w-4 accent-[#0a65cc] border border-gray-400 rounded appearance-none checked:appearance-auto" />
                   <span className="text-sm text-gray-700">Notify me when I have up to 5 job alerts</span>
                 </label>
               </div>
               <div className="space-y-2">
                 <label className="flex items-center space-x-2">
-                  <input {...notificationForm.register('savedProfile')} type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                  <input {...notificationForm.register('savedProfile')} type="checkbox" className="h-4 w-4 accent-[#0a65cc] border border-gray-400 rounded appearance-none checked:appearance-auto" />
                   <span className="text-sm text-gray-700">Notify me when employers saved my profile</span>
                 </label>
                 <label className="flex items-center space-x-2">
-                  <input {...notificationForm.register('rejected')} type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                  <input {...notificationForm.register('rejected')} type="checkbox" className="h-4 w-4 accent-[#0a65cc] border border-gray-400 rounded appearance-none checked:appearance-auto" />
                   <span className="text-sm text-gray-700">Notify me when employers rejected me</span>
                 </label>
               </div>

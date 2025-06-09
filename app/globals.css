@@ -2,7 +2,6 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
 @plugin "daisyui";
 :root {
   --background: oklch(1 0 0);
@@ -172,3 +171,4 @@ html {
 * {
   -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
 }
+
