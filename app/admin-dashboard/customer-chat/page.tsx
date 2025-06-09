@@ -190,7 +190,7 @@ export default function CustomerChatPage() {
   return (
     <div className="">
       <Toaster richColors />
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-1">
         <h2 className="px-5 lg:px-0 text-base md:text-xl lg:text-2xl pb-3 font-bold">Customer Chat</h2>
         <div className="flex space-x-2">
           <Button variant="outline" size="sm">
@@ -204,7 +204,7 @@ export default function CustomerChatPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[80vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full lg:h-[80vh]">
         {/* Chat List */}
         <Card className="lg:col-span-1 order-2 lg:order-1">
           <CardHeader className="pb-3">
@@ -215,7 +215,7 @@ export default function CustomerChatPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-[65vh]">
+            <ScrollArea className="h-full lg:h-[65vh]">
               {filterProfile && Array.isArray(filterProfile) && filterProfile.map((user) => (
                 <div
                   key={user._id}
