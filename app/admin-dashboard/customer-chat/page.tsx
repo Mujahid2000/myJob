@@ -188,10 +188,10 @@ export default function CustomerChatPage() {
   const filterProfile = profileData && Array.isArray(profileData) && profileData.filter((profile) => profile.senderId !== userid);
 
   return (
-    <div className="space-y-6">
+    <div className="">
       <Toaster richColors />
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Customer Chat</h2>
+        <h2 className="text-2xl pb-3 font-bold">Customer Chat</h2>
         <div className="flex space-x-2">
           <Button variant="outline" size="sm">
             <Phone className="h-4 w-4 mr-2" />
@@ -215,7 +215,7 @@ export default function CustomerChatPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-[60vh]">
+            <ScrollArea className="h-[65vh]">
               {filterProfile && Array.isArray(filterProfile) && filterProfile.map((user) => (
                 <div
                   key={user._id}
@@ -278,7 +278,7 @@ export default function CustomerChatPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-[300px] md:h-[60vh] p-4">
+            <ScrollArea className="h-[300px] md:h-[65vh] p-4">
               <div className="flex flex-col gap-3">
                 {sortMessagesByTime(chatMessages).map((msg) => (
                   <div
