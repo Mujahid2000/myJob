@@ -2,7 +2,8 @@
 
 @plugin "tailwindcss-animate";
 
-@plugin "daisyui";
+
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
@@ -122,19 +123,9 @@
   }
 }
 
-/* Hide scrollbar globally */
-html,
-body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  
+::-webkit-scrollbar {
+  width: 0px;
 }
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
 
 input[type= "radio"] {
   accent-color: #0066FF
@@ -181,4 +172,3 @@ html {
 * {
   -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
 }
-

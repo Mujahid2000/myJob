@@ -356,29 +356,32 @@ export default function SupportPage() {
           </DialogHeader>
 
           <div className="space-y-4">
-            <ScrollArea className="h-[300px] md:h-[400px] p-4">
+            {/* chat message show section */}
+             <ScrollArea className="h-[300px] md:h-[400px] p-4">
               <div className="flex flex-col gap-3">
-                {sortMessagesByTime(chatMessages).filter((newMsg) => newMsg.receiverId === userid || newMsg.senderId === userid).map((msg) => (
-                  <div
-                    key={msg._id}
-                    className={`chat ${
-                      msg.receiverId === userid ? 'chat-start' : 'chat-end'
-                    }`}
-                  >
+                {sortMessagesByTime(chatMessages)
+                  .filter((msg) => msg.receiverId === userid || msg.senderId === userid)
+                  .map((msg) => (
                     <div
-                      className={`chat-bubble ${
-                        msg.receiverId === userid
-                          ? 'chat-bubble-neutral'
-                          : 'chat-bubble-info'
+                      key={msg._id}
+                      className={`flex ${
+                        msg.senderId === userid ? 'justify-end' : 'justify-start'
                       }`}
                     >
-                      {msg.message}
-                      <div className="text-xs text-right opacity-70 mt-1">
-                        {msg.dateWithTime}
+                      <div
+                        className={`max-w-full text-wrap rounded-lg p-3 ${
+                          msg.senderId === userid
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-900'
+                        }`}
+                      >
+                        <p>{msg.message}</p>
+                        <p className="text-xs opacity-70 mt-1 text-right">
+                          {msg.dateWithTime}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </ScrollArea>
 

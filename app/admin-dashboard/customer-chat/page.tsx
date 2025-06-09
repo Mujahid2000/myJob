@@ -278,23 +278,31 @@ export default function CustomerChatPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-[300px] md:h-[65vh] p-4">
+                      <ScrollArea className="h-[300px] md:h-[65vh] p-4">
               <div className="flex flex-col gap-3">
-                {sortMessagesByTime(chatMessages).filter((uM) => uM.senderId === selectedUser.senderId || uM.receiverId === selectedUser.senderId).map((msg) => (
-                  <div
-                    key={msg._id}
-                    className={`chat ${msg.senderId === userid ? 'chat-end' : 'chat-start'}`}
-                  >
+                {sortMessagesByTime(chatMessages)
+                  .filter((uM) => uM.senderId === selectedUser.senderId || uM.receiverId === selectedUser.senderId)
+                  .map((msg) => (
                     <div
-                      className={`chat-bubble ${
-                        msg.senderId === userid ? 'chat-bubble-info' : 'chat-bubble-neutral'
+                      key={msg._id}
+                      className={`flex ${
+                        msg.senderId === userid ? 'justify-end' : 'justify-start'
                       }`}
                     >
-                      {msg.message}
-                      <div className="text-xs text-right opacity-70 mt-1">{msg.dateWithTime}</div>
+                      <div
+                        className={`max-w-full text-wrap rounded-lg p-3 ${
+                          msg.senderId === userid
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-900'
+                        }`}
+                      >
+                        <p>{msg.message}</p>
+                        <p className="text-xs opacity-70 mt-1 text-right">
+                          {msg.dateWithTime}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </ScrollArea>
             <form onSubmit={handleSubmit(onSubmit)} className="border-t p-3 md:p-4">
