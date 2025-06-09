@@ -149,7 +149,7 @@ export default function CustomerChatPage() {
     setChatMessages((prev) => [...prev, newMessage]);
 
     try {
-      const response = await fetch('http://localhost:5000/liveNotification/customerMessage', {
+      const response = await fetch('https://job-server-1.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
         body: JSON.stringify(newMessage),
         headers: {

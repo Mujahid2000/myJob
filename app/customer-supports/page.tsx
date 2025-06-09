@@ -145,7 +145,7 @@ export default function SupportPage() {
     setChatMessages((prev) => [...prev, newMessage]);
 
     try {
-      await fetch('http://localhost:5000/liveNotification/customerMessage', {
+      await fetch('https://job-server-1.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
         body: JSON.stringify(newMessage),
         headers: {
@@ -358,7 +358,7 @@ export default function SupportPage() {
           <div className="space-y-4">
             <ScrollArea className="h-[300px] md:h-[400px] p-4">
               <div className="flex flex-col gap-3">
-                {sortMessagesByTime(chatMessages).map((msg) => (
+                {sortMessagesByTime(chatMessages).filter((newMsg) => newMsg.receiverId === userid || newMsg.senderId === userid).map((msg) => (
                   <div
                     key={msg._id}
                     className={`chat ${
