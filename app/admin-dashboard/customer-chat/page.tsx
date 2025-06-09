@@ -179,7 +179,7 @@ export default function CustomerChatPage() {
     );
   };
 
-  const lastMessages = sortMessagesByTime(chatMessages);
+  const lastMessages = sortMessagesByTime(chatMessages).filter((lm) => lm.receiverId === senderid || lm.senderId === senderid);
   const lastItem = lastMessages.at(lastMessages.length -1);
   const lastUserMessageOrAdmin = lastItem?.message.slice(0,10)
 
@@ -247,7 +247,7 @@ export default function CustomerChatPage() {
                         
                         </div>
                       </div>
-                      <p className="text-sm text-gray-500 truncate">{lastUserMessageOrAdmin || 'Hi'}</p>
+                      <p className="text-sm text-gray-500 truncate">Click to show the message</p>
                     </div>
                   </div>
                 </div>
