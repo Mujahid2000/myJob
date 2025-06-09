@@ -204,7 +204,7 @@ export default function CustomerChatPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[82vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[80vh]">
         {/* Chat List */}
         <Card className="lg:col-span-1 order-2 lg:order-1">
           <CardHeader className="pb-3">
@@ -257,7 +257,9 @@ export default function CustomerChatPage() {
         </Card>
 
         {/* Chat Window */}
-        <Card className="lg:col-span-2 order-1 lg:order-2">
+        {
+          selectedUser ? 
+           <Card className="lg:col-span-2 order-1 lg:order-2">
           <CardHeader className="border-b pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -276,7 +278,7 @@ export default function CustomerChatPage() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="h-[300px] md:h-[400px] p-4">
+            <ScrollArea className="h-[300px] md:h-[60vh] p-4">
               <div className="flex flex-col gap-3">
                 {sortMessagesByTime(chatMessages).map((msg) => (
                   <div
@@ -313,6 +315,13 @@ export default function CustomerChatPage() {
             </form>
           </CardContent>
         </Card>
+          :
+
+          <Card className="lg:col-span-2 order-1 lg:order-2 flex items-center justify-center h-[90vh]">
+            <p className="text-gray-500 text-lg">Select a user to start chatting</p>
+          </Card>
+        }
+       
       </div>
     </div>
   );
