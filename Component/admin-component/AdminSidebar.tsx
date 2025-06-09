@@ -10,28 +10,23 @@ import { Users, Briefcase, TrendingUp, Bell, Shield, MessageSquare, CreditCard, 
 const sidebarItems = [
   {
     title: "Overview",
-    href: "/",
+    href: "/admin-dashboard",
     icon: TrendingUp,
   },
   {
     title: "User Management",
-    href: "/users",
+    href: "/admin-dashboard/users-managment",
     icon: Users,
   },
   {
     title: "Job Posts",
-    href: "/jobs",
+    href: "/admin-dashboard/jobs",
     icon: Briefcase,
   },
   {
     title: "Billing",
-    href: "/billing",
+    href: "/admin-dashboard/billing",
     icon: CreditCard,
-  },
-  {
-    title: "Support",
-    href: "/support",
-    icon: MessageSquare,
   },
   {
     title: "Customer Chat",
@@ -40,12 +35,12 @@ const sidebarItems = [
   },
   {
     title: "Notifications",
-    href: "/notifications",
+    href: "/admin-dashboard/notification",
     icon: Bell,
   },
   {
     title: "Security",
-    href: "/security",
+    href: "/admin-dashboard/security",
     icon: Shield,
   },
 ]
