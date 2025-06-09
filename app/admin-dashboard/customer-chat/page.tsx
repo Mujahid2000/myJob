@@ -280,7 +280,7 @@ export default function CustomerChatPage() {
           <CardContent className="p-0">
             <ScrollArea className="h-[300px] md:h-[65vh] p-4">
               <div className="flex flex-col gap-3">
-                {sortMessagesByTime(chatMessages).map((msg) => (
+                {sortMessagesByTime(chatMessages).filter((uM) => uM.senderId === selectedUser.senderId || uM.receiverId === selectedUser.senderId).map((msg) => (
                   <div
                     key={msg._id}
                     className={`chat ${msg.senderId === userid ? 'chat-end' : 'chat-start'}`}
