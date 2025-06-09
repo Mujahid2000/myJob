@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ModalState {
     value: boolean;
     jobId: string;
+    mailModal: boolean;
 }
 
 const initialState: ModalState = {
     value: false,
-    jobId: ''
+    jobId: '',
+    mailModal: false,
 };
 
 export const ModalOpenSlice = createSlice({
@@ -17,10 +19,13 @@ export const ModalOpenSlice = createSlice({
         openModal: (state, action: PayloadAction<{ value: boolean; jobId: string }>) => {
             state.value = action.payload.value;
             state.jobId = action.payload.jobId;
+        },
+        mailModal: (state, action: PayloadAction<{openMail:boolean}>) =>{
+            state.mailModal = action.payload.openMail
         }
     }
 });
 
-export const { openModal } = ModalOpenSlice.actions;
+export const { openModal, mailModal } = ModalOpenSlice.actions;
 
 export default ModalOpenSlice.reducer;

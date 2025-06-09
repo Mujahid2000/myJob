@@ -13,6 +13,9 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube 
 import { FaUsersBetweenLines } from "react-icons/fa6";
 import { toast, Toaster } from 'sonner';
 import io from 'socket.io-client';
+import { useDispatch, useSelector } from 'react-redux';
+import { mailModal } from '@/Store/ModalSlice';
+import { RootState } from '@/Store/Store';
 
 const socket = io('https://job-server-1.onrender.com', {
   withCredentials: false,
@@ -51,7 +54,16 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
   const { data: applicantDetails, isLoading, isError, error, isSuccess } = useGetJobPostApplicantDetailsQuery(applicantDetailsData);
   const applicantData = applicantDetails?.applicant;
   const date = applicantData?.dateOfBirth;
+  const dispatch = useDispatch()
+  const mailModalState = useSelector((state:RootState) => state.modal.mailModal)
 
+
+
+    useEffect(() =>{
+      if(mailModalState === true) {
+        setnewopen(false)
+      }
+    },[mailModalState])
 
   // Initialize Socket.IO connection
 
@@ -248,7 +260,7 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
                       >
                         <Bookmark />
                       </Button>
-                      <Button className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
+                      <Button onClick={() => dispatch(mailModal({ openMail: !mailModalState }))} className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
                         <Mail className="mr-2 h-4 w-4" /> Send Mail
                       </Button>
                       <Button className="bg-[#0A65CC] hover:bg-white border hover:text-[#0A65CC] hover:border-[#0A65CC] text-white">

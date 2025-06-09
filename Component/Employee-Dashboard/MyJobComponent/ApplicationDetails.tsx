@@ -11,6 +11,7 @@ import { useGetJobPostApplicantListByJobIdQuery } from '@/RTKQuery/JobApplyApiSl
 import { useGetShortListedDataQuery } from '@/RTKQuery/ShortListedApi';
 import Link from 'next/link';
 import ApplicantShortlistDetailsModal from './ApplicantShortlistDetailsModal';
+import MailComposer from './MailModal';
 
 // Define the interface for an applicant
 interface Applicant {
@@ -344,6 +345,8 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
         companyname={sortedApplicantDetails.companyName}
         jobTitle={sortedApplicantDetails.title}
       />
+
+      <MailComposer/>
     </div>
   );
 };
