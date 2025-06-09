@@ -122,9 +122,19 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 0px;
+/* Hide scrollbar globally */
+html,
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  overflow: hidden; /* Completely disables scrolling */
 }
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 
 input[type= "radio"] {
   accent-color: #0066FF
