@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "Authentication/firebase.js", "Authentication/AuthContext.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "Authentication/firebase.js", "Authentication/AuthContext.tsx", "app/admin-dashboard/security"],
   "exclude": ["node_modules"]
 }
