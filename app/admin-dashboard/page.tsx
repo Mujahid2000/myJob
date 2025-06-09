@@ -338,9 +338,7 @@ export default function SaasAdminDashboard() {
         <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMobileSidebarOpen(true)}>
-                <Menu className="h-4 w-4" />
-              </Button>
+              
               <div>
                 <h1 className="text-xl md:text-2xl font-bold text-gray-900">JobPortal Admin</h1>
                 <p className="text-sm md:text-base text-gray-600 hidden sm:block">

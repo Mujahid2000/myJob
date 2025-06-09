@@ -28,7 +28,7 @@ export default function BillingPage() {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Subscription & Billing</h2>
+          <h2 className="px-5 lg:px-0 text-base md:text-xl lg:text-2xl font-bold">Subscription & Billing</h2>
           <Button>
             <CreditCard className="h-4 w-4 mr-2" />
             Create Invoice

@@ -38,7 +38,7 @@ export default function JobsPage() {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Job Post Management</h2>
+          <h2 className="px-5 lg:px-0 text-base md:text-xl lg:text-2xl font-bold">Job Post Management</h2>
           <div className="flex space-x-2">
             <Button variant="outline">
               <Filter className="h-4 w-4 mr-2" />

@@ -14,7 +14,7 @@ export default function NotificationsPage() {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Notifications & Messaging</h2>
+          <h2 className="px-5 lg:px-0 text-base md:text-xl lg:text-2xl font-bold">Notifications & Messaging</h2>
           <Button>
             <Send className="h-4 w-4 mr-2" />
             Send Announcement
