@@ -150,9 +150,10 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
 
   // Fetch job listings
   let jobListings: JobListing[] = [];
+
   try {
     const res = await fetch("https://job-server-1.onrender.com/jobs/getAllPostedData", {
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
+      next: { revalidate: 10 }, // Revalidate every 60 seconds
       headers: {
         "Content-Type": "application/json",
       },
