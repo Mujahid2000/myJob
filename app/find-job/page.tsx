@@ -24,12 +24,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   const params = resolvedSearchParams || { viewMode: 'grid' };
 
   return (
-    <ReactLenis root>
+
 <div>
       <JobFiltering />
       <JobListings searchParams={params} />
     </div>
-    </ReactLenis>
+
     
   );
 }
