@@ -17,7 +17,7 @@ export interface Daum {
 export const TagsApi = createApi({
     reducerPath: 'tagsName',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://job-server-1.onrender.com',
+        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     }),
     tagTypes: ['Tags'],
     endpoints:(builder)=>({

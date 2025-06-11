@@ -27,7 +27,7 @@ interface captureOrderData {
 export const paymentApi = createApi({
     reducerPath: 'paymentApi',
     baseQuery: fetchBaseQuery({
-      baseUrl: 'https://job-server-1.onrender.com/api/paypal'
+      baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_PAYMENT
     }),
     endpoints: (builder) =>({
         createOrder: builder.mutation<orderApiResponse ,orderData >({

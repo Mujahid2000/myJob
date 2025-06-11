@@ -97,7 +97,7 @@ export interface ProfileDelete {
 export const shortListed = createApi({
     reducerPath: 'shortListed',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://job-server-1.onrender.com'
+        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL
     }),
     tagTypes: ['shortlist'],
     endpoints: (builder) => ({

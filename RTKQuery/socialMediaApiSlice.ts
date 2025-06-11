@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const socialMediaApiSlice = createApi({
     reducerPath: "socialMediaApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://job-server-1.onrender.com" }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
     tagTypes: ["SocialMedia"],
     endpoints: (builder) =>({
         postSocialMediaInfo: builder.mutation({

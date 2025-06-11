@@ -107,7 +107,7 @@ export interface SpecificJobsData {
 export const companyApiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://job-server-1.onrender.com', // Replace with your API base URL
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL, // Replace with your API base URL
   }),
   tagTypes: ['Company'],
   endpoints: (builder) => ({

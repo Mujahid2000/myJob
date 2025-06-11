@@ -57,7 +57,7 @@ interface ProfileDataResponse {
 export const profileApi = createApi({
   reducerPath: 'profileApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://job-server-1.onrender.com',
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
   }),
   tagTypes: ['Resumes', 'Profile'],
   endpoints: (builder) => ({

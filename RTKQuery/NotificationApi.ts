@@ -21,7 +21,7 @@ export interface Daum {
 //notification data get
 export const notificationApiSlice = createApi({
     reducerPath: 'notificationApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
     endpoints: (builder) => ({
         getNotifications: builder.query<NotificationResponse, string>({
             query: (userId) => ({

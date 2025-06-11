@@ -61,7 +61,7 @@ interface SignupResponse {
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://job-server-1.onrender.com',
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({

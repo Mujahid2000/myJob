@@ -42,7 +42,7 @@ export interface Favortite {
 export const candidateJObApplyData = createApi({
     reducerPath: 'candidateJobApply',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://job-server-1.onrender.com'
+        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL
     }),
     tagTypes: ['candidateJob'],
     endpoints: (builder) =>({

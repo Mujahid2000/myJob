@@ -33,7 +33,7 @@ interface BookmarkResponse {
 }
 export const bookMarkApiSlice = createApi({
   reducerPath: 'bookmark',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
   tagTypes: ['bookMarkApi'],
   endpoints: builder => ({
     bookMarkDataPost: builder.mutation<bookmarkTypesResponse, bookmarkTypesRequest>({

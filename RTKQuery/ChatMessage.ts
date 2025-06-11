@@ -41,7 +41,7 @@ export interface Admin {
 
 export const chatApi = createApi({
     reducerPath: 'chatApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
     endpoints: (builder) => ({
         getMessages: builder.query<CustomerProfile, string>({
             query: (userid) => ({

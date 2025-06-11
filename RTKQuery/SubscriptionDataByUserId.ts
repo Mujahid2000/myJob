@@ -16,7 +16,7 @@ interface paymentsDataByUserId {
 
 export const SubscriptionDataByUserId = createApi({
     reducerPath: 'subscriptionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
   tagTypes: ['SubscriptionDataByUserId'],
     endpoints: builder =>({
         getSubscriptionDataByUserId: builder.query<paymentsDataByUserId[], string>({

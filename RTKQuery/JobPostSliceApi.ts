@@ -87,7 +87,7 @@ export interface GetCompanyDataResponse {
 export const JobPostApi = createApi({
     reducerPath: 'jobpostapi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://job-server-1.onrender.com',
+        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     }),
     tagTypes: ['jobPost'],
     endpoints: (builder) => ({

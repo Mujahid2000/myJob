@@ -23,7 +23,7 @@ interface FoundingInfoResponse {
 
 export const foundingInfoApi = createApi({
   reducerPath: 'foundingInfoApi', 
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://job-server-1.onrender.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
   tagTypes: ['FoundingInfo'],
   endpoints: (builder) => ({
     postFounderInfo: builder.mutation<FoundingInfoResponse, FoundingInfoRequest>({

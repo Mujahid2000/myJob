@@ -22,7 +22,7 @@ interface ContactFormData {
 
 export const contact = createApi({
     reducerPath: "contactApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://job-server-1.onrender.com" }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
     tagTypes: ["contact"],
     endpoints: (builder) => ({
         postContactInfo: builder.mutation<ContactResponse, ContactFormData>({

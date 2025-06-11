@@ -63,7 +63,7 @@ export interface Social {
 export const CandidatePersonalData = createApi({
     reducerPath: 'candidateApi',
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'https://job-server-1.onrender.com' 
+        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL 
     }),
     tagTypes: ['candidate'],
     endpoints: builder =>({

@@ -51,7 +51,7 @@ interface passwordDataResponse {
 export const notificationApi = createApi({
   reducerPath: 'notification',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://job-server-1.onrender.com',
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
   }),
   tagTypes: ['notificationApi'],
   endpoints: (builder) => ({
