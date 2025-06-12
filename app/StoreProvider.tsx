@@ -6,11 +6,11 @@ import { Provider } from 'react-redux';
 
 const StoreProvider = ({children}: {children: ReactNode}) => {
     return (
-      <AuthProvider> 
-        <Provider store={store}>
+      <Provider store={store}>
+          <AuthProvider> 
           {children}  
-        </Provider>
       </AuthProvider>
+        </Provider>
       
           
     );

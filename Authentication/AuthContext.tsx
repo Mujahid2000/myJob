@@ -12,6 +12,9 @@ import React, { createContext, useEffect, useState } from 'react';
 
 import { ReactNode } from 'react';
 import { auth } from './firebase';
+import { usePostUserTokenMutation } from '@/RTKQuery/JWT';
+import { useDispatch } from 'react-redux';
+import { setJwtToken } from '@/Store/JwtToken';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -33,14 +36,31 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface UserDetails {
+  email: string,
+  password: string
+}
+
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<any | null>({name:"mujahid"});
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState('Personal');
   const [tabloading, setTabLoading] = useState(true);
-  
+  const [userDetail, setUserDetail] = useState<UserDetails>({
+    email: '',
+    password: ''
+  })
+const dispatch = useDispatch()
+
+  const [postJwt, {isLoading, isError, isSuccess}] =usePostUserTokenMutation()
   async function signup(name: string, email: string, password: string): Promise<UserCredential> {
     try {
+      if(email && password){
+        setUserDetail((prev) => ({
+          email: email,
+          password: password
+        }))
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
       return userCredential;
@@ -54,10 +74,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   async function login(email: string, password: string): Promise<UserCredential> {
-    console.log(email, password)
+    
     try {
+      if(email && password){
+        setUserDetail((prev) => ({
+          email: email,
+          password: password
+        }))
+      }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCredential)
       return userCredential;
 
     } catch (error) {
@@ -80,8 +105,26 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
+    const unsubscribe = auth.onAuthStateChanged(async(user: User | null) => {
       setCurrentUser(user);
+      if(user){
+        try {
+          const response = await postJwt(userDetail).unwrap();
+          console.log(response.token)
+        if(response.token){
+          dispatch(setJwtToken(response.token))
+          // localStorage.setItem( 'Access_Token', response.token)
+        }else{
+          dispatch(setJwtToken(response.token))
+          }
+        } catch (error) {
+          console.error('JWT Error:', error);
+          localStorage.removeItem("Access_Token")
+        }
+        
+      } else {
+        localStorage.removeItem("Access_Token")
+      }
       setLoading(false);
     });
 

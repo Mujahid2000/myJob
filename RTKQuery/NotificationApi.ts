@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { secureUrl } from './JwtHeader';
 
 export interface NotificationResponse {
   message: string
-  data: Daum[]
+  data: Notification[]
 }
 
-export interface Daum {
+export interface Notification {
   _id: string
   id: string
   companyUser: string
@@ -21,7 +22,7 @@ export interface Daum {
 //notification data get
 export const notificationApiSlice = createApi({
     reducerPath: 'notificationApi',
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+    baseQuery: secureUrl,
     endpoints: (builder) => ({
         getNotifications: builder.query<NotificationResponse, string>({
             query: (userId) => ({

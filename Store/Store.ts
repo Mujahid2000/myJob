@@ -36,6 +36,11 @@ import searchFilterParams from './searchFilterSlice'
 import CandidateModal from './CandidateModal'
 import { notificationApiSlice } from '@/RTKQuery/NotificationApi';
 import { chatApi } from '@/RTKQuery/ChatMessage';
+import { JwtAuth } from '@/RTKQuery/JWT';
+import jwtSet from './JwtToken'
+
+
+
 
 export const store = configureStore({
   reducer: {
@@ -58,6 +63,7 @@ export const store = configureStore({
     [candidateJObApplyData.reducerPath]: candidateJObApplyData.reducer,
     [notificationApiSlice.reducerPath]: notificationApiSlice.reducer,
     [chatApi.reducerPath] : chatApi.reducer,
+    [JwtAuth.reducerPath] : JwtAuth.reducer,
     companyInfo: companyInfoReducer,
     foundingInfo: foundingInfoReducer,
     socialMedia: socialMediaReducer,
@@ -74,7 +80,8 @@ export const store = configureStore({
     experience: experience,
     slider: sliderReducer,
     searchFilter: searchFilterParams,
-    candidateModal: CandidateModal
+    candidateModal: CandidateModal,
+    jwtSet: jwtSet
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -98,7 +105,8 @@ export const store = configureStore({
       shortListed.middleware,
       candidateJObApplyData.middleware,
       notificationApiSlice.middleware,
-      chatApi.middleware
+      chatApi.middleware,
+      JwtAuth.middleware
     ),
 });
 
