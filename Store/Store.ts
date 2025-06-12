@@ -38,6 +38,7 @@ import { notificationApiSlice } from '@/RTKQuery/NotificationApi';
 import { chatApi } from '@/RTKQuery/ChatMessage';
 import { JwtAuth } from '@/RTKQuery/JWT';
 import jwtSet from './JwtToken'
+import { AccountSetupApi } from '@/RTKQuery/AccountSetupApi';
 
 
 
@@ -64,6 +65,7 @@ export const store = configureStore({
     [notificationApiSlice.reducerPath]: notificationApiSlice.reducer,
     [chatApi.reducerPath] : chatApi.reducer,
     [JwtAuth.reducerPath] : JwtAuth.reducer,
+    [AccountSetupApi.reducerPath] : AccountSetupApi.reducer,
     companyInfo: companyInfoReducer,
     foundingInfo: foundingInfoReducer,
     socialMedia: socialMediaReducer,
@@ -106,7 +108,8 @@ export const store = configureStore({
       candidateJObApplyData.middleware,
       notificationApiSlice.middleware,
       chatApi.middleware,
-      JwtAuth.middleware
+      JwtAuth.middleware,
+      AccountSetupApi.middleware
     ),
 });
 
