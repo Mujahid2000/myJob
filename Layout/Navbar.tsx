@@ -247,7 +247,7 @@ export default function Navbar() {
           </nav>
 
           {/* Main Header */}
-          <div className="px-6 lg:px-3 py-3 sm:py-4 max-w-7xl mx-auto">
+          <div className="px-3 lg:px-3 py-3 sm:py-4 max-w-7xl mx-auto">
             {/* Desktop Layout */}
             <div className="hidden lg:flex items-center justify-between">
               {/* Logo Section */}

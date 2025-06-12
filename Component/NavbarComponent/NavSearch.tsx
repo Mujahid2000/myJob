@@ -15,7 +15,12 @@ const NavSearch = () => {
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            const params =new URLSearchParams();
+           performSearch()
+        }
+    };
+
+    const performSearch= () =>{
+      const params =new URLSearchParams();
             if(searchValue){
                 params.set('jobRole', searchValue)
             };
@@ -23,13 +28,15 @@ const NavSearch = () => {
                 params.set('location', country)
             }
             router.push(`/find-job?${params.toString()}`)
-            // Optionally trigger search here
-        }
-    };
+    }
+
+    const handleSearchButton = () =>{
+      performSearch()
+    }
 
     return (
-        <div className=''>
-            <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] px-3 py-1">
+        <div className='flex flex-row gap-2 items-center'>
+            <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] lg:px-3 py-1">
                   <Input
                     type="text"
                     placeholder="Job tittle, keyword..."
@@ -39,7 +46,7 @@ const NavSearch = () => {
                   />
                   <FiSearch className="text-blue-500 text-lg" />
                   <Select onValueChange={(value)=>setCountry(value)}>
-                    <SelectTrigger  className="w-32 shadow-none focus:outline-none border-none bg-transparent">
+                    <SelectTrigger  className="w-24 lg:w-32 shadow-none focus:outline-none border-none bg-transparent">
                       <SelectValue placeholder="Country" />
                     </SelectTrigger>
                     <SelectContent className="border-none shadow-md focus:outline-none">
@@ -48,8 +55,9 @@ const NavSearch = () => {
                       <SelectItem value="Nepal">Nepal</SelectItem>
                     </SelectContent>
                   </Select>
+
                 </div>
-                
+                <button onClick={handleSearchButton} className='flex lg:hidden text-sm bg-[#0a65cc] px-4 rounded-md py-3 text-white'>Search</button>
         </div>
     );
 };
