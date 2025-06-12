@@ -565,6 +565,7 @@ export default function Navbar() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-60">
+                      <div className="max-h-60 overflow-y-auto">
                       <div className="p-2 font-medium">Notifications</div>
                       {sumArray.length === 0 ? (
                         <DropdownMenuItem className="text-sm text-muted-foreground">
@@ -583,6 +584,7 @@ export default function Navbar() {
                           </DropdownMenuItem>
                         ))
                       )}
+                      </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
