@@ -57,7 +57,7 @@ const NavSearch = () => {
                   </Select>
 
                 </div>
-                <button onClick={handleSearchButton} className='flex lg:hidden text-sm bg-[#0a65cc] px-4 rounded-md py-3 text-white'>Search</button>
+                <button onClick={handleSearchButton} className='flex lg:hidden font-semibold text-sm bg-[#0a65cc] px-4 rounded-md py-3 text-white'>Search</button>
         </div>
     );
 };
