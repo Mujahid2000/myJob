@@ -110,7 +110,6 @@ const dispatch = useDispatch()
       if(user){
         try {
           const response = await postJwt(userDetail).unwrap();
-          console.log(response.token)
         if(response.token){
           dispatch(setJwtToken(response.token))
           // localStorage.setItem( 'Access_Token', response.token)
