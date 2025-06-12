@@ -37,6 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import io from 'socket.io-client';
 import { useGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
 import NavSearch from "@/Component/NavbarComponent/NavSearch";
+import { useLenis } from "lenis/react";
 
 // Socket.IO initialization
 const socket = io('https://job-server-1.onrender.com', {
@@ -75,8 +76,9 @@ export default function Navbar() {
     { name: "Pricing Plans", href: "/pricing-plans", active: false, id: 5 },
     { name: "Customer Supports", href: "/customer-supports", active: false, id: 6 },
   ];
-
+  const lenis = useLenis()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [dropdownOpen, setDropDownOpen] = useState<boolean>()
   const path = usePathname();
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
@@ -189,6 +191,18 @@ export default function Navbar() {
   const singleName = currentUser?.displayName?.split(' ');
   const firstName = singleName ? singleName[0] : '';
 
+
+
+  // Stop Lenis scroll when dropdown is open
+  useEffect(() => {
+    if (dropdownOpen) {
+      lenis?.stop();
+    } else {
+      lenis?.start();
+    }
+  }, [dropdownOpen, lenis]);
+
+
   return (
     <>
       {!disableNavWithFooter.includes(path) && (
@@ -259,41 +273,47 @@ export default function Navbar() {
               <div className="flex items-center gap-5">
                 {/* notification section start */}
                 {currentUser && role === 'Applicant' && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="relative focus:outline-none">
-                        <Bell className="h-4 w-4" />
-                        {sumArray.length > 0 && (
-                          <Badge
-                            variant="destructive"
-                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                          >
-                            {sumArray.length}
-                          </Badge>
-                        )}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-80">
-                      <div className="p-2 font-medium">Notifications</div>
-                      {sumArray.length === 0 ? (
-                        <DropdownMenuItem className="text-sm text-muted-foreground">
-                          No new notifications
-                        </DropdownMenuItem>
-                      ) : (
-                        sumArray.map((notification, index) => (
-                          <DropdownMenuItem
-                            key={index}
-                            className="flex flex-col items-start gap-1"
-                          >
-                            <span className="text-sm font-medium">{notification.message}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {notification.time}
-                            </span>
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="relative focus:outline-none">
+          <Bell className="h-4 w-4" />
+          {sumArray.length > 0 && (
+            <Badge
+              variant="destructive"
+              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+            >
+              {sumArray.length}
+            </Badge>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-80">
+        <div
+          data-lenis-prevent
+          className="max-h-60 overflow-y-auto"
+        >
+          <div className="p-2 font-medium">Notifications</div>
+          {sumArray.length === 0 ? (
+            <DropdownMenuItem className="text-sm text-muted-foreground">
+              No new notifications
+            </DropdownMenuItem>
+          ) : (
+            sumArray.map((notification, index) => (
+              <DropdownMenuItem
+                key={index}
+                className="flex flex-col items-start gap-1"
+              >
+                <span className="text-sm font-medium">{notification.message}</span>
+                <span className="text-xs text-muted-foreground">
+                  {notification.time}
+                </span>
+              </DropdownMenuItem>
+            ))
+          )}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
                 )}
                 {/* notification section end */}
                 {/* condition sign in button if current user is not available  */}
