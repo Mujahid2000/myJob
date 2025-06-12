@@ -740,24 +740,7 @@ export default function Navbar() {
               </div>
 
               {/* Search Bar - Mobile & Tablet Full Width */}
-              <div className="flex items-center gap-2 bg-white rounded-sm border-full xl:w-[500px] px-3 py-2">
-                <Input
-                  type="text"
-                  placeholder="Search..."
-                  className="flex-1 border-none focus:outline-none outline-none px-2"
-                />
-                <FiSearch size={15} className="text-blue-500 text-lg" />
-                <Select>
-                  <SelectTrigger className="w-20 px-0 shadow-none focus:outline-none border-none bg-transparent">
-                    <SelectValue placeholder="Country" />
-                  </SelectTrigger>
-                  <SelectContent className="border-none text-base shadow-md focus:outline-none">
-                    <SelectItem value="Bangladesh">Bangladesh</SelectItem>
-                    <SelectItem value="usa">United States</SelectItem>
-                    <SelectItem value="Nepal">Nepal</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <NavSearch/>
             </div>
           </div>
         </div>

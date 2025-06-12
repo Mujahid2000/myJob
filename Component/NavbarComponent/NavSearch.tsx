@@ -28,7 +28,7 @@ const NavSearch = () => {
     };
 
     return (
-        <div>
+        <div className=''>
             <div className="flex items-center gap-2 bg-white rounded-sm border flex-row-reverse max-w-full xl:w-[500px] px-3 py-1">
                   <Input
                     type="text"
@@ -49,6 +49,7 @@ const NavSearch = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                
         </div>
     );
 };
