@@ -233,7 +233,7 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
           </div>
         </div>
       </div>
-      <div className="flex space-x-3">
+      <div className="flex flex-col lg:flex-row space-x-3">
         <div className="rounded-lg bg-[#F8FAFC] p-5 flex-1">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-800">All Applications ({allApplicants?.length || 0})</h3>

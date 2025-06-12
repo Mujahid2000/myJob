@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { useGetJobPostApplicantDetailsQuery } from '@/RTKQuery/JobApplyApiSlice';
 import { shortlistRequest, usePostShortListedDataMutation, useSaveCandidateProfileMutation } from '@/RTKQuery/ShortListedApi';
-import { Bookmark, Cake, CircleArrowRight, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, Map, MapPin, Phone } from 'lucide-react';
+import { Bookmark, Cake, CircleArrowRight, CircleUserRound, ClipboardList, Download, FileText, GraduationCap, Layers, Mail, Map, MapPin, Phone, X } from 'lucide-react';
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaReddit, FaTwitter, FaYoutube } from 'react-icons/fa';
@@ -233,26 +233,35 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
         <div
           className={`${
             newopen ? "scale-[1] opacity-100" : "scale-[0] opacity-0"
-          } w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300`}
+          }w-[95%] lg:w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300`}
         >
           <div className="flex gap-3">
             <div className="p-5 rounded-md bg-white">
               <div className="max-w-7xl mx-auto px-4">
                 <div>
                   {/* Header */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-4">
-                      <img src={applicantData?.profilePicture} className="w-16 h-16 rounded-full object-cover" alt="Profile" />
-                      <div>
-                        <h1 className="text-xl font-bold text-gray-800">{applicantData?.fullName}</h1>
-                        <p className="text-sm text-gray-600">{applicantData?.title}</p>
-                      </div>
+                   <div className="flex flex-col lg:flex-row justify-between gap-3 items-center">
+                  <div className="flex items-start lg:items-center justify-between gap-5 lg:gap-20">
+                  <div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
+                  <div className="flex items-center space-x-4">
+                    <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
+                    <div>
+                      <h1 className="text-base lg:text-xl font-bold text-gray-800">
+                        {applicantData?.fullName}
+                      </h1>
+                      <p className="text-sm text-gray-600">
+                       {applicantData?.title}
+                      </p>
                     </div>
-                    <div className="flex gap-4">
-                      <Button onClick={handleShortListed} title="shortlisted" className="cursor-pointer" disabled={shortLoading}>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className='flex flex-col lg:flex-row gap-4'>
+   <div className='flex gap-4'>
+                   <Button onClick={handleShortListed} title="shortlisted" className="cursor-pointer" disabled={shortLoading}>
                         <FaUsersBetweenLines />
-                      </Button>
-                      <Button
+                    </Button>
+
+                    <Button
                         title="save candidate profile"
                         className="cursor-pointer"
                         onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId , fullName: applicantData?.fullName || ''})}
@@ -260,16 +269,30 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
                       >
                         <Bookmark />
                       </Button>
-                      <Button onClick={() => dispatch(mailModal({ openMail: !mailModalState }))} className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
+                    </div>
+                    
+                    <div className='flex gap-4'>
+ <Button onClick={() => dispatch(mailModal({ openMail: !mailModalState }))} className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
                         <Mail className="mr-2 h-4 w-4" /> Send Mail
                       </Button>
-                      <Button className="bg-[#0A65CC] hover:bg-white border hover:text-[#0A65CC] hover:border-[#0A65CC] text-white">
+
+                       <Button className="bg-[#0A65CC] hover:bg-white border hover:text-[#0A65CC] hover:border-[#0A65CC] text-white">
                         <CircleArrowRight className="mr-2 h-4 w-4" /> Hire Candidates
                       </Button>
                     </div>
+                    </div>
+                 
+                  
                   </div>
+                  </div>
+                  <div className="flex lg:hidden">
+                      <button onClick={() => setnewopen(!newopen)}><X/></button>
+                  </div>
+                  </div>
+                  
+                </div>
 
-                  <div className="flex gap-5 justify-between pt-6">
+                  <div className="flex flex-col lg:flex-row gap-5 justify-between pt-6">
                     {/* First parent div */}
                     <div className="flex-1">
                       <div className="pb-4">
@@ -432,12 +455,7 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => setnewopen(!newopen)}
-              className="bg-white hover:bg-gray-200 w-5 h-5 flex justify-center items-center text-xl cursor-pointer text-black rounded-full p-5"
-            >
-              X
-            </button>
+            <button onClick={() => setnewopen(!newopen)} className="bg-white hover:bg-gray-200 w-5 h-5 hidden lg:flex justify-center items-center text-xl cursor-pointer text-black rounded-full p-5">X</button>
           </div>
         </div>
       </div>

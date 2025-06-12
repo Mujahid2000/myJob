@@ -46,7 +46,7 @@ export default function CandidateModal() {
                 {/* this is header */}
                 <div className="flex flex-col lg:flex-row justify-between gap-3 items-center">
                   <div className="flex items-start lg:items-center justify-between gap-20">
-<div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
+                  <div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
                   <div className="flex items-center space-x-4">
                     <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
                     <div>
