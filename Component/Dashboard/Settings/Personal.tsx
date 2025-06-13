@@ -4,9 +4,9 @@ import 'react-quill-new/dist/quill.snow.css';
 import { useForm, SubmitHandler } from "react-hook-form";
 import './custom.css'
 import { usePostCandidatePersonalDataMutation } from "@/RTKQuery/CandidateInfo";
-import { toast, Toaster } from "sonner";
 import { AuthContext } from "@/Authentication/AuthContext";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
+import { useToast } from "@/Component/Toast/ToastNotification";
 
 type Inputs = {
   country: string,
@@ -24,6 +24,7 @@ const Personal: React.FC = () => {
   const [biography, setBiography] = useState<string>();
   const [createPersonalData, { data, error, isLoading }] = usePostCandidatePersonalDataMutation()
   const authContext = useContext(AuthContext);
+  const { addToast } = useToast();
     const currentUser = authContext?.currentUser;
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
     const userId = userEmail?.user?._id;
@@ -48,14 +49,14 @@ const Personal: React.FC = () => {
           education: "",
           experience: "",
         })
-        toast.success("Personal data saved successfully!");
+        addToast("Personal data saved successfully!", 'success');
       } else if ('error' in result && result.error) {
-        toast.error("Failed to save changes. Please try again.");
+        addToast("Failed to save changes. Please try again.",'error');
       }
       console.log(result);
     } catch (error) {
       console.error("Error submitting personal data:", error);
-      toast.error("Failed to save changes. Please try again.");
+      addToast("Failed to save changes. Please try again.",'error');
     }
   };
 
@@ -148,7 +149,7 @@ const Personal: React.FC = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
         </button>
-         <Toaster richColors />
+         
       </form>
     );
   };

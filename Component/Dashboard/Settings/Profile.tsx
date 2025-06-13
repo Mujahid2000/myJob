@@ -10,7 +10,8 @@ import { useGetResumesQuery, useUploadCvMutation, useUpdateProfileMutation, useG
 import { setActiveDropdown, setModalOpen } from '@/Store/profileSlice';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
-import { Toaster, toast } from 'sonner';
+
+import { useToast } from '@/Component/Toast/ToastNotification';
 
 interface BasicInfoFormData {
   fullName: string;
@@ -44,7 +45,7 @@ const Profile = () => {
   const { data: candidateInfo, isLoading: inCandidateLoading } = useGetProfileDataQuery(email, {
     skip: !email, // Skip query if email is undefined
   });
-
+  const { addToast } = useToast();
   const getAllResume = resumes?.data || []; // Default to empty array if data is undefined
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -86,12 +87,12 @@ const Profile = () => {
         userId: userId || '',
         email: email || '',
       }).unwrap();
-      toast.success('Profile updated successfully!');
+      addToast('Profile updated successfully!', 'success');
       resetBasicInfo();
       setImagePreview(null);
     } catch (err) {
       console.error(err);
-      toast.error('Failed to update profile.');
+      addToast('Failed to update profile.', 'error');
     }
   };
 
@@ -100,16 +101,16 @@ const Profile = () => {
     if (file && data.resumeName) {
       try {
         const result = await uploadCvMutation({ resumeName: data.resumeName, userId: userId || '', email: email || '', file }).unwrap();
-        toast.success(result.message || 'CV uploaded successfully!');
+        addToast(result.message || 'CV uploaded successfully!', 'success');
         dispatch(setModalOpen(false));
         resetCv();
         setSelectedFile(null);
       } catch (err) {
         console.error('Upload failed:', err);
-        toast.error('Failed to upload CV.');
+        addToast('Failed to upload CV.','error');
       }
     } else {
-      toast.error('Please fill all fields.');
+      addToast('Please fill all fields.', 'warning');
     }
   };
 
@@ -168,7 +169,7 @@ const Profile = () => {
                             const file = e.target.files?.[0];
                             if (file) {
                               if (file.size > 3 * 1024 * 1024) {
-                                toast.error('File size exceeds the maximum limit of 3 MB.');
+                               addToast('File size exceeds the maximum limit of 3 MB.','error');
                               } else {
                                 setImagePreview(URL.createObjectURL(file));
                                 onChange(e.target.files);
@@ -542,7 +543,7 @@ const Profile = () => {
           </form>
         </div>
       </div>
-      <Toaster richColors />
+     
     </div>
   );
 };
