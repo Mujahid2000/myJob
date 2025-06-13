@@ -8,7 +8,8 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCaptureOrderMutation, useCreateOrderMutation } from '@/RTKQuery/paymentApi';
-import { toast } from 'react-toastify';
+import { useToast } from '@/Component/Toast/ToastNotification';
+
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const [modal, isModal] = useState<boolean>(false)
   const router = useRouter();
   const { price, duration, packageName, userId } = useSelector((state: RootState) => state.subscription);
-
+  const { addToast } = useToast();
   const [newCard, setNewCard] = useState({
     name: '',
     cardNumber: '',
@@ -89,7 +90,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     } catch (err: any) {
       const errorMessage = err.data?.message || 'Failed to create order';
       setError(errorMessage);
-      toast.error(errorMessage);
+      addToast(errorMessage, 'error');
       throw new Error(errorMessage);
     }
   };
@@ -99,13 +100,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       // Format price to two decimal places for consistency
       const formattedPrice = Number(price).toFixed(2);
       await captureOrder({ orderID: data.orderID, userId, packageName, duration, price: formattedPrice }).unwrap();
-      toast.success('Payment successful!');
+      addToast('Payment successful!', 'success');
       onClose();
       router.push('/payments/success');
     } catch (err: any) {
       const errorMessage = err.data?.message || 'Payment failed';
       setError(errorMessage);
-      toast.error(errorMessage);
+      addToast(errorMessage, 'error');
     }
   };
 

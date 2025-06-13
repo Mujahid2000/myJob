@@ -1,6 +1,5 @@
 'use client';
 import { AuthContext } from '@/Authentication/AuthContext';
-import SuccessModal from '@/Component/Employee-Dashboard/postajob/SuccessModal';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { useGetCompanyDataQuery, useJobPostPromotedMutation, usePostAJobMutation } from '@/RTKQuery/JobPostSliceApi';
 import { useGetAllTagsQuery } from '@/RTKQuery/TagsApi';
@@ -10,10 +9,13 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactQuill from 'react-quill-new';
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+const SuccessModal = dynamic(() => import('@/Component/Employee-Dashboard/postajob/SuccessModal'), { ssr: false });
+
 import 'react-quill-new/dist/quill.snow.css';
 import './custom.css';
 import 'ldrs/react/Ring.css'
+import dynamic from 'next/dynamic';
 type Inputs = {
   title: string;
   tags: string[];
