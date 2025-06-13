@@ -1,3 +1,4 @@
+'use client'
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, MapPin, Mail } from 'lucide-react';
 import { RxCross2 } from 'react-icons/rx';
@@ -7,6 +8,7 @@ import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { toast, Toaster } from 'sonner';
 import { useGetJobAlertsDataQuery, useGetProfilePrivacyDataQuery, useGetUserNotificationQuery, useUpdateJobAlertsMutation, useUpdatePasswordMutation, useUpdateProfilePrivacyMutation, useUpdateUserNotificationMutation } from '@/RTKQuery/NotificationApiSlice';
+import { useToast } from '@/Component/Toast/ToastNotification';
 
 // টাইপ ডেফিনিশন
 type ContactInputs = { email: string; phoneNumber: string; mapLocation: string };
@@ -30,7 +32,7 @@ const Settings = () => {
   const email = userEmail?.user?.email || '';
   const { data: userContactData, error: contactError } = useGetUserContactDataQuery(email, { skip: !email });
   const userDataContact = userContactData?.data;
-
+  const { addToast } = useToast();
   const { data: privacyProfile, isLoading: isPrivacyLoading, error: privacyError } = useGetProfilePrivacyDataQuery(userId, { skip: !userId });
   const { data: jobAlerts, isLoading: jobAlertLoading, error: jobAlertError } = useGetJobAlertsDataQuery(userId, { skip: !userId });
   const alertsJobsData = jobAlerts?.data;
@@ -105,23 +107,23 @@ const Settings = () => {
   // API fetching error handling
   useEffect(() => {
     if (userEmailError) {
-      toast.error('Failed to fetch user data', { style: toastStyles.error });
+      addToast('Failed to fetch user data', 'error')
       console.error('User fetch error:', userEmailError);
     }
     if (contactError) {
-      toast.error('Failed to fetch contact data', { style: toastStyles.error });
+      addToast('Failed to fetch contact data', 'error')
       console.error('Contact fetch error:', contactError);
     }
     if (privacyError) {
-      toast.error('Failed to fetch privacy settings', { style: toastStyles.error });
+      addToast('Failed to fetch privacy settings', 'error')
       console.error('Privacy fetch error:', privacyError);
     }
     if (jobAlertError) {
-      toast.error('Failed to fetch job alerts', { style: toastStyles.error });
+      addToast('Failed to fetch job alerts', 'error')
       console.error('Job alerts fetch error:', jobAlertError);
     }
     if (notificationError) {
-      toast.error('Failed to fetch notification settings', { style: toastStyles.error });
+      addToast('Failed to fetch notification settings', 'error')
       console.error('Notification fetch error:', notificationError);
     }
   }, [userEmailError, contactError, privacyError, jobAlertError, notificationError]);
@@ -130,14 +132,14 @@ const Settings = () => {
   const onSubmitContact: SubmitHandler<ContactInputs> = useCallback(async (data) => {
     try {
       if (!email || !userId) {
-        toast.error('Email or user ID not found', { style: toastStyles.error });
+        addToast('Email or user ID not found', 'error')
         return;
       }
       console.log('Contact Info:', data);
-      toast.success('Contact data updated successfully', { style: toastStyles.success });
+      addToast('Contact data updated successfully', 'success');
       contactForm.reset();
     } catch (error) {
-      toast.error('Failed to update contact info', { style: toastStyles.error });
+      addToast('Failed to update contact info', 'error');
       console.error('Contact update error:', error);
     }
   }, [email, userId, contactForm]);
@@ -145,24 +147,24 @@ const Settings = () => {
   const onSubmitNotification: SubmitHandler<NotificationInputs> = useCallback(async (data) => {
     try {
       if (!userId) {
-        toast.error('User ID not found', { style: toastStyles.error });
+        addToast('User ID not found', 'error');
         return;
       }
       const notificationDataToSend = { userId, ...data };
       const result = await updateNotification(notificationDataToSend).unwrap();
       if (result.message === 'Notification updated successfully') {
-        toast.success('Notification updated successfully', { style: toastStyles.success });
+        addToast('Notification updated successfully', 'success');
       } else {
-        toast.error('Unexpected response from server', { style: toastStyles.error });
+        addToast('Unexpected response from server', 'error');
       }
     } catch (error: any) {
       console.error('Error updating notification:', error);
       if (error.status === 404) {
-        toast.error('Notification settings not found for this user', { style: toastStyles.error });
+        addToast('Notification settings not found for this user', 'error');
       } else if (error.status === 400) {
-        toast.error('No changes made to notification settings', { style: toastStyles.error });
+        addToast('No changes made to notification settings', 'error');
       } else {
-        toast.error(error?.data?.message || 'Failed to update notification', { style: toastStyles.error });
+        addToast(error?.data?.message || 'Failed to update notification', 'error');
       }
     }
   }, [userId, updateNotification]);
@@ -170,52 +172,52 @@ const Settings = () => {
   const onSubmitJobAlert: SubmitHandler<JobAlertInputs> = useCallback(async (data) => {
     try {
       if (!userId) {
-        toast.error('User ID not found', { style: toastStyles.error });
+        addToast('User ID not found', 'error');
         return;
       }
       const alertsData = { ...data, userId };
       const result = await updateJobAlerts(alertsData).unwrap();
       if (result?.data) {
-        toast.success('Job Alert updated successfully', { style: toastStyles.success });
+        addToast('Job Alert updated successfully', 'success');
       } else {
-        toast.error('Unexpected response from server', { style: toastStyles.error });
+        addToast('Unexpected response from server', 'error');
       }
     } catch (error: any) {
       console.error('Error updating job alerts:', error);
-      toast.error(error?.data?.message || 'Failed to update job alerts', { style: toastStyles.error });
+      addToast(error?.data?.message || 'Failed to update job alerts', 'error');
     }
   }, [userId, updateJobAlerts]);
 
   const onSubmitProfilePrivacy: SubmitHandler<ProfilePrivacyInputs> = useCallback(async (data) => {
     try {
       if (!userId) {
-        toast.error('User ID not found', { style: toastStyles.error });
+        addToast('User ID not found', 'error');
         return;
       }
       const previousData = privacyProfile?.data || { profilePublic: false, resumePublic: false };
       if (previousData.profilePublic === data.profilePublic && previousData.resumePublic === data.resumePublic) {
-        toast.warning('You do not change any privacy mode', { style: toastStyles.warning });
+        addToast('You do not change any privacy mode', 'warning');
         return;
       }
       const privacyDataToSend = { userId, ...data };
       const response = await updateProfilePrivacy(privacyDataToSend).unwrap();
       if (response.message === 'Updated data successfully') {
-        toast.success('Profile privacy updated successfully', { style: toastStyles.success });
+        addToast('Profile privacy updated successfully', 'success');
         profilePrivacyForm.reset({
           profilePublic: data.profilePublic,
           resumePublic: data.resumePublic,
         });
       } else {
-        toast.error(response.message || 'Unexpected response from server', { style: toastStyles.error });
+        addToast(response.message || 'Unexpected response from server', 'error');
       }
     } catch (error: any) {
       console.error('Error updating profile privacy:', error);
       if (error.status === 400) {
-        toast.error(error.data?.message || 'No changes made to profile privacy settings', { style: toastStyles.error });
+        addToast(error.data?.message || 'No changes made to profile privacy settings', 'error');
       } else if (error.status === 404) {
-        toast.error('Profile privacy settings not found for this user', { style: toastStyles.error });
+        addToast('Profile privacy settings not found for this user', 'error');
       } else {
-        toast.error(error?.data?.message || 'Failed to update profile privacy', { style: toastStyles.error });
+        addToast(error?.data?.message || 'Failed to update profile privacy', 'error');
       }
     }
   }, [userId, privacyProfile, updateProfilePrivacy, profilePrivacyForm]);
@@ -223,19 +225,19 @@ const Settings = () => {
   const onSubmitPassword: SubmitHandler<PasswordInputs> = useCallback(async (data) => {
     try {
       if (data.newPassword !== data.confirmPassword) {
-        toast.error('New password and confirm password do not match', { style: toastStyles.error });
+        addToast('New password and confirm password do not match', 'error');
         return;
       }
       const passwordData = {...data, userId}
       const result = await updatePassword(passwordData);
       if (result && 'data' in result && result.data?.message === 'Password updated successfully') {
         console.log('Passwords:', data);
-        toast.success('Password updated successfully', { style: toastStyles.success });
+        addToast('Password updated successfully', 'success');
       } else {
-        toast.error(result?.data?.message || 'Failed to update password', { style: toastStyles.error });
+        addToast(result?.data?.message || 'Failed to update password', 'error');
       }
     } catch (error) {
-      toast.error('Failed to update password', { style: toastStyles.error });
+      addToast('Failed to update password', 'error');
       console.error('Password update error:', error);
     }
   }, []);
@@ -522,7 +524,7 @@ const Settings = () => {
         </button>
       </div>
 
-      <Toaster richColors />
+     
     </div>
   );
 };

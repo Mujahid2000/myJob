@@ -1,5 +1,5 @@
 
-
+'use client'
 import React, { JSX, useCallback, useContext, useMemo } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
