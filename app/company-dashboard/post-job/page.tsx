@@ -13,8 +13,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import './custom.css';
-import { useGetSubscriptionDataByUserIdQuery } from '@/RTKQuery/SubscriptionDataByUserId';
-import { Ring } from 'ldrs/react'
 import 'ldrs/react/Ring.css'
 type Inputs = {
   title: string;

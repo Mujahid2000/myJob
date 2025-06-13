@@ -1,25 +1,26 @@
 'use client';
 
 import { useAuth } from '@/Authentication/AuthContext';
-import Settings from '@/Component/Employee-Dashboard/Settings/AccountSettings';
-import EmployeeCompanyInfo from '@/Component/Employee-Dashboard/Settings/Personal';
-import Profile from '@/Component/Employee-Dashboard/Settings/Profile';
-// ✅ Dynamic import with ssr: false
+import { useToast } from '@/Component/Toast/ToastNotification';
+
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const SocialLink = dynamic(() => import('@/Component/Employee-Dashboard/Settings/SocialLinks'), {
-  ssr: false,
-});
+// Dynamically import components to avoid SSR issues
+const Profile = dynamic(() => import('@/Component/Employee-Dashboard/Settings/Profile'), { ssr: false });
+const EmployeeCompanyInfo = dynamic(() => import('@/Component/Employee-Dashboard/Settings/Personal'), { ssr: false });
+const SocialLink = dynamic(() => import('@/Component/Employee-Dashboard/Settings/SocialLinks'), { ssr: false });
+const Settings = dynamic(() => import('@/Component/Employee-Dashboard/Settings/AccountSettings'), { ssr: false });
 
 const Page: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const authContext = useAuth();
+  const { addToast } = useToast();
 
   if (!authContext) {
-    throw new Error("AuthContext is undefined. Ensure the provider is set up correctly.");
+    throw new Error('AuthContext is undefined. Ensure the provider is set up correctly.');
   }
 
   const { currentUser, activeTab, handleTab, loading } = authContext;
@@ -34,20 +35,21 @@ const Page: React.FC = () => {
   useEffect(() => {
     if (loading) return;
     if (!currentUser) {
-      console.log("No user found, redirecting to /signin");
-      router.push("/signin");
+      console.log('No user found, redirecting to /signin');
+      router.push('/signin');
     }
   }, [currentUser, loading, router]);
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (!currentUser) return null;
 
-  const tabs = [
-    "Personal",
-    "Profile",
-    "Social Links",
-    isMobile ? "Settings" : "Account Settings"
-  ];
+  const tabs = ['Personal', 'Profile', 'Social Links', isMobile ? 'Settings' : 'Account Settings'];
+
+  // Handle tab change with toast notification
+  const handleTabChange = (tab: string) => {
+    handleTab(tab);
+    addToast(`Switched to ${tab} tab`, 'success');
+  };
 
   return (
     <div className="min-h-screen">
@@ -59,11 +61,11 @@ const Page: React.FC = () => {
           {tabs.map((tab) => (
             <button
               key={tab}
-              onClick={() => handleTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`flex-1 py-2 lg:py-4 text-sm lg:text-base text-center font-semibold transition-colors duration-200 ${
                 activeTab === tab
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-blue-600"
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
             >
               {tab}
@@ -73,10 +75,10 @@ const Page: React.FC = () => {
 
         {/* Tab Content */}
         <div className="py-6">
-          {activeTab === "Personal" && <Profile />}
-          {activeTab === "Profile" && <EmployeeCompanyInfo />}
-          {activeTab === "Social Links" && <SocialLink />}
-          {(activeTab === "Account Settings" || activeTab === "Settings") && <Settings />}
+          {activeTab === 'Personal' && <Profile />}
+          {activeTab === 'Profile' && <EmployeeCompanyInfo />}
+          {activeTab === 'Social Links' && <SocialLink />}
+          {(activeTab === 'Account Settings' || activeTab === 'Settings') && <Settings />}
         </div>
       </div>
     </div>

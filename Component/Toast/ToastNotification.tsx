@@ -86,34 +86,8 @@ export const useToast = () => {
   return { addToast, ToastContainer };
 };
 
-const ToastDemo: React.FC = () => {
-  const { addToast, ToastContainer } = useToast();
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="space-x-4">
-        <button
-          onClick={() => addToast('Application submitted successfully!', 'success')}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-        >
-          Show Success Toast
-        </button>
-        <button
-          onClick={() => addToast('Failed to submit application.', 'error')}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-        >
-          Show Error Toast
-        </button>
-        <button
-          onClick={() => addToast('Please complete all fields.', 'warning')}
-          className="px-4 py-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-600"
-        >
-          Show Warning Toast
-        </button>
-      </div>
-      <ToastContainer />
-    </div>
-  );
+// Export the hook and container for external use
+export const ToastContainer = () => {
+  const { ToastContainer } = useToast();
+  return <ToastContainer />;
 };
-
-export default ToastDemo;
