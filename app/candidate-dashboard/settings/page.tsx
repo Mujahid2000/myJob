@@ -1,56 +1,51 @@
 'use client';
 
 import { useAuth } from '@/Authentication/AuthContext';
-import AccountSetting from '@/Component/Dashboard/Settings/AccountSettings';
-import Personal from '@/Component/Dashboard/Settings/Personal';
-import Profile from '@/Component/Dashboard/Settings/Profile';
-import { useRouter } from 'next/navigation';
+import { useToast } from '@/Component/Toast/ToastNotification';
+
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 
-// ✅ SocialLinks কে dynamic import করা হয়েছে, ssr: false দিয়ে
-const SocialLinks = dynamic(() => import('@/Component/Dashboard/Settings/SocialLinks'), {
-  ssr: false,
-});
+// Dynamically import components to avoid SSR issues
+const Profile = dynamic(() => import('@/Component/Dashboard/Settings/Profile'), { ssr: false });
+const Personal = dynamic(() => import('@/Component/Dashboard/Settings/Personal'), { ssr: false });
+const SocialLinks = dynamic(() => import('@/Component/Dashboard/Settings/SocialLinks'), { ssr: false });
+const AccountSetting = dynamic(() => import('@/Component/Dashboard/Settings/AccountSettings'), { ssr: false });
 
 const Settings: React.FC = () => {
   const [settingA, setSettingA] = useState(false);
-  const router = useRouter();
-  const tabs = ['Personal', 'Profile', 'Social Links', settingA ? 'Settings' : 'Account Setting'];
-
+  const { addToast } = useToast();
   const authContext = useAuth();
 
   if (!authContext) {
-    throw new Error("AuthContext is undefined. Ensure the provider is set up correctly.");
+    throw new Error('AuthContext is undefined. Ensure the provider is set up correctly.');
   }
 
-  const { currentUser, activeTab, handleTab, loading } = authContext;
+  const { activeTab, handleTab } = authContext;
+
+  const tabs = ['Personal', 'Profile', 'Social Links', settingA ? 'Settings' : 'Account Setting'];
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 500) {
-        setSettingA(true);
-      } else {
-        setSettingA(false);
-      }
-    }
-  }, [settingA]);
+    // Only run on the client side
+    const handleResize = () => {
+      setSettingA(window.innerWidth < 470);
+    };
 
-  useEffect(() => {
-    if (loading) return;
-    if (!currentUser) {
-      console.log("No user found, redirecting to /signin");
-      router.push("/signin");
-    }
-  }, [currentUser, loading, router]);
+    // Set initial value
+    handleResize();
 
-  if (loading) {
-    return <div className="text-center p-4">Loading...</div>;
-  }
-// if current user is not available
-  if (!currentUser) {
-    return null;
-  }
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Example: Show a toast when a tab is changed
+  const handleTabChange = (tab: string) => {
+    handleTab(tab);
+    addToast(`Switched to ${tab} tab`, 'success');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -62,11 +57,11 @@ const Settings: React.FC = () => {
           {tabs.map((tab) => (
             <button
               key={tab}
-              onClick={() => handleTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`flex-1 py-2 lg:py-4 px-0 lg:px-6 text-sm lg:text-base text-center font-semibold ${
                 activeTab === tab
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-600 hover:text-blue-600"
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
             >
               {tab}
@@ -76,10 +71,10 @@ const Settings: React.FC = () => {
 
         {/* Tab Content */}
         <div className="">
-          {activeTab === "Personal" && <Profile />}
-          {activeTab === "Profile" && <Personal />}
-          {activeTab === "Social Links" && <SocialLinks />}
-          {(activeTab === "Account Setting" || activeTab === "Settings") && <AccountSetting />}
+          {activeTab === 'Personal' && <Profile />}
+          {activeTab === 'Profile' && <Personal />}
+          {activeTab === 'Social Links' && <SocialLinks />}
+          {(activeTab === 'Account Setting' || activeTab === 'Settings') && <AccountSetting />}
         </div>
       </div>
     </div>
