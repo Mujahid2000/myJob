@@ -85,7 +85,7 @@ const PostAJob: React.FC = () => {
       location,
       expiryDate: data.expiryDate,
       status: 'active', // Added as required by PostJobRequest
-      minSalary: Number(data.minSalary) || 0, // Convert to number as required by PostJobRequest ok
+      minSalary: Number(data.minSalary) || 0, // Convert to number as required by PostJobRequest
       maxSalary: Number(data.maxSalary) || 0, // Convert to number as required by PostJobRequest
     };
 

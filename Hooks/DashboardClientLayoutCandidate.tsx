@@ -34,10 +34,14 @@ const handleLogout = async () => {
 useEffect(() =>{
   if(!currentUser){
     redirect('/signin')
-  } else if (isSuccess && role !== "Applicant") {
+  } 
+},[currentUser, router])
+
+useEffect(() =>{
+  if(isSuccess && role !== 'Applicant'){
     redirect('/')
   }
-},[currentUser, router])
+},[currentUser, role, redirect])
 
 if(loadingUser && isLoading){
   return (

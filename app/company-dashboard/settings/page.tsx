@@ -6,6 +6,7 @@ import EmployeeCompanyInfo from '@/Component/Employee-Dashboard/Settings/Persona
 import Profile from '@/Component/Employee-Dashboard/Settings/Profile';
 // ✅ Dynamic import with ssr: false
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const SocialLink = dynamic(() => import('@/Component/Employee-Dashboard/Settings/SocialLinks'), {
@@ -14,7 +15,7 @@ const SocialLink = dynamic(() => import('@/Component/Employee-Dashboard/Settings
 
 const Page: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
-  
+  const router = useRouter();
   const authContext = useAuth();
 
   if (!authContext) {
@@ -30,8 +31,16 @@ const Page: React.FC = () => {
     return () => window.removeEventListener('resize', checkWindowSize);
   }, []);
 
+  useEffect(() => {
+    if (loading) return;
+    if (!currentUser) {
+      console.log("No user found, redirecting to /signin");
+      router.push("/signin");
+    }
+  }, [currentUser, loading, router]);
 
-
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (!currentUser) return null;
 
   const tabs = [
     "Personal",
