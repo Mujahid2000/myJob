@@ -6,7 +6,6 @@ import { useGetUserContactDataQuery } from '@/RTKQuery/contact';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
-import { toast, Toaster } from 'sonner';
 import { useGetJobAlertsDataQuery, useGetProfilePrivacyDataQuery, useGetUserNotificationQuery, useUpdateJobAlertsMutation, useUpdatePasswordMutation, useUpdateProfilePrivacyMutation, useUpdateUserNotificationMutation } from '@/RTKQuery/NotificationApiSlice';
 import { useToast } from '@/Component/Toast/ToastNotification';
 
