@@ -70,11 +70,11 @@ type NewNotification = {
 export default function Navbar() {
   const navigationLinks = [
     { name: "Home", href: "/", active: true, id: 1 },
-    { name: "Find Job", href: "/find-job", active: false, id: 2 },
-    { name: "Employers", href: "/employers", active: false, id: 3 },
-    { name: "Candidates", href: "/candidates", active: false, id: 4 },
-    { name: "Pricing Plans", href: "/pricing-plans", active: false, id: 5 },
-    { name: "Customer Supports", href: "/customer-supports", active: false, id: 6 },
+    { name: "Find Job", href: "find-job", active: false, id: 2 },
+    { name: "Company", href: "employers", active: false, id: 3 },
+    { name: "Candidates", href: "candidates", active: false, id: 4 },
+    { name: "Pricing Plans", href: "pricing-plans", active: false, id: 5 },
+    { name: "Customer Supports", href: "customer-supports", active: false, id: 6 },
   ];
   const lenis = useLenis()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -212,7 +212,7 @@ export default function Navbar() {
             <ul className="flex items-center space-x-6 xl:space-x-8">
               {navigationLinks.map((link) => (
                 <li key={link.id} className="relative">
-                  <Link href={link.id === 1 ? '/' : `/${link.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                  <Link href={link.id === 1 ? '/' : `/${link.href.toLowerCase()}`}>
                     <p className="bar text-base">{link.name}</p>
                   </Link>
                 </li>

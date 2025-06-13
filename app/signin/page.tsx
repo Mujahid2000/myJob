@@ -33,7 +33,6 @@ export default function Page() {
     const singInResponse = await singIn(data).unwrap();
     const singins = await login(data.email, data.password);
     if (singInResponse && singins) {
-      console.log("Sign in successful");
       redirect('/');
     } else {
       console.error("Sign in failed");
