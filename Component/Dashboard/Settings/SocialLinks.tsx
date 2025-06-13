@@ -11,7 +11,7 @@ import { setSocialLinks, updateSocialLinks, resetSocialLinks } from '@/Store/soc
 import { RootState } from '@/Store/Store';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
-import { toast, Toaster } from 'sonner';
+
 
 interface SocialLink {
   id: number;
@@ -66,7 +66,7 @@ const SocialLinks: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = useCallback(
     async (data) => {
       if (!userId) {
-        toast.error('User ID is required!');
+        
         return;
       }
 
@@ -78,13 +78,13 @@ const SocialLinks: React.FC = () => {
       try {
         dispatch(setSocialLinks(updatedLinks));
         await postSocialMediaInfo({ userId, socialLinks: updatedLinks }).unwrap();
-        toast.success('Social media info saved successfully!');
+        
         reset();
         dispatch(resetSocialLinks());
         dispatch(setRenderState('Contact'));
       } catch (err) {
         console.error('Failed to update social media info:', err);
-        toast.error('Failed to update social media info!');
+        
       }
     },
     [dispatch, postSocialMediaInfo, reset, socialLinks, userId]
@@ -168,7 +168,7 @@ const SocialLinks: React.FC = () => {
         </div>
         {renderError}
       </form>
-      <Toaster richColors />
+      
     </div>
   );
 };

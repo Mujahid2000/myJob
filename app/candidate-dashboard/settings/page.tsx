@@ -47,7 +47,7 @@ const Settings: React.FC = () => {
   if (loading) {
     return <div className="text-center p-4">Loading...</div>;
   }
-
+// if current user is not available
   if (!currentUser) {
     return null;
   }
