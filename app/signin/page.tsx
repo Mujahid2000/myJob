@@ -45,6 +45,8 @@ export default function Page() {
     }
   }, [currentUser]);
 
+
+
   
   return (
     <div className="flex h-screen">
@@ -74,7 +76,14 @@ export default function Page() {
             </div>
             <a href="#" className="text-[#0A65CC]">Forgot password?</a>
           </div>
-          <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign In →</Button>
+          
+          {
+            signInLoading || loading ? 
+            <Button  className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#e5e7eb]  text-white">Loading</Button> 
+            : 
+            <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign In →</Button>
+          }
+          
         </form>
 
         {/* <div className="flex items-center my-6">

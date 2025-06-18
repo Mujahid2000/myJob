@@ -46,7 +46,7 @@ export default function SignUpPage() {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const { signup, currentUser } = authContext;
+  const { signup, currentUser, loading } = authContext;
 
   // Form setup
   const {
@@ -261,7 +261,13 @@ export default function SignUpPage() {
             </div>
             <a href="#" className="text-[#0A65CC]">Forgot password?</a>
           </div>
-          <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign Up →</Button>
+          {
+            loading || isSigningUp ? 
+            <Button  className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#e5e7eb]  text-white">Loading</Button>
+            :
+            <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign Up →</Button>
+          }
+          
         </form>
 
         {/* <div className="flex items-center my-6">
