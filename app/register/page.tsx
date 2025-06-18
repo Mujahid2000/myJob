@@ -270,14 +270,14 @@ export default function SignUpPage() {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-between gap-4">
+        {/* <div className="flex flex-col lg:flex-row justify-between gap-4">
           <Button  className=" hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
             <Image src='https://res.cloudinary.com/diez3alve/image/upload/v1740758529/Employers_Logo_2_eyvdlw.png' alt="google"  width={18}  height={18}className="text-blue-500 hover:text-white"/> Sign in with Facebook
           </Button>
           <Button className=" hover:text-white bg-white flex text-[#474C54] cursor-pointer rounded-sm items-center gap-2 border border-gray-300">
             <Image src="https://res.cloudinary.com/diez3alve/image/upload/v1740756553/google_g2hwru.png" alt="fb" width={18} height={18}/> Sign in with Google
           </Button>
-        </div>
+        </div> */}
         </div>
         <div>
 
