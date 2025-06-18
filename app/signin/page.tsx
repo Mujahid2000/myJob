@@ -77,11 +77,11 @@ export default function Page() {
           <Button type="submit" className="w-full cursor-pointer p-[1rem] rounded-sm bg-[#0A65CC] hover:bg-[#0A65CC] text-white">Sign In →</Button>
         </form>
 
-        <div className="flex items-center my-6">
+        {/* <div className="flex items-center my-6">
           <div className="flex-1 border-t border-gray-300"></div>
           <p className="px-4 text-gray-500">or</p>
           <div className="flex-1 border-t border-gray-300"></div>
-        </div>
+        </div> */}
 
         {/* <div className="flex flex-col lg:flex-row gap-4">
           <Button  className=" hover:text-white bg-white text-[#474C54] cursor-pointer rounded-sm flex items-center gap-2 border border-gray-300">
