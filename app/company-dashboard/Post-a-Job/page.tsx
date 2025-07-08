@@ -78,7 +78,7 @@ const page: React.FC = () => {
       })
     
     useEffect(() => {
-        if (!paymentCheckLoading && !modalData) {
+        if (!paymentCheckLoading && modalData) {
           // Redirect to a different route, e.g., a subscription page, instead of the same route
           redirect('/company-dashboard/post-job'); // Adjust the route as needed
         }
@@ -90,8 +90,8 @@ const page: React.FC = () => {
       if (paymentCheckLoading) {
         return (
           <div className="flex justify-center items-center h-screen">
-            loading...
-          </div>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
         );
       }
     
