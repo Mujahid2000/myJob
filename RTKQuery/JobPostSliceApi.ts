@@ -22,35 +22,35 @@ export interface PostJobRequest {
 }
 
 export interface PostJobResponse {
-  success: boolean;
-  message: string;
-  data: Data;
+ success: boolean
+  message: string
+  data: Data
 }
 
 export interface Data {
-  userId: string;
-  companyId: string;
-  title: string;
-  tags: string[];
-  jobRole: string;
-  salaryType: string;
-  minSalary: number;
-  maxSalary: number;
-  education: string;
-  experience: string;
-  jobType: string;
-  expiryDate: string;
-  vacancies: string;
-  jobLevel: string;
-  biography: string;
-  responsibilities: string;
-  location: string;
-  status: string;
-  _id: string;
-  postedDate: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  userId: string
+  companyId: string
+  title: string
+  tags: string[]
+  jobRole: string
+  salaryType: string
+  minSalary: number
+  maxSalary: number
+  education: string
+  experience: string
+  jobType: string
+  expiryDate: string
+  vacancies: string
+  jobLevel: string
+  biography: string
+  responsibilities: string
+  location: string
+  status: string
+  _id: string
+  postedDate: string
+  createdAt: string
+  updatedAt: string
+  __v: number
 }
 
 // Input type for the jobPostPromoted mutation
@@ -95,19 +95,19 @@ export const JobPostApi = createApi({
             query: (id) => `/getCompanyData/companyDataById/${id}`,
         }),
         postAJob: builder.mutation<PostJobResponse, PostJobRequest>({
-            query: (formData) => ({
-                url: '/jobs/jobPost',
-                method: "POST",
-                body: formData,
-            }),
-            transformResponse: (response: { data: PostJobResponse }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
-            ) => response.status,
-            invalidatesTags: ['jobPost'],
-        }),
+  query: (formData) => ({
+    url: '/jobs/jobPost',
+    method: 'POST',
+    body: formData,
+  }),
+  transformResponse: (response: PostJobResponse, meta, arg): PostJobResponse => response,
+  transformErrorResponse: (
+    response: { status: string | number },
+    meta,
+    arg,
+  ) => response.status,
+  invalidatesTags: ['jobPost'],
+}),
         jobPostPromoted: builder.mutation<PromotedJobsResponse, PromotedJobsRequest>({
             query: (data) => ({
                 url: '/jobs/PromotedJObs',

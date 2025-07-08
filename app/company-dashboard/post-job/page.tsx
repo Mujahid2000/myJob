@@ -92,18 +92,20 @@ const PostAJob: React.FC = () => {
 
     try {
       const result = await postData(jobData).unwrap();
-      if(result.message) {
-        toast.success(result.message)
+      console.log(result?.data._id, 'Job posted successfully');
+      if(result) {
+        toast.success(result?.message || 'Job posted successfully.');
       }
-      if (result?.data._id) {
-        setJobId(result.data._id);
+      
+      if (result.data?._id) {
+        setJobId(result?.data?._id);
         setIsModalOpen(true);
         Object.keys(data).forEach((key) => setValue(key as keyof Inputs, ''));
         dispatch(removeTag('')); // Consider revising this to clear all tags
       }
     } catch (error) {
       console.error('Error posting job:', error);
-      alert('Failed to post job. Please try again.');
+      toast.error('Failed to post job. Please try again.');
     }
   };
 
