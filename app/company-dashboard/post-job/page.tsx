@@ -16,6 +16,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import './custom.css';
 import 'ldrs/react/Ring.css'
 import dynamic from 'next/dynamic';
+import { toast, Toaster } from 'sonner';
 type Inputs = {
   title: string;
   tags: string[];
@@ -71,7 +72,7 @@ const PostAJob: React.FC = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (userEmail?.user?.role !== 'Company' || !id || !companyId || !location) {
-      console.log('User role is not Company or missing ID/companyId/location');
+      // console.log('User role is not Company or missing ID/companyId/location');
       alert('User is not authorized or missing required data.');
       return;
     }
@@ -91,6 +92,9 @@ const PostAJob: React.FC = () => {
 
     try {
       const result = await postData(jobData).unwrap();
+      if(result.message) {
+        toast.success(result.message)
+      }
       if (result?.data._id) {
         setJobId(result.data._id);
         setIsModalOpen(true);
@@ -556,6 +560,7 @@ const PostAJob: React.FC = () => {
         onViewJobs={handleViewJobs}
         onPromoteJob={handlePromoteJob}
       />
+      <Toaster richColors/>
     </div>
   );
 };
