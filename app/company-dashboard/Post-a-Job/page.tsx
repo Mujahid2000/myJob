@@ -82,8 +82,10 @@ const page: React.FC = () => {
           // Redirect to a different route, e.g., a subscription page, instead of the same route
           redirect('/company-dashboard/post-job'); // Adjust the route as needed
         }
-      }, [paymentCheckLoading, modalData, router]);
+      }, [paymentCheckLoading, modalData]);
     
+      
+
       // Render loading spinner while checking payment status
       if (paymentCheckLoading) {
         return (
