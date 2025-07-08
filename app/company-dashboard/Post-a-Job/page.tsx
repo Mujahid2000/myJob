@@ -8,7 +8,7 @@ import { setPlanDetails } from '@/Store/Subscription';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { useGetSubscriptionDataByUserIdQuery } from '@/RTKQuery/SubscriptionDataByUserId';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 
 // Define the interface for a single plan
@@ -80,7 +80,7 @@ const page: React.FC = () => {
     useEffect(() => {
         if (!paymentCheckLoading && !modalData) {
           // Redirect to a different route, e.g., a subscription page, instead of the same route
-          router.push('/company-dashboard/post-job'); // Adjust the route as needed
+          redirect('/company-dashboard/post-job'); // Adjust the route as needed
         }
       }, [paymentCheckLoading, modalData, router]);
     

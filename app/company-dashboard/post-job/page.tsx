@@ -92,7 +92,7 @@ const PostAJob: React.FC = () => {
 
     try {
       const result = await postData(jobData).unwrap();
-      console.log(result?.data._id, 'Job posted successfully');
+      // console.log(result?.data._id, 'Job posted successfully');
       if(result) {
         toast.success(result?.message || 'Job posted successfully.');
       }
@@ -124,10 +124,11 @@ const PostAJob: React.FC = () => {
 
   const handlePromoteJob = async (promotionType: string | null) => {
     if (!companyId || !jobId || !id || !promotionType) {
-      console.warn('Missing required data for promoting job');
+      alert('Missing required data for promoting job');
       setIsModalOpen(false);
       return;
     }
+    // console.log(companyId, jobId, id, promotionType, 'Promotion data');
     try {
       if (promotionType === 'cancel') {
         setIsModalOpen(false);
@@ -139,6 +140,7 @@ const PostAJob: React.FC = () => {
           companyId,
           promotedSystem: promotionType,
         }).unwrap();
+        // console.log(result, 'Job promotion result');
         if (result) {
           setIsModalOpen(false);
           console.log('Job promoted successfully:', result);
@@ -147,7 +149,7 @@ const PostAJob: React.FC = () => {
       }
     } catch (error) {
       console.error('Error promoting job:', error);
-      alert('Failed to promote job. Please try again.');
+      toast.error('Failed to promote job. Please try again.');
       setIsModalOpen(false);
     }
   };
