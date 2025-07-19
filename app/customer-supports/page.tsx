@@ -205,7 +205,7 @@ export default function SupportPage() {
     if(!userid && !userEmail){
       toast.error('Please log in to start a chat.');
       return;
-     
+      // if user is admin then not open the chat box
     } else if(currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
       toast.error('Admin cannot start a chat.');
       setIsChatOpen(false);
