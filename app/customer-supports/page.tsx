@@ -200,6 +200,18 @@ export default function SupportPage() {
     );
   };
 
+  const handleChatOpen = () => {
+    if(!userid && !userEmail){
+      toast.error('Please log in to start a chat.');
+      return;
+    } else if(currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
+      toast.error('Admin cannot start a chat.');
+      setIsChatOpen(false);
+      return;
+    }
+    setIsChatOpen(true);  
+  }
+
   return (
     <div className="min-h-screen bg-white pt-30">
       <header>
@@ -323,7 +335,7 @@ export default function SupportPage() {
                 <Button
                   variant="link"
                   className="p-0 text-[#0A65CC]"
-                  onClick={() => setIsChatOpen(true)}
+                  onClick={handleChatOpen}
                 >
                   Start Support
                 </Button>
