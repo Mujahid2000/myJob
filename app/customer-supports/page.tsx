@@ -201,14 +201,17 @@ export default function SupportPage() {
   };
 // authentication logic for chat feature where if the user is not logged in, they cannot start a chat, and if the user is an admin, they cannot start a chat either.
   const handleChatOpen = () => {
+    // if use not available then not open the chat box
     if(!userid && !userEmail){
       toast.error('Please log in to start a chat.');
       return;
+     
     } else if(currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
       toast.error('Admin cannot start a chat.');
       setIsChatOpen(false);
       return;
     }
+   
     setIsChatOpen(true);  
   }
 
