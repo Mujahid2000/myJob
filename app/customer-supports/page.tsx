@@ -211,7 +211,7 @@ export default function SupportPage() {
       setIsChatOpen(false);
       return;
     }
-   
+    // if user is logged in then open the chat box
     setIsChatOpen(true);  
   }
 
