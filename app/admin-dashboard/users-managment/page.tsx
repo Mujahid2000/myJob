@@ -65,7 +65,7 @@ const users = [
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("")
 
-  // Filter function for users based on search term
+  // ---Filter function for users based on search term---
   const filterUsers = (users: any[], term: string) => {
     if (!term) return users
     return users.filter(
