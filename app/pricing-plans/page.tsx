@@ -8,6 +8,8 @@ import React, { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import BillCheckModal from './BillModal';
 import { toast, Toaster } from 'sonner';
+import Head from 'next/head';
+
 interface Plan {
   name: string;
   price: string;
@@ -79,6 +81,15 @@ const page = () => {
            
         }
     return (
+      <>
+      <Head>
+        <title>Pricing Plans | MyJob</title>
+        <meta name="description" content="Choose the best plan that fits your needs and start posting jobs today." />
+        <meta name="keywords" content="pricing plans, subscription, job posting, career opportunities, MyJob" />
+        <meta property="og:title" content="Pricing Plans | MyJob" />
+        <meta property="og:description" content="Choose the best plan that fits your needs and start posting jobs today." />
+      </Head>
+
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-33 pb-5'>
              <div className="flex flex-col md:flex-row items-center justify-between mb-12">
         <div className="md:w-1/2 text-center md:text-left">
@@ -153,6 +164,8 @@ const page = () => {
         onClose={() => setIsModalOpen(false)}/>
         <Toaster richColors/>
         </div>
+
+      </>
     );
 };
 

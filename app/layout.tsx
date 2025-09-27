@@ -19,12 +19,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title:{
+  title: {
     default: "MyJob",
-    template: "%s | MyJob",
-    
+    template: "%s | MyJob", // Ensures consistent branding
   },
-  description: "Find a job that suits your interest & skills.",
+  description: "Find jobs that match your skills, interests, and career goals.",
+  keywords: ["job search", "career", "employment", "MyJob", "find job online", "Bangladesh jobs"],
+  authors: [{ name: "MyJob Team", url: "https://myjob.com" }],
+  openGraph: {
+    title: "MyJob",
+    description: "Find jobs that match your skills, interests, and career goals.",
+    url: "https://myjob.com",
+    siteName: "MyJob",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MyJob",
+    description: "Find jobs that match your skills, interests, and career goals.",
+  },
 };
 
 export default function RootLayout({

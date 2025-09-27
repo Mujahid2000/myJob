@@ -8,9 +8,22 @@ interface PageProps {
 }
 
 export const metadata: Metadata = {
-  title: 'Find Job',
-  description: 'Explore and find your dream job',
-}
+  title: "Find Job",
+  description: "Explore thousands of job opportunities tailored to your skills and interests.",
+  keywords: ["find job", "job listings", "career opportunities", "employment", "MyJob"],
+  openGraph: {
+    title: "Find Job | MyJob",
+    description: "Explore thousands of job opportunities tailored to your skills and interests.",
+    url: "https://my-job-brown.vercel.app/find-job",
+    siteName: "MyJob",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Find Job | MyJob",
+    description: "Explore thousands of job opportunities tailored to your skills and interests.",
+  },
+};
 
 export const dynamic = 'force-dynamic';
 

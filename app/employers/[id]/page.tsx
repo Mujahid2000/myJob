@@ -115,7 +115,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
         <div className="max-w-7xl bg-[#F1F2F4] mx-auto py-3">
           <div className="bg-[#F1F2F4] py-2">
             <div className="flex flex-col lg:flex-row gap-4 justify-between items-center py-3 max-w-7xl mx-auto">
-              <h3 className="text-xl font-semibold text-gray-800">Single Employers</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Company</h3>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -123,11 +123,11 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>/</BreadcrumbSeparator>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/components">Find Employees</BreadcrumbLink>
+                    <BreadcrumbLink href="/components">Find Company</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>/</BreadcrumbSeparator>
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/components">Single Employers</BreadcrumbLink>
+                    <BreadcrumbLink href="/components">Company</BreadcrumbLink>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>

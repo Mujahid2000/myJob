@@ -109,8 +109,8 @@ export default function HeaderSide() {
     <div>
       <div className="bg-[#F1F2F4] px-2 py-6">
         <div className="flex max-w-7xl mx-auto justify-between items-center py-3">
-          <h3 className="text-2xl font-semibold text-gray-800">Find Job</h3>
-          <p className="text-sm text-gray-500">Home / Find Job</p>
+          <h3 className="text-2xl font-semibold text-gray-800">Candidate Profile</h3>
+          <p className="text-sm text-gray-500">Home / Candidate Profile</p>
         </div>
 
         {/* Search Bar */}

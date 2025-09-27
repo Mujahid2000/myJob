@@ -4,7 +4,7 @@ import SideBar from '@/Component/employee-Component/SideBar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Bookmark, CalendarMinus2, MapPin } from 'lucide-react';
-import Image from 'next/image';
+
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -40,9 +40,22 @@ export interface jobItem {
 }
 
 export const metadata: Metadata = {
-  title: "Company",
-  description: "Find Top Companies"
-}
+  title: "Top Companies",
+  description: "Discover leading companies actively hiring across industries. Explore profiles, benefits, and open roles.",
+  keywords: ["top companies", "hiring companies", "company profiles", "job search", "employment", "MyJob"],
+  openGraph: {
+    title: "Top Companies | MyJob",
+    description: "Explore top employers, company insights, and current job openings tailored to your career goals.",
+    url: "https://my-job-brown.vercel.app/employers",
+    siteName: "MyJob",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Top Companies | MyJob",
+    description: "Explore top employers, company insights, and current job openings tailored to your career goals.",
+  },
+};
 
 export const dynamic = 'force-dynamic';
 

@@ -7,6 +7,12 @@ import HeaderSide from '@/Component/candidates-component/HeaderSide';
 import Sidebar from '@/Component/candidates-component/Sidebar';
 import OpenModalButton from '@/Component/candidates-component/OpenModalButton';
 import CandidateModal from '@/Component/candidates-component/CandidateModal';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Candidate Profile',
+  description: "Find the perfect candidate for your job openings",
+}
 
 
 export const dynamic = 'force-dynamic';
