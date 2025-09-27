@@ -7,6 +7,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { BriefcaseBusiness, Calendar, DollarSign, Globe, GraduationCap, Mail, Timer, Wallet } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } from "react-icons/fa";
@@ -14,6 +15,27 @@ import { FaFacebook, FaInstagram, FaPhone, FaPinterest, FaTwitter, FaYoutube } f
 interface UserId {
   id: string;
 }
+
+export async function generateMetadata(
+  { params }: {params: Promise<UserId>},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = (await params).id
+ 
+  // fetch post information
+  const post = await fetch(`https://job-server-1.onrender.com/jobs/getSingleCompanyData/${id}`).then((res) =>
+    res.json()
+  )
+
+  console.log(post.data.companyName)
+ 
+  return {
+    title: post.data.companyName,
+    description: ""+post.data.companyName+" - "+post.data.industryTypes+" Hiring For Various Position",
+  }
+}
+
+
 
 export default async function Page({ params }: { params: Promise<UserId> }) {
   let resolveId: UserId;
