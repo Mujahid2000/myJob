@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title:{
     default: "MyJob",
     template: "%s | MyJob",
-    absolute: "MyJob - Find your dream job",
+    
   },
   description: "Find a job that suits your interest & skills.",
 };

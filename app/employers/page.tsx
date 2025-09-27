@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Bookmark, CalendarMinus2, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 interface PageProps {
   viewMode?: string;
@@ -36,6 +37,11 @@ export interface jobItem {
   logo?: string
   organizationType?: string
   totalCompanyJobs: number
+}
+
+export const metadata: Metadata = {
+  title: "Company",
+  description: "Find Top Companies"
 }
 
 export const dynamic = 'force-dynamic';

@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import BookMarkButton from "../Joblist/BookMarkButton"
 import ApplyNowButton from "./ApplyNowButton"
 
+
+
 export default async function JobDetails ({id}: {id:string}) {
       const jobs = [
     {

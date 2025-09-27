@@ -2,8 +2,14 @@ import React from 'react';
 import JobFiltering from '@/Component/Joblist/JobFiltering';
 import JobListings from '@/Component/Joblist/Joblist';
 import {ReactLenis} from '@/lib/lenis'
+import { Metadata } from 'next';
 interface PageProps {
   viewMode?: string;
+}
+
+export const metadata: Metadata = {
+  title: 'Find Job',
+  description: 'Explore and find your dream job',
 }
 
 export const dynamic = 'force-dynamic';
