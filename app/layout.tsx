@@ -54,7 +54,7 @@ export default function RootLayout({
        <head>
     <meta charSet="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Decor</title>
+    <title>My Job</title>
     <meta name="description" content='My Job' />
     <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/diez3alve/image/upload/v1740414466/briefcase_1_l2uamk.png" />
   </head>
