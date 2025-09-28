@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -48,6 +48,7 @@ import {
   X,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { AuthContext } from "@/Authentication/AuthContext"
 
 
 // Mock data for analytics charts
@@ -204,6 +205,9 @@ const StatCard = ({ title, value, icon: Icon, description, trend, color = "blue"
 export default function SaasAdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [searchTerm, setSearchTerm] = useState("")
+  const authContext = useContext(AuthContext);
+  const name = authContext?.currentUser?.displayName || "Admin";
+  
 
   // Filter function for users based on search term
   const filterUsers = ({users, term}: {users: any, term: any}) => {
@@ -404,10 +408,30 @@ export default function SaasAdminDashboard() {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                <AvatarFallback>AD</AvatarFallback>
-              </Avatar>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                      <AvatarFallback>{name?.slice(0, 1)}</AvatarFallback>
+                    </Avatar>
+                    
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      if (authContext?.logout) authContext.logout();
+                      else if (authContext?.logout) authContext.logout();
+                      else console.log("Logout action");
+                    }}
+                    className="text-red-600"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
