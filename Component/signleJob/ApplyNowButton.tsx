@@ -29,7 +29,7 @@ const ApplyNowButton = ({ id }: { id: string }) => {
       >
         Apply Now →
       </Button>
-      <Toaster/>
+      <Toaster richColors/>
     </>
   );
 };
