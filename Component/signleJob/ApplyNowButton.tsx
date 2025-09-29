@@ -5,8 +5,8 @@ import { openModal } from "@/Store/ModalSlice";
 import { AppDispatch } from "@/Store/Store";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { Toaster } from "sonner";
+
+import { toast, Toaster } from "sonner";
 
 const ApplyNowButton = ({ id }: { id: string }) => {
    const authContext = useContext(AuthContext);
@@ -15,10 +15,12 @@ const ApplyNowButton = ({ id }: { id: string }) => {
   const jobId = id
   const handleOpen = () => {
     if(!currentUser){
+      console.log('first')
       toast.error("Please log in to apply for jobs.");
       return; 
+    } else{
+      dispatch(openModal({ value: true, jobId }));
     }
-    dispatch(openModal({ value: true, jobId }));
   };
 
   return (
