@@ -1,13 +1,23 @@
 'use client'
+import { AuthContext } from "@/Authentication/AuthContext";
 import { Button } from "@/components/ui/button";
 import { openModal } from "@/Store/ModalSlice";
 import { AppDispatch } from "@/Store/Store";
+import { useContext } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { Toaster } from "sonner";
 
 const ApplyNowButton = ({ id }: { id: string }) => {
+   const authContext = useContext(AuthContext);
+    const currentUser = authContext?.currentUser;
   const dispatch = useDispatch<AppDispatch>();
   const jobId = id
   const handleOpen = () => {
+    if(!currentUser){
+      toast.error("Please log in to apply for jobs.");
+      return; 
+    }
     dispatch(openModal({ value: true, jobId }));
   };
 
@@ -19,6 +29,7 @@ const ApplyNowButton = ({ id }: { id: string }) => {
       >
         Apply Now →
       </Button>
+      <Toaster/>
     </>
   );
 };
