@@ -1,3 +1,4 @@
+import { stat } from 'fs';
 // RTKQuery/apiSlice.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -58,6 +59,20 @@ interface SignupResponse {
   token: string;
 }
 
+
+
+
+export interface AllUser {
+  _id: string
+  name: string
+  email: string
+  role: string
+  packageName?: string
+  date: string
+  companyName?: string
+  status: string
+}
+
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
@@ -85,7 +100,11 @@ export const authApiSlice = createApi({
       query: (email) => `/user/users/${email}`,
       providesTags: (result, error, email) => [{ type: 'User', email }],
     }),
+    getUser: builder.query<AllUser[], void>({
+      query: () => '/user/users',
+      providesTags: ['User'],
+    }),
   }),
 });
 
-export const { useSignupMutation, useGetUserByIdQuery,useSingInMutation } = authApiSlice;
+export const { useSignupMutation, useGetUserByIdQuery,useSingInMutation, useGetUserQuery } = authApiSlice;

@@ -83,8 +83,8 @@ export default function Navbar() {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userData } = useGetUserByIdQuery(currentUser?.email || '');
-  const role = userData?.user.role;
-  const userId = userData?.user._id || '';
+  const role = userData?.user?.role;
+  const userId = userData?.user?._id || '';
   const logOut = authContext?.logout;
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);

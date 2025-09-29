@@ -24,6 +24,7 @@ import {
   Mail,
   Building,
 } from "lucide-react"
+import { useGetUserQuery } from "@/RTKQuery/authSlice"
 
 // Mock data for users
 const users = [
@@ -64,17 +65,14 @@ const users = [
 
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("")
-
+  const {data:userData} = useGetUserQuery();
+console.log(userData)
   // ---Filter function for users based on search term---
-  const filterUsers = (users: any[], term: string) => {
-    if (!term) return users
-    return users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(term.toLowerCase()) ||
-        user.email.toLowerCase().includes(term.toLowerCase()) ||
-        user.company.toLowerCase().includes(term.toLowerCase()),
-    )
-  }
+  const filterUser = userData?.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.companyName?.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
     <>
@@ -140,8 +138,8 @@ export default function UsersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filterUsers(users, searchTerm).map((user) => (
-                    <TableRow key={user.id}>
+                  {filterUser?.map((user) => (
+                    <TableRow key={user?._id}>
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-8 w-8">
@@ -159,26 +157,26 @@ export default function UsersPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={user.type === "Employer" ? "default" : "secondary"}>{user.type}</Badge>
+                        <Badge variant={user?.role === "Company" ? "default" : "secondary"}>{user?.role}</Badge>
                       </TableCell>
-                      <TableCell>{user.company}</TableCell>
+                      <TableCell>{user.companyName}</TableCell>
                       <TableCell>
                         <Badge
                           variant={
-                            user.subscription === "Premium"
+                            user.packageName === "Premium"
                               ? "default"
-                              : user.subscription === "Basic"
+                              : user.packageName === "Basic"
                                 ? "secondary"
                                 : "outline"
                           }
                         >
-                          {user.subscription}
+                          {user?.packageName ? user.packageName : "Free"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{user.joinDate}</TableCell>
-                      <TableCell>{user.lastLogin}</TableCell>
+                      <TableCell>{user.date}</TableCell>
+                      <TableCell>{user.date}</TableCell>
                       <TableCell>
-                        <Badge variant={user.status === "Active" ? "default" : "destructive"}>{user.status}</Badge>
+                        <Badge variant={user.status === "Active" ? "default" : "destructive"}>Active</Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -201,7 +199,7 @@ export default function UsersPage() {
                               Send Message
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                              {user.status === "Active" ? (
+                              {user?.status === "Active" ? (
                                 <>
                                   <UserX className="h-4 w-4 mr-2" />
                                   Suspend User
@@ -228,7 +226,7 @@ export default function UsersPage() {
           </TabsContent>
 
           <TabsContent value="employers">
-            <Card>
+            <Card className="px-5">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -242,100 +240,99 @@ export default function UsersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filterUsers(
-                    users.filter((user) => user.type === "Employer"),
-                    searchTerm,
-                  ).map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                              {user.name
-                                .split(" ")
-                                .map((n:any) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+                  {
+                    filterUser?.filter((user) => user.role === "Company").map((user) => (
+                      <TableRow key={user._id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>
+                                {user.name
+                                  .split(" ")
+                                  .map((n:any) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{user.name}</p>
+                              <p className="text-sm text-gray-500">{user.email}</p>
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <Building className="h-4 w-4 mr-2 text-gray-400" />
-                          {user.company}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            user.subscription === "Premium"
-                              ? "default"
-                              : user.subscription === "Basic"
-                                ? "secondary"
-                                : "outline"
-                          }
-                        >
-                          {user.subscription}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{user.joinDate}</TableCell>
-                      <TableCell>{user.lastLogin}</TableCell>
-                      <TableCell>
-                        <Badge variant={user.status === "Active" ? "default" : "destructive"}>{user.status}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit User
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Mail className="h-4 w-4 mr-2" />
-                              Send Message
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              {user.status === "Active" ? (
-                                <>
-                                  <UserX className="h-4 w-4 mr-2" />
-                                  Suspend User
-                                </>
-                              ) : (
-                                <>
-                                  <UserCheck className="h-4 w-4 mr-2" />
-                                  Activate User
-                                </>
-                              )}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete User
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <Building className="h-4 w-4 mr-2 text-gray-400" />
+                            {user.companyName}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user?.packageName === "Premium"
+                                ? "default"
+                                : user?.packageName === "Basic"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
+                            {user?.packageName ? user.packageName : "Free"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{user?.date}</TableCell>
+                        <TableCell>{user?.date}</TableCell>
+                        <TableCell>
+                          <Badge variant={user.status === "Active" ? "default" : "destructive"}>Active</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Profile
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit User
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Mail className="h-4 w-4 mr-2" />
+                                Send Message
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                {user.status === "Active" ? (
+                                  <>
+                                    <UserX className="h-4 w-4 mr-2" />
+                                    Suspend User
+                                  </>
+                                ) : (
+                                  <>
+                                    <UserCheck className="h-4 w-4 mr-2" />
+                                    Activate User
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete User
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  }
                 </TableBody>
               </Table>
             </Card>
           </TabsContent>
 
           <TabsContent value="jobseekers">
-            <Card>
+            <Card className="px-5">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -349,11 +346,8 @@ export default function UsersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filterUsers(
-                    users.filter((user) => user.type === "Job Seeker"),
-                    searchTerm,
-                  ).map((user) => (
-                    <TableRow key={user.id}>
+                  {filterUser?.filter((user) => user.role === "Applicant").map((user)=> (
+                    <TableRow key={user._id}>
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-8 w-8">
@@ -383,20 +377,20 @@ export default function UsersPage() {
                       <TableCell>
                         <Badge
                           variant={
-                            user.subscription === "Premium"
+                            user.packageName === "Premium"
                               ? "default"
-                              : user.subscription === "Basic"
+                              : user.packageName === "Basic"
                                 ? "secondary"
                                 : "outline"
                           }
                         >
-                          {user.subscription}
+                          {user?.packageName ? user.packageName : "Free"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{user.joinDate}</TableCell>
-                      <TableCell>{user.lastLogin}</TableCell>
+                      <TableCell>{user.date}</TableCell>
+                      <TableCell>{user.date}</TableCell>
                       <TableCell>
-                        <Badge variant={user.status === "Active" ? "default" : "destructive"}>{user.status}</Badge>
+                        <Badge variant={user.status === "Active" ? "default" : "destructive"}>Active</Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
@@ -446,7 +440,7 @@ export default function UsersPage() {
           </TabsContent>
 
           <TabsContent value="suspended">
-            <Card>
+            <Card className="px-5">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -459,29 +453,26 @@ export default function UsersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filterUsers(
-                    users.filter((user) => user.status === "Suspended"),
-                    searchTerm,
-                  ).map((user) => (
-                    <TableRow key={user.id}>
+                  {filterUser?.filter((user) => user?.status == "Suspended").map((user) => (
+                    <TableRow key={user?._id}>
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback>
-                              {user.name
+                              {user?.name
                                 .split(" ")
                                 .map((n:any) => n[0])
                                 .join("")}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+                            <p className="font-medium">{user?.name}</p>
+                            <p className="text-sm text-gray-500">{user?.email}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={user.type === "Employer" ? "default" : "secondary"}>{user.type}</Badge>
+                        <Badge variant={user?.role === "Company" ? "default" : "secondary"}>{user?.role}</Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant="destructive">Policy Violation</Badge>
