@@ -15,7 +15,7 @@ const ApplyNowButton = ({ id }: { id: string }) => {
   const jobId = id
   const handleOpen = () => {
     if(!currentUser){
-      console.log('first')
+
       toast.error("Please log in to apply for jobs.");
       return; 
     } else{
