@@ -263,7 +263,7 @@ export default function Navbar() {
                       />
                     </Link>
                   </div>
-                  <span className="text-2xl font-bold text-gray-900">MyJob</span>
+                  <span className="text-2xl font-bold text-gray-900">HireConnect</span>
                 </div>
 
                 <NavSearch/>
