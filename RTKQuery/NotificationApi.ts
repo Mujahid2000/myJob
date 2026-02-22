@@ -21,16 +21,16 @@ export interface Notification {
 
 //notification data get
 export const notificationApiSlice = createApi({
-    reducerPath: 'notificationApi',
-    baseQuery: secureUrl,
-    endpoints: (builder) => ({
-        getNotifications: builder.query<NotificationResponse, string>({
-            query: (userId) => ({
-                url: `/notification/notificationData/${userId}`,
-            }),
-        }),
-       
+  reducerPath: 'notificationApi',
+  baseQuery: secureUrl,
+  endpoints: (builder) => ({
+    getNotifications: builder.query<NotificationResponse, string>({
+      query: (userId) => ({
+        url: `/notification/notificationData/${userId}`,
+      }),
     }),
+
+  }),
 });
 
-export const { useGetNotificationsQuery } = notificationApiSlice;
+export const { useGetNotificationsQuery, useLazyGetNotificationsQuery } = notificationApiSlice;

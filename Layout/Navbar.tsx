@@ -1,8 +1,12 @@
 
 "use client";
 
+import { AuthContext } from "@/Authentication/AuthContext";
+import ButtonCommon from "@/Component/HomeComponent/Button";
+import NavSearch from "@/Component/NavbarComponent/NavSearch";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,29 +22,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Search, Phone, ChevronDown, Briefcase, Menu, User, LogOut, Bell, Settings } from "lucide-react";
-import Image from "next/image";
-import { useContext, useEffect, useRef, useState } from "react";
-import { FiSearch } from "react-icons/fi";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Link from "next/link";
-import './navbar.css';
-import { usePathname } from "next/navigation";
-import { AuthContext } from "@/Authentication/AuthContext";
 import { disableNavWithFooter } from "@/Hooks/disableNavWithFooter";
-import ButtonCommon from "@/Component/HomeComponent/Button";
-import { DialogTitle } from "@/components/ui/dialog";
-import { FaUsers } from "react-icons/fa";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
-import { Badge } from "@/components/ui/badge";
-import io from 'socket.io-client';
-import { useGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
-import NavSearch from "@/Component/NavbarComponent/NavSearch";
+import { useLazyGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
 import { useLenis } from "lenis/react";
+import { Bell, ChevronDown, LogOut, Menu, Phone, Settings, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useContext, useEffect, useRef, useState } from "react";
+import { FaUsers } from "react-icons/fa";
+import io from 'socket.io-client';
+import './navbar.css';
 
 // Socket.IO initialization
-const socket = io('https://job-server-1.onrender.com', {
+const socket = io('https://job-server-fqvf.onrender.com', {
   withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 });
@@ -90,7 +86,7 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [newNotification, setNewNotification] = useState<NewNotification[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { data: notificationData } = useGetNotificationsQuery(userId);
+  const [triggerNotification, { data: notificationData }] = useLazyGetNotificationsQuery();
   const notData = notificationData?.data;
 
   // Combine notifications
@@ -266,54 +262,59 @@ export default function Navbar() {
                   <span className="text-2xl font-bold text-gray-900">HireConnect</span>
                 </div>
 
-                <NavSearch/>
+                <NavSearch />
               </div>
 
               {/* Action Buttons */}
               <div className="flex items-center gap-5">
                 {/* notification section start */}
                 {currentUser && role === 'Applicant' && (
-                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative focus:outline-none">
-          <Bell className="h-4 w-4" />
-          {sumArray.length > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-            >
-              {sumArray.length}
-            </Badge>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
+                  <DropdownMenu open={dropdownOpen} onOpenChange={setDropDownOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative focus:outline-none"
+                        onClick={() => userId && triggerNotification(userId)}
+                      >
+                        <Bell className="h-4 w-4" />
+                        {sumArray.length > 0 && (
+                          <Badge
+                            variant="destructive"
+                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                          >
+                            {sumArray.length}
+                          </Badge>
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-80">
-        <div
-          data-lenis-prevent
-          className="max-h-60 overflow-y-auto"
-        >
-          <div className="p-2 font-medium">Notifications</div>
-          {sumArray.length === 0 ? (
-            <DropdownMenuItem className="text-sm text-muted-foreground">
-              No new notifications
-            </DropdownMenuItem>
-          ) : (
-            sumArray.map((notification, index) => (
-              <DropdownMenuItem
-                key={index}
-                className="flex flex-col items-start gap-1"
-              >
-                <span className="text-sm font-medium">{notification.message}</span>
-                <span className="text-xs text-muted-foreground">
-                  {notification.time}
-                </span>
-              </DropdownMenuItem>
-            ))
-          )}
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+                    <DropdownMenuContent align="end" className="w-80">
+                      <div
+                        data-lenis-prevent
+                        className="max-h-60 overflow-y-auto"
+                      >
+                        <div className="p-2 font-medium">Notifications</div>
+                        {sumArray.length === 0 ? (
+                          <DropdownMenuItem className="text-sm text-muted-foreground">
+                            No new notifications
+                          </DropdownMenuItem>
+                        ) : (
+                          sumArray.map((notification, index) => (
+                            <DropdownMenuItem
+                              key={index}
+                              className="flex flex-col items-start gap-1"
+                            >
+                              <span className="text-sm font-medium">{notification.message}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {notification.time}
+                              </span>
+                            </DropdownMenuItem>
+                          ))
+                        )}
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 {/* notification section end */}
                 {/* condition sign in button if current user is not available  */}
@@ -548,199 +549,204 @@ export default function Navbar() {
                 </div>
 
                 <div className="flex gap-2 items-center">
- {/* notification section start */}
-                {currentUser && role === 'Applicant' && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="relative focus:outline-none">
-                        <Bell className="h-4 w-4" />
-                        {sumArray.length > 0 && (
-                          <Badge
-                            variant="destructive"
-                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                          >
-                            {sumArray.length}
-                          </Badge>
-                        )}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-60">
-                      <div className="max-h-60 overflow-y-auto">
-                      <div className="p-2 font-medium">Notifications</div>
-                      {sumArray.length === 0 ? (
-                        <DropdownMenuItem className="text-sm text-muted-foreground">
-                          No new notifications
-                        </DropdownMenuItem>
-                      ) : (
-                        sumArray.map((notification, index) => (
-                          <DropdownMenuItem
-                            key={index}
-                            className="flex flex-col items-start gap-1"
-                          >
-                            <span className="text-sm font-medium">{notification.message}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {notification.time}
-                            </span>
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-
-                
-                {/* if currentUser not available then show the signin button */}
-                {!currentUser && (
-                  <Link href="/signin" className="">
-                    <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
-                      Sign in
-                    </button>
-                  </Link>
-                )}
-
-                {/* Mobile Action Buttons */}
-                <div className="flex items-center space-x-2">
+                  {/* notification section start */}
                   {currentUser && role === 'Applicant' && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
-                          {currentUser.displayName?.slice(0, 1)}
-                        </button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="relative focus:outline-none"
+                          onClick={() => userId && triggerNotification(userId)}
+                        >
+                          <Bell className="h-4 w-4" />
+                          {sumArray.length > 0 && (
+                            <Badge
+                              variant="destructive"
+                              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+                            >
+                              {sumArray.length}
+                            </Badge>
+                          )}
+                        </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56 mx-1" align="start">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            Profile
-                            <DropdownMenuShortcut>
-                              <User size={16} />
-                            </DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            Team
-                            <DropdownMenuShortcut>
-                              <FaUsers />
-                            </DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                <Link href="/candidate-dashboard">
-                                  <DropdownMenuItem>Overview</DropdownMenuItem>
-                                </Link>
-                                <Link href="/candidate-dashboard/applied-jobs">
-                                  <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
-                                </Link>
-                                <Link href="/candidate-dashboard/favourite-jobs">
-                                  <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
-                                </Link>
-                                <Link href="/candidate-dashboard/job-alerts">
-                                  <DropdownMenuItem>Job Alert</DropdownMenuItem>
-                                </Link>
-                                <Link href="/candidate-dashboard/settings">
-                                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                                </Link>
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                          </DropdownMenuSub>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <Link href="/customer-support">
-                          <DropdownMenuItem>Support</DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout}>
-                          Log out
-                          <DropdownMenuShortcut>
-                            <LogOut size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                      <DropdownMenuContent align="end" className="w-60">
+                        <div className="max-h-60 overflow-y-auto">
+                          <div className="p-2 font-medium">Notifications</div>
+                          {sumArray.length === 0 ? (
+                            <DropdownMenuItem className="text-sm text-muted-foreground">
+                              No new notifications
+                            </DropdownMenuItem>
+                          ) : (
+                            sumArray.map((notification, index) => (
+                              <DropdownMenuItem
+                                key={index}
+                                className="flex flex-col items-start gap-1"
+                              >
+                                <span className="text-sm font-medium">{notification.message}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {notification.time}
+                                </span>
+                              </DropdownMenuItem>
+                            ))
+                          )}
+                        </div>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )}
-                </div>
-                {/* if company user is available then show this  */}
-                <div className="flex items-center space-x-2">
-                  {currentUser && role === 'Company' && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
-                          {currentUser.displayName?.slice(0, 1)}
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56 mx-1" align="start">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            Profile
-                            <DropdownMenuShortcut>
-                              <User size={16} />
-                            </DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            Team
-                            <DropdownMenuShortcut>
-                              <FaUsers />
-                            </DropdownMenuShortcut>
-                          </DropdownMenuItem>
-                          <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                <Link href="/company-dashboard">
-                                  <DropdownMenuItem>Overview</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/employer-profile">
-                                  <DropdownMenuItem>Employer Profile</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/post-job">
-                                  <DropdownMenuItem>Post Job</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/my-jobs">
-                                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/saved-candidates">
-                                  <DropdownMenuItem>Saved Candidates</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/plans-&-billing">
-                                  <DropdownMenuItem>Plans & Billings</DropdownMenuItem>
-                                </Link>
-                                <Link href="/company-dashboard/settings">
-                                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                                </Link>
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                          </DropdownMenuSub>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <Link href="/customer-support">
-                          <DropdownMenuItem>Support</DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout}>
-                          Log out
-                          <DropdownMenuShortcut>
-                            <LogOut size={16} />
-                          </DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+
+
+                  {/* if currentUser not available then show the signin button */}
+                  {!currentUser && (
+                    <Link href="/signin" className="">
+                      <button className="px-3 text-sm lg:px-4 py-2 border-gray-300 rounded-sm text-gray-600">
+                        Sign in
+                      </button>
+                    </Link>
                   )}
+
+                  {/* Mobile Action Buttons */}
+                  <div className="flex items-center space-x-2">
+                    {currentUser && role === 'Applicant' && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                            {currentUser.displayName?.slice(0, 1)}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56 mx-1" align="start">
+                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              Profile
+                              <DropdownMenuShortcut>
+                                <User size={16} />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              Team
+                              <DropdownMenuShortcut>
+                                <FaUsers />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSub>
+                              <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                              <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                  <Link href="/candidate-dashboard">
+                                    <DropdownMenuItem>Overview</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/candidate-dashboard/applied-jobs">
+                                    <DropdownMenuItem>Applied Jobs</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/candidate-dashboard/favourite-jobs">
+                                    <DropdownMenuItem>Favorite Jobs</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/candidate-dashboard/job-alerts">
+                                    <DropdownMenuItem>Job Alert</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/candidate-dashboard/settings">
+                                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                                  </Link>
+                                </DropdownMenuSubContent>
+                              </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <Link href="/customer-support">
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                          </Link>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={handleLogout}>
+                            Log out
+                            <DropdownMenuShortcut>
+                              <LogOut size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                  {/* if company user is available then show this  */}
+                  <div className="flex items-center space-x-2">
+                    {currentUser && role === 'Company' && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="border rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-700 hover:bg-gray-300">
+                            {currentUser.displayName?.slice(0, 1)}
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56 mx-1" align="start">
+                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              Profile
+                              <DropdownMenuShortcut>
+                                <User size={16} />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              Team
+                              <DropdownMenuShortcut>
+                                <FaUsers />
+                              </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSub>
+                              <DropdownMenuSubTrigger>Dashboard</DropdownMenuSubTrigger>
+                              <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                  <Link href="/company-dashboard">
+                                    <DropdownMenuItem>Overview</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/employer-profile">
+                                    <DropdownMenuItem>Employer Profile</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/post-job">
+                                    <DropdownMenuItem>Post Job</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/my-jobs">
+                                    <DropdownMenuItem>My Jobs</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/saved-candidates">
+                                    <DropdownMenuItem>Saved Candidates</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/plans-&-billing">
+                                    <DropdownMenuItem>Plans & Billings</DropdownMenuItem>
+                                  </Link>
+                                  <Link href="/company-dashboard/settings">
+                                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                                  </Link>
+                                </DropdownMenuSubContent>
+                              </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <Link href="/customer-support">
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                          </Link>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={handleLogout}>
+                            Log out
+                            <DropdownMenuShortcut>
+                              <LogOut size={16} />
+                            </DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
                 </div>
-                </div>
-                
+
               </div>
 
               {/* Search Bar - Mobile & Tablet Full Width */}
-              <NavSearch/>
+              <NavSearch />
             </div>
           </div>
         </div>
