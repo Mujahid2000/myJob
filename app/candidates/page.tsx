@@ -79,7 +79,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
 
   // Fetch candidate data
   try {
-    const response = await fetch(`https://job-server-1.onrender.com/candidateJobApplyData/candidateList`, {
+    const response = await fetch(`https://job-server-fqvf.onrender.com/candidateJobApplyData/candidateList`, {
       cache: 'no-store',
     });
 
@@ -130,8 +130,8 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
           const educationArray = Array.isArray(education)
             ? education
             : typeof education === 'string' && education
-            ? education.split(',').map(e => e.trim())
-            : [];
+              ? education.split(',').map(e => e.trim())
+              : [];
           if (!educationArray.includes(candidate.education)) {
             matches = false;
           }
@@ -205,122 +205,122 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
             <div className="grid grid-cols-1 gap-4 px-3">
               {filteredCandidates.map((job) => (
                 <Card key={job._id} className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white transition-all duration-200 hover:shadow-md">
-      <CardContent className="">
-        {/* Mobile Layout (< sm) */}
-        <div className="sm:hidden">
-          {/* Top Section: Profile Picture and Basic Info */}
-          <div className="flex items-start gap-3 mb-4">
-            <Image
-              src={job.profilePicture || "/placeholder.svg"}
-              alt={job.fullName}
-              width={60}
-              height={60}
-              className="rounded-md object-cover flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-[#18191C] text-base truncate">{job.fullName}</h3>
-              <h4 className="text-sm text-gray-600 truncate">{job.title}</h4>
-            </div>
-            <Button variant="ghost" size="sm" className="cursor-pointer p-2 flex-shrink-0">
-              <Bookmark size={16} />
-            </Button>
-          </div>
+                  <CardContent className="">
+                    {/* Mobile Layout (< sm) */}
+                    <div className="sm:hidden">
+                      {/* Top Section: Profile Picture and Basic Info */}
+                      <div className="flex items-start gap-3 mb-4">
+                        <Image
+                          src={job.profilePicture || "/placeholder.svg"}
+                          alt={job.fullName}
+                          width={60}
+                          height={60}
+                          className="rounded-md object-cover flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-[#18191C] text-base truncate">{job.fullName}</h3>
+                          <h4 className="text-sm text-gray-600 truncate">{job.title}</h4>
+                        </div>
+                        <Button variant="ghost" size="sm" className="cursor-pointer p-2 flex-shrink-0">
+                          <Bookmark size={16} />
+                        </Button>
+                      </div>
 
-          {/* Middle Section: Location and Experience */}
-          <div className="flex flex-col gap-2 text-gray-500 text-sm mb-4">
-            <div className="flex items-center gap-1">
-              <MapPin size={14} className="flex-shrink-0" />
-              <span className="truncate">{job.location || "Not specified"}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <BriefcaseConveyorBelt size={14} className="flex-shrink-0" />
-              <span className="truncate">{job.experience || "Not specified"}</span>
-            </div>
-          </div>
+                      {/* Middle Section: Location and Experience */}
+                      <div className="flex flex-col gap-2 text-gray-500 text-sm mb-4">
+                        <div className="flex items-center gap-1">
+                          <MapPin size={14} className="flex-shrink-0" />
+                          <span className="truncate">{job.location || "Not specified"}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <BriefcaseConveyorBelt size={14} className="flex-shrink-0" />
+                          <span className="truncate">{job.experience || "Not specified"}</span>
+                        </div>
+                      </div>
 
-          {/* Bottom Section: Action Button */}
-          <div className="flex justify-end">
-            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
-          </div>
-        </div>
+                      {/* Bottom Section: Action Button */}
+                      <div className="flex justify-end">
+                        <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]} />
+                      </div>
+                    </div>
 
-        {/* Tablet Layout (sm to lg) */}
-        <div className="hidden sm:flex lg:hidden items-start justify-between gap-4">
-          {/* Left Section: Profile Picture and Info */}
-          <div className="flex items-start gap-4 flex-1 min-w-0">
-            <Image
-              src={job.profilePicture || "/placeholder.svg"}
-              alt={job.fullName}
-              width={70}
-              height={70}
-              className="rounded-md object-cover flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="mb-2">
-                <h3 className="font-semibold text-[#18191C] text-lg truncate">{job.fullName}</h3>
-                <h4 className="text-sm text-gray-600 truncate">{job.title}</h4>
-              </div>
-              <div className="flex flex-col gap-1 text-gray-500 text-sm">
-                <div className="flex items-center gap-1">
-                  <MapPin size={16} />
-                  <span className="truncate">{job.location || "Not specified"}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <BriefcaseConveyorBelt size={16} />
-                  <span className="truncate">{job.experience || "Not specified"}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                    {/* Tablet Layout (sm to lg) */}
+                    <div className="hidden sm:flex lg:hidden items-start justify-between gap-4">
+                      {/* Left Section: Profile Picture and Info */}
+                      <div className="flex items-start gap-4 flex-1 min-w-0">
+                        <Image
+                          src={job.profilePicture || "/placeholder.svg"}
+                          alt={job.fullName}
+                          width={70}
+                          height={70}
+                          className="rounded-md object-cover flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="mb-2">
+                            <h3 className="font-semibold text-[#18191C] text-lg truncate">{job.fullName}</h3>
+                            <h4 className="text-sm text-gray-600 truncate">{job.title}</h4>
+                          </div>
+                          <div className="flex flex-col gap-1 text-gray-500 text-sm">
+                            <div className="flex items-center gap-1">
+                              <MapPin size={16} />
+                              <span className="truncate">{job.location || "Not specified"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <BriefcaseConveyorBelt size={16} />
+                              <span className="truncate">{job.experience || "Not specified"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-          {/* Right Section: Action Buttons */}
-          <div className="flex flex-col gap-2 flex-shrink-0">
-            <Button variant="ghost" className="cursor-pointer">
-              <Bookmark size={16} />
-            </Button>
-            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
-          </div>
-        </div>
+                      {/* Right Section: Action Buttons */}
+                      <div className="flex flex-col gap-2 flex-shrink-0">
+                        <Button variant="ghost" className="cursor-pointer">
+                          <Bookmark size={16} />
+                        </Button>
+                        <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]} />
+                      </div>
+                    </div>
 
-        {/* Desktop Layout (lg+) */}
-        <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
-          {/* Left Section: Profile Picture and Info */}
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <Image
-              src={job.profilePicture || "/placeholder.svg"}
-              alt={job.fullName}
-              width={75}
-              height={75}
-              className="rounded-md object-cover flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="mb-2">
-                <h3 className="font-semibold text-[#18191C] text-lg">{job.fullName}</h3>
-                <h4 className="text-sm text-gray-600">{job.title}</h4>
-              </div>
-              <div className="flex items-center gap-4 text-gray-500 text-sm">
-                <div className="flex items-center gap-1">
-                  <MapPin size={16} />
-                  <span>{job.location || "Not specified"}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <BriefcaseConveyorBelt size={16} />
-                  <span>{job.experience || "Not specified"}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                    {/* Desktop Layout (lg+) */}
+                    <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
+                      {/* Left Section: Profile Picture and Info */}
+                      <div className="flex items-center gap-4 flex-1 min-w-0">
+                        <Image
+                          src={job.profilePicture || "/placeholder.svg"}
+                          alt={job.fullName}
+                          width={75}
+                          height={75}
+                          className="rounded-md object-cover flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="mb-2">
+                            <h3 className="font-semibold text-[#18191C] text-lg">{job.fullName}</h3>
+                            <h4 className="text-sm text-gray-600">{job.title}</h4>
+                          </div>
+                          <div className="flex items-center gap-4 text-gray-500 text-sm">
+                            <div className="flex items-center gap-1">
+                              <MapPin size={16} />
+                              <span>{job.location || "Not specified"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <BriefcaseConveyorBelt size={16} />
+                              <span>{job.experience || "Not specified"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-          {/* Right Section: Action Buttons */}
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <Button variant="ghost" className="cursor-pointer">
-              <Bookmark />
-            </Button>
-            <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]}/>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+                      {/* Right Section: Action Buttons */}
+                      <div className="flex items-center gap-4 flex-shrink-0">
+                        <Button variant="ghost" className="cursor-pointer">
+                          <Bookmark />
+                        </Button>
+                        <OpenModalButton usersId={job.userId} resumeId={job.resume_Id[0]} />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
@@ -328,7 +328,7 @@ export default async function FindJobPage({ searchParams }: { searchParams: Prom
       </div>
 
       {filteredCandidates.length >= 12 && <PaginationDemo itemsPerPage={validatedItemsPerPage} candidates={filteredCandidates} />}
-      <CandidateModal/>
+      <CandidateModal />
     </div>
   );
 }

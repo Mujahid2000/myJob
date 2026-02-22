@@ -16,9 +16,9 @@ import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
 import { useForm } from 'react-hook-form';
 import { Admin, Customer, useGetAdminMessagesQuery, useGetMessagesQuery } from '@/RTKQuery/ChatMessage';
 
-interface ChatMessage extends Admin {}
+interface ChatMessage extends Admin { }
 
-const socket = io('https://job-server-1.onrender.com', {
+const socket = io('https://job-server-fqvf.onrender.com', {
   withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 });
@@ -116,9 +116,9 @@ export default function CustomerChatPage() {
     }
   }, [message]);
 
-  useEffect(() =>{
+  useEffect(() => {
 
-  },[])
+  }, [])
   // Send message to backend
   const onSubmit = async (data: any) => {
     const newMessage: ChatMessage = {
@@ -149,7 +149,7 @@ export default function CustomerChatPage() {
     setChatMessages((prev) => [...prev, newMessage]);
 
     try {
-      const response = await fetch('https://job-server-1.onrender.com/liveNotification/customerMessage', {
+      const response = await fetch('https://job-server-fqvf.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
         body: JSON.stringify(newMessage),
         headers: {
@@ -180,8 +180,8 @@ export default function CustomerChatPage() {
   };
 
   const lastMessages = sortMessagesByTime(chatMessages).filter((lm) => lm.receiverId === senderid || lm.senderId === senderid);
-  const lastItem = lastMessages.at(lastMessages.length -1);
-  const lastUserMessageOrAdmin = lastItem?.message.slice(0,10)
+  const lastItem = lastMessages.at(lastMessages.length - 1);
+  const lastUserMessageOrAdmin = lastItem?.message.slice(0, 10)
 
 
 
@@ -219,9 +219,8 @@ export default function CustomerChatPage() {
               {filterProfile && Array.isArray(filterProfile) && filterProfile.map((user) => (
                 <div
                   key={user._id}
-                  className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${
-                    selectedUser?._id === user._id ? 'bg-blue-50 border-blue-200' : ''
-                  }`}
+                  className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${selectedUser?._id === user._id ? 'bg-blue-50 border-blue-200' : ''
+                    }`}
                   onClick={() => setSelectedUser(user)}
                 >
                   <div className="flex items-center space-x-3">
@@ -240,11 +239,11 @@ export default function CustomerChatPage() {
                         <p className="font-medium truncate">{user.name}</p>
                         <div className="flex items-center space-x-2">
                           <span className="text-xs text-gray-500">sometimes ago</span>
-                         
-                            <Badge className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
-                             1
-                            </Badge>
-                        
+
+                          <Badge className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
+                            1
+                          </Badge>
+
                         </div>
                       </div>
                       <p className="text-sm text-gray-500 truncate">Click to show the message</p>
@@ -258,78 +257,76 @@ export default function CustomerChatPage() {
 
         {/* Chat Window */}
         {
-          selectedUser ? 
-           <Card className="lg:col-span-2 order-1 lg:order-2">
-          <CardHeader className="border-b pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8 md:h-10 md:w-10">
-                  <AvatarImage src={selectedUser?.picture} alt={selectedUser?.name} />
-                  <AvatarFallback>{selectedUser?.name?.slice(0, 1)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <CardTitle className="text-base md:text-lg">{selectedUser?.name}</CardTitle>
-                  <CardDescription className="text-sm">{selectedUser?.email}</CardDescription>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-                      <ScrollArea className="h-[300px] md:h-[65vh] p-4">
-              <div className="flex flex-col gap-3">
-                {sortMessagesByTime(chatMessages)
-                  .filter((uM) => uM.senderId === selectedUser.senderId || uM.receiverId === selectedUser.senderId)
-                  .map((msg) => (
-                    <div
-                      key={msg._id}
-                      className={`flex ${
-                        msg.senderId === userid ? 'justify-end' : 'justify-start'
-                      }`}
-                    >
-                      <div
-                        className={`max-w-full text-wrap rounded-lg p-3 ${
-                          msg.senderId === userid
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200 text-gray-900'
-                        }`}
-                      >
-                        <p>{msg.message}</p>
-                        <p className="text-xs opacity-70 mt-1 text-right">
-                          {msg.dateWithTime}
-                        </p>
-                      </div>
+          selectedUser ?
+            <Card className="lg:col-span-2 order-1 lg:order-2">
+              <CardHeader className="border-b pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-8 w-8 md:h-10 md:w-10">
+                      <AvatarImage src={selectedUser?.picture} alt={selectedUser?.name} />
+                      <AvatarFallback>{selectedUser?.name?.slice(0, 1)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle className="text-base md:text-lg">{selectedUser?.name}</CardTitle>
+                      <CardDescription className="text-sm">{selectedUser?.email}</CardDescription>
                     </div>
-                  ))}
-              </div>
-            </ScrollArea>
-            <form onSubmit={handleSubmit(onSubmit)} className="border-t p-3 md:p-4">
-              <div className="flex space-x-2">
-                <Textarea
-                  placeholder="Type your message..."
-                  {...register('message', { required: 'Message is required' })}
-                  className="flex-1 min-h-[40px] max-h-[120px] text-sm"
-                  rows={1}
-                />
-                <Button size="sm" className="self-end px-3" disabled={!selectedUser}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-              {errors.message?.message && (
-                <p className="text-red-500 text-sm mt-1">message can not loading</p>
-              )}
-            </form>
-          </CardContent>
-        </Card>
-          :
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="h-[300px] md:h-[65vh] p-4">
+                  <div className="flex flex-col gap-3">
+                    {sortMessagesByTime(chatMessages)
+                      .filter((uM) => uM.senderId === selectedUser.senderId || uM.receiverId === selectedUser.senderId)
+                      .map((msg) => (
+                        <div
+                          key={msg._id}
+                          className={`flex ${msg.senderId === userid ? 'justify-end' : 'justify-start'
+                            }`}
+                        >
+                          <div
+                            className={`max-w-full text-wrap rounded-lg p-3 ${msg.senderId === userid
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-200 text-gray-900'
+                              }`}
+                          >
+                            <p>{msg.message}</p>
+                            <p className="text-xs opacity-70 mt-1 text-right">
+                              {msg.dateWithTime}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </ScrollArea>
+                <form onSubmit={handleSubmit(onSubmit)} className="border-t p-3 md:p-4">
+                  <div className="flex space-x-2">
+                    <Textarea
+                      placeholder="Type your message..."
+                      {...register('message', { required: 'Message is required' })}
+                      className="flex-1 min-h-[40px] max-h-[120px] text-sm"
+                      rows={1}
+                    />
+                    <Button size="sm" className="self-end px-3" disabled={!selectedUser}>
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {errors.message?.message && (
+                    <p className="text-red-500 text-sm mt-1">message can not loading</p>
+                  )}
+                </form>
+              </CardContent>
+            </Card>
+            :
 
-          <Card className="lg:col-span-2 order-1 lg:order-2 flex items-center justify-center h-[90vh]">
-            <p className="text-gray-500 text-lg">Select a user to start chatting</p>
-          </Card>
+            <Card className="lg:col-span-2 order-1 lg:order-2 flex items-center justify-center h-[90vh]">
+              <p className="text-gray-500 text-lg">Select a user to start chatting</p>
+            </Card>
         }
-       
+
       </div>
     </div>
   );

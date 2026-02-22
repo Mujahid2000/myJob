@@ -1,9 +1,8 @@
+import FooterSection from "@/components/sections/footer/default";
+import Navbar from "@/Layout/Navbar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/Layout/Navbar";
-import FooterSection from "@/components/sections/footer/default";
-import { store } from "@/Store/Store";
 import StoreProvider from "./StoreProvider";
 
 

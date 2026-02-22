@@ -80,7 +80,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   // Fetch job data
   let jobListings: JobApiResponse;
   try {
-    const response = await fetch('https://job-server-1.onrender.com/jobs/getCompanyData', {
+    const response = await fetch('https://job-server-fqvf.onrender.com/jobs/getCompanyData', {
       cache: 'no-store', // Disable caching for fresh data
     });
     if (!response.ok) {
@@ -110,8 +110,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
     const matchesJobTitle = !lower.jobTitle
       ? true
       : job.title.toLowerCase().includes(lower.jobTitle) ||
-        (job.companyName?.toLowerCase().includes(lower.jobTitle) ?? false) ||
-        (job.tags?.some((tag) => tag.toLowerCase().includes(lower.jobTitle!)) ?? false);
+      (job.companyName?.toLowerCase().includes(lower.jobTitle) ?? false) ||
+      (job.tags?.some((tag) => tag.toLowerCase().includes(lower.jobTitle!)) ?? false);
 
     const matchesCategory = !resolvedSearchParams.category
       ? true
@@ -151,7 +151,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
                   <Card className="border hover:shadow-lg transition">
                     <CardContent className="flex flex-col gap-3 p-4">
                       <div className="flex items-center gap-3">
-                       <img className='w-12 h-12' src={job.logo || 'https://via.placeholder.com/55'} alt="" />
+                        <img className='w-12 h-12' src={job.logo || 'https://via.placeholder.com/55'} alt="" />
                         <div>
                           <div className="flex gap-3">
                             <h4 className="font-semibold text-[1rem]">
@@ -183,89 +183,89 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
           ) : (
             <div className="grid grid-cols-1 gap-4 px-2 lg:px-0">
               {paginatedJobs.map((job) => (
-                 <Card key={job._id} className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white transition-all duration-200 hover:shadow-md">
-      <CardContent className="p-4 sm:p-5 lg:p-6">
-        {/* Mobile & Tablet Layout (< lg) */}
-        <div className="lg:hidden">
-          {/* Top Section: Logo, Company Info & Bookmark */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3 flex-1">
-              <img
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover flex-shrink-0"
-                src={job.logo || "/placeholder.svg"}
-                alt={job.companyName}
-              />
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-[#18191C] text-base sm:text-lg truncate">{job.companyName}</h3>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-gray-500 text-xs sm:text-sm mt-1">
-                  <div className="flex items-center gap-1">
-                    <MapPin size={14} className="flex-shrink-0" />
-                    <span className="truncate">{job.location || "Unknown Location"}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CalendarMinus2 size={14} className="flex-shrink-0" />
-                    <span>
-                      {job.totalCompanyJobs} open Job{job.totalCompanyJobs !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-md transition-colors ml-2">
-              <Bookmark size={16} />
-            </button>
-          </div>
+                <Card key={job._id} className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white transition-all duration-200 hover:shadow-md">
+                  <CardContent className="p-4 sm:p-5 lg:p-6">
+                    {/* Mobile & Tablet Layout (< lg) */}
+                    <div className="lg:hidden">
+                      {/* Top Section: Logo, Company Info & Bookmark */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3 flex-1">
+                          <img
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover flex-shrink-0"
+                            src={job.logo || "/placeholder.svg"}
+                            alt={job.companyName}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-[#18191C] text-base sm:text-lg truncate">{job.companyName}</h3>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-gray-500 text-xs sm:text-sm mt-1">
+                              <div className="flex items-center gap-1">
+                                <MapPin size={14} className="flex-shrink-0" />
+                                <span className="truncate">{job.location || "Unknown Location"}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <CalendarMinus2 size={14} className="flex-shrink-0" />
+                                <span>
+                                  {job.totalCompanyJobs} open Job{job.totalCompanyJobs !== 1 ? "s" : ""}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-md transition-colors ml-2">
+                          <Bookmark size={16} />
+                        </button>
+                      </div>
 
-          {/* Bottom Section: Apply Button */}
-          <div className="flex justify-end">
-            <Link href={`/employers/${job.userId}`} className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2.5 text-sm rounded-md transition-all duration-200 font-medium">
-                Open Position →
-              </button>
-            </Link>
-          </div>
-        </div>
+                      {/* Bottom Section: Apply Button */}
+                      <div className="flex justify-end">
+                        <Link href={`/employers/${job.userId}`} className="w-full sm:w-auto">
+                          <button className="w-full sm:w-auto bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2.5 text-sm rounded-md transition-all duration-200 font-medium">
+                            Open Position →
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
 
-        {/* Desktop Layout (lg+) */}
-        <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
-          {/* Left Section: Logo & Job Info */}
-          <div className="flex items-center gap-4 flex-1">
-            <img
-              className="w-12 h-12 rounded-md object-cover flex-shrink-0"
-              src={job.logo || "/placeholder.svg"}
-              alt={job.companyName}
-            />
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-[#18191C] text-lg">{job.companyName}</h3>
-              <div className="flex items-center gap-4 text-gray-500 text-sm mt-2">
-                <div className="flex items-center gap-1">
-                  <MapPin size={16} />
-                  <span>{job.location || "Unknown Location"}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <CalendarMinus2 size={16} />
-                  <span>
-                    {job.totalCompanyJobs} open Job{job.totalCompanyJobs !== 1 ? "s" : ""}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+                    {/* Desktop Layout (lg+) */}
+                    <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-6">
+                      {/* Left Section: Logo & Job Info */}
+                      <div className="flex items-center gap-4 flex-1">
+                        <img
+                          className="w-12 h-12 rounded-md object-cover flex-shrink-0"
+                          src={job.logo || "/placeholder.svg"}
+                          alt={job.companyName}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-[#18191C] text-lg">{job.companyName}</h3>
+                          <div className="flex items-center gap-4 text-gray-500 text-sm mt-2">
+                            <div className="flex items-center gap-1">
+                              <MapPin size={16} />
+                              <span>{job.location || "Unknown Location"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <CalendarMinus2 size={16} />
+                              <span>
+                                {job.totalCompanyJobs} open Job{job.totalCompanyJobs !== 1 ? "s" : ""}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-          {/* Right Section: Bookmark & Apply Button */}
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-md transition-colors">
-              <Bookmark size={16} />
-            </button>
-            <Link href={`/employers/${job.userId}`}>
-              <button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium whitespace-nowrap">
-                Open Position →
-              </button>
-            </Link>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+                      {/* Right Section: Bookmark & Apply Button */}
+                      <div className="flex items-center gap-4 flex-shrink-0">
+                        <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-md transition-colors">
+                          <Bookmark size={16} />
+                        </button>
+                        <Link href={`/employers/${job.userId}`}>
+                          <button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-4 py-2 text-sm rounded-md transition-all duration-200 font-medium whitespace-nowrap">
+                            Open Position →
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
@@ -278,9 +278,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
       </div>
       {/* Pagination section */}
       {
-        paginatedJobs.length >= 12 ? <PaginationDemo currentPage={currentPage} totalPages={totalPages} /> : '' 
+        paginatedJobs.length >= 12 ? <PaginationDemo currentPage={currentPage} totalPages={totalPages} /> : ''
       }
-      
+
     </div>
   );
 }

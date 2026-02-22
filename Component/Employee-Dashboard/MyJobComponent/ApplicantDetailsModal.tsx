@@ -17,13 +17,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mailModal } from '@/Store/ModalSlice';
 import { RootState } from '@/Store/Store';
 
-const socket = io('https://job-server-1.onrender.com', {
+const socket = io('https://job-server-fqvf.onrender.com', {
   withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 }); // socket server URL
 
 interface Notification {
-  id: string |undefined;
+  id: string | undefined;
   message: string;
   timestamp: string;
   companyUser: string,
@@ -41,7 +41,7 @@ interface ApplicantDetailsModalProps {
   jobTitle: string
 }
 
-const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, setnewopen, userId, resume_Id, jobId, companyname ,jobTitle}) => {
+const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, setnewopen, userId, resume_Id, jobId, companyname, jobTitle }) => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
@@ -55,15 +55,15 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
   const applicantData = applicantDetails?.applicant;
   const date = applicantData?.dateOfBirth;
   const dispatch = useDispatch()
-  const mailModalState = useSelector((state:RootState) => state.modal.mailModal)
+  const mailModalState = useSelector((state: RootState) => state.modal.mailModal)
 
 
 
-    useEffect(() =>{
-      if(mailModalState === true) {
-        setnewopen(false)
-      }
-    },[mailModalState])
+  useEffect(() => {
+    if (mailModalState === true) {
+      setnewopen(false)
+    }
+  }, [mailModalState])
 
   // Initialize Socket.IO connection
 
@@ -99,116 +99,116 @@ const ApplicantDetailsModal: React.FC<ApplicantDetailsModalProps> = ({ newopen, 
 
   const formattedDate = formatDateToOrdinal(date ?? '');
 
-    useEffect(() => {
-      if (!userId) return;
-  
-      socket.emit('join', userId);
-      console.log(`User ${userId} joined their room`);
-  
-      return () => {
-        socket.emit('leave', userId); // Optional: Leave room on cleanup
-      };
-    }, [userId]);
+  useEffect(() => {
+    if (!userId) return;
 
- const handleShortListed = async () => {
-  if (!applicantData) {
-    console.error('No applicant data available');
-    toast.error('No applicant data available');
-    return;
-  }
-  const shortListedData = {
-    jobId: jobId || '',
-    userId: userid,
-    resumeId: applicantData.resumeId || '',
-    email: email || '',
-    applicantId: applicantDetails?.applicant.userId || '',
-  };
+    socket.emit('join', userId);
+    console.log(`User ${userId} joined their room`);
 
-  try {
-    const response = await sendShortList(shortListedData).unwrap();
-    if (response.message === 'you already added this candidate') {
-      toast.warning(response.message);
-    } else if (response.message === 'You shortListed this candidate successfully') {
-      toast.success(response.message);
+    return () => {
+      socket.emit('leave', userId); // Optional: Leave room on cleanup
+    };
+  }, [userId]);
 
-      // Send notification via REST API
-      const notificationResponse = await fetch('https://job-server-1.onrender.com/liveNotification/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: socket.id,
-          companyUser: userid,
-          Name: applicantDetails.applicant.fullName,
-          applicantId: applicantDetails?.applicant.userId,
-          jobId,
-          message: `You have been shortlisted for ${jobTitle} role in ${companyname}  `,
-        }),
-      });
-
-      if (!notificationResponse.ok) {
-        throw new Error('Failed to send notification');
-      }
-
-      toast.success('Notification sent successfully');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    toast.error('Failed to process shortlist or notification');
-  }
-};
-// save profile and send notification
-const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName}: {currentUsersId: string; SapplicantId: string; jobId: string; fullName: string}) => {
-  try {
-    const response = await saveProfileData({
-      userId: currentUsersId,
-      applicantId: SapplicantId,
-    }).unwrap();
-
-    const message = response?.message;
-
-    if (message === 'Candidate profile already saved') {
-      toast.warning(message);
+  const handleShortListed = async () => {
+    if (!applicantData) {
+      console.error('No applicant data available');
+      toast.error('No applicant data available');
       return;
     }
+    const shortListedData = {
+      jobId: jobId || '',
+      userId: userid,
+      resumeId: applicantData.resumeId || '',
+      email: email || '',
+      applicantId: applicantDetails?.applicant.userId || '',
+    };
 
-    if (message === 'Candidate profile saved successfully') {
-      const notificationPayload = {
-        id: socket.id,
-        companyUser: userid,
-        Name: fullName,
-        applicantId: applicantDetails?.applicant.userId,
-        jobId,
-        message: `Your profile was saved by ${companyname} company for ${jobTitle} role`,
-      };
+    try {
+      const response = await sendShortList(shortListedData).unwrap();
+      if (response.message === 'you already added this candidate') {
+        toast.warning(response.message);
+      } else if (response.message === 'You shortListed this candidate successfully') {
+        toast.success(response.message);
 
-      const notificationResponse = await fetch(
-        'https://job-server-1.onrender.com/liveNotification/sendSavedProfile',
-        {
+        // Send notification via REST API
+        const notificationResponse = await fetch('https://job-server-fqvf.onrender.com/liveNotification/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(notificationPayload),
-        }
-      );
+          body: JSON.stringify({
+            id: socket.id,
+            companyUser: userid,
+            Name: applicantDetails.applicant.fullName,
+            applicantId: applicantDetails?.applicant.userId,
+            jobId,
+            message: `You have been shortlisted for ${jobTitle} role in ${companyname}  `,
+          }),
+        });
 
-      if (!notificationResponse.ok) {
-        throw new Error('Failed to send notification');
+        if (!notificationResponse.ok) {
+          throw new Error('Failed to send notification');
+        }
+
+        toast.success('Notification sent successfully');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to process shortlist or notification');
+    }
+  };
+  // save profile and send notification
+  const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName }: { currentUsersId: string; SapplicantId: string; jobId: string; fullName: string }) => {
+    try {
+      const response = await saveProfileData({
+        userId: currentUsersId,
+        applicantId: SapplicantId,
+      }).unwrap();
+
+      const message = response?.message;
+
+      if (message === 'Candidate profile already saved') {
+        toast.warning(message);
+        return;
       }
 
-      toast.success('Profile saved and notification sent successfully');
-      return;
-    }
+      if (message === 'Candidate profile saved successfully') {
+        const notificationPayload = {
+          id: socket.id,
+          companyUser: userid,
+          Name: fullName,
+          applicantId: applicantDetails?.applicant.userId,
+          jobId,
+          message: `Your profile was saved by ${companyname} company for ${jobTitle} role`,
+        };
 
-    // Catch-all for any other message
-    if (message) {
-      toast.warning(message);
+        const notificationResponse = await fetch(
+          'https://job-server-fqvf.onrender.com/liveNotification/sendSavedProfile',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(notificationPayload),
+          }
+        );
+
+        if (!notificationResponse.ok) {
+          throw new Error('Failed to send notification');
+        }
+
+        toast.success('Profile saved and notification sent successfully');
+        return;
+      }
+
+      // Catch-all for any other message
+      if (message) {
+        toast.warning(message);
+      }
+    } catch (error: any) {
+      console.error('Save profile error:', error);
+      const errMsg =
+        error?.data?.message || error?.message || 'Failed to save candidate profile';
+      toast.error(errMsg);
     }
-  } catch (error: any) {
-    console.error('Save profile error:', error);
-    const errMsg =
-      error?.data?.message || error?.message || 'Failed to save candidate profile';
-    toast.error(errMsg);
-  }
-};
+  };
 
 
   if (isLoading) {
@@ -226,71 +226,69 @@ const handleSaveProfile = async ({ currentUsersId, SapplicantId, jobId, fullName
   return (
     <div>
       <div
-        className={`${
-          newopen ? "visible" : "invisible"
-        } w-full h-screen fixed top-0 left-0 z-[200000000] bg-[#0000002a] transition-all duration-300 flex items-center justify-center`}
+        className={`${newopen ? "visible" : "invisible"
+          } w-full h-screen fixed top-0 left-0 z-[200000000] bg-[#0000002a] transition-all duration-300 flex items-center justify-center`}
       >
         <div
-          className={`${
-            newopen ? "scale-[1] opacity-100" : "scale-[0] opacity-0"
-          }w-[95%] lg:w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300`}
+          className={`${newopen ? "scale-[1] opacity-100" : "scale-[0] opacity-0"
+            }w-[95%] lg:w-[50%] max-h-[95vh] overflow-y-auto pt-6 rounded-lg transition-all duration-300`}
         >
           <div className="flex gap-3">
             <div className="p-5 rounded-md bg-white">
               <div className="max-w-7xl mx-auto px-4">
                 <div>
                   {/* Header */}
-                   <div className="flex flex-col lg:flex-row justify-between gap-3 items-center">
-                  <div className="flex items-start lg:items-center justify-between gap-5 lg:gap-20">
-                  <div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
-                  <div className="flex items-center space-x-4">
-                    <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
-                    <div>
-                      <h1 className="text-base lg:text-xl font-bold text-gray-800">
-                        {applicantData?.fullName}
-                      </h1>
-                      <p className="text-sm text-gray-600">
-                       {applicantData?.title}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className='flex flex-col lg:flex-row gap-4'>
-   <div className='flex gap-4'>
-                   <Button onClick={handleShortListed} title="shortlisted" className="cursor-pointer" disabled={shortLoading}>
-                        <FaUsersBetweenLines />
-                    </Button>
+                  <div className="flex flex-col lg:flex-row justify-between gap-3 items-center">
+                    <div className="flex items-start lg:items-center justify-between gap-5 lg:gap-20">
+                      <div className="flex flex-col lg:flex-row justify-between  lg:items-center gap-3">
+                        <div className="flex items-center space-x-4">
+                          <img src={applicantData?.profilePicture} className="w-16 h-16  rounded-full object-cover" />
+                          <div>
+                            <h1 className="text-base lg:text-xl font-bold text-gray-800">
+                              {applicantData?.fullName}
+                            </h1>
+                            <p className="text-sm text-gray-600">
+                              {applicantData?.title}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className='flex flex-col lg:flex-row gap-4'>
+                            <div className='flex gap-4'>
+                              <Button onClick={handleShortListed} title="shortlisted" className="cursor-pointer" disabled={shortLoading}>
+                                <FaUsersBetweenLines />
+                              </Button>
 
-                    <Button
-                        title="save candidate profile"
-                        className="cursor-pointer"
-                        onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId , fullName: applicantData?.fullName || ''})}
-                        disabled={saveProfileLoading}
-                      >
-                        <Bookmark />
-                      </Button>
-                    </div>
-                    
-                    <div className='flex gap-4'>
- <Button onClick={() => dispatch(mailModal({ openMail: !mailModalState }))} className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
-                        <Mail className="mr-2 h-4 w-4" /> Send Mail
-                      </Button>
+                              <Button
+                                title="save candidate profile"
+                                className="cursor-pointer"
+                                onClick={() => handleSaveProfile({ currentUsersId: userid, SapplicantId: applicantData?.userId || '', jobId: jobId, fullName: applicantData?.fullName || '' })}
+                                disabled={saveProfileLoading}
+                              >
+                                <Bookmark />
+                              </Button>
+                            </div>
 
-                       <Button className="bg-[#0A65CC] hover:bg-white border hover:text-[#0A65CC] hover:border-[#0A65CC] text-white">
-                        <CircleArrowRight className="mr-2 h-4 w-4" /> Hire Candidates
-                      </Button>
+                            <div className='flex gap-4'>
+                              <Button onClick={() => dispatch(mailModal({ openMail: !mailModalState }))} className="bg-white border border-[#0A65CC] text-[#0A65CC] hover:bg-blue-700 hover:text-white">
+                                <Mail className="mr-2 h-4 w-4" /> Send Mail
+                              </Button>
+
+                              <Button className="bg-[#0A65CC] hover:bg-white border hover:text-[#0A65CC] hover:border-[#0A65CC] text-white">
+                                <CircleArrowRight className="mr-2 h-4 w-4" /> Hire Candidates
+                              </Button>
+                            </div>
+                          </div>
+
+
+                        </div>
+                      </div>
+                      <div className="flex lg:hidden">
+                        <button onClick={() => setnewopen(!newopen)}><X /></button>
+                      </div>
                     </div>
-                    </div>
-                 
-                  
+
                   </div>
-                  </div>
-                  <div className="flex lg:hidden">
-                      <button onClick={() => setnewopen(!newopen)}><X/></button>
-                  </div>
-                  </div>
-                  
-                </div>
 
                   <div className="flex flex-col lg:flex-row gap-5 justify-between pt-6">
                     {/* First parent div */}

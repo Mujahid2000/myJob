@@ -108,15 +108,15 @@ const filterJobListings = (jobListings: JobListing[], params: SearchParams): Job
       ? job.title.toLowerCase().includes(params.jobRole.toLowerCase())
       : true;
 
-   // Replace both matchesJobRole and matchTags with a combined OR logic
-const matchesJobTitleOrTags = params.jobRole
-? (job.title.toLowerCase().includes(params.jobRole.toLowerCase()) ||
-   (Array.isArray(job.tags) &&
-    job.tags.some((tag) =>
-      typeof tag === "string" &&
-      tag.toLowerCase().includes(params.jobRole!.toLowerCase())
-    )))
-: true;
+    // Replace both matchesJobRole and matchTags with a combined OR logic
+    const matchesJobTitleOrTags = params.jobRole
+      ? (job.title.toLowerCase().includes(params.jobRole.toLowerCase()) ||
+        (Array.isArray(job.tags) &&
+          job.tags.some((tag) =>
+            typeof tag === "string" &&
+            tag.toLowerCase().includes(params.jobRole!.toLowerCase())
+          )))
+      : true;
 
 
     return (
@@ -152,13 +152,13 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
   let jobListings: JobListing[] = [];
 
   try {
-    const res = await fetch("https://job-server-1.onrender.com/jobs/getAllPostedData", {
+    const res = await fetch("https://job-server-fqvf.onrender.com/jobs/getAllPostedData", {
       next: { revalidate: 10 }, // Revalidate every 60 seconds
       headers: {
         "Content-Type": "application/json",
       },
     });
-
+    console.log(res);
     if (!res.ok) {
       throw new Error(`Fetch failed with status: ${res.status}`);
     }
@@ -191,7 +191,7 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
     }));
 
 
- 
+
   return (
     <div className="max-w-7xl mx-auto py-7">
       {/* Filters */}
@@ -308,145 +308,145 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
       ) : (
         <div className="grid grid-cols-1 gap-4 px-2">
           {paginatedJobs.map((job) => (
-               <Card key={job._id} className="border cursor-pointer hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white">
-      <CardContent className="p-3 lg:p-6">
-        {/* Mobile Layout */}
-        <div className="flex lg:hidden">
-          {/* Image */}
-          <div className="flex-shrink-0 mr-3">
-            <Image
-              src={job.logo || "/default-logo.png"}
-              alt={job.jobRole}
-              width={55}
-              height={55}
-              className="rounded-md"
-            />
-          </div>
+            <Card key={job._id} className="border cursor-pointer hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white">
+              <CardContent className="p-3 lg:p-6">
+                {/* Mobile Layout */}
+                <div className="flex lg:hidden">
+                  {/* Image */}
+                  <div className="flex-shrink-0 mr-3">
+                    <Image
+                      src={job.logo || "/default-logo.png"}
+                      alt={job.jobRole}
+                      width={55}
+                      height={55}
+                      className="rounded-md"
+                    />
+                  </div>
 
-          {/* Content and Buttons Container */}
-          <div className="flex-1 min-w-0">
-            {/* Job Details */}
-            <div className="mb-3">
-              <div className="flex flex-col-reverse gap-1 items-start mb-2">
-                <h3 className="font-semibold text-[#18191C] text-sm">{job.title}</h3>
-                <div className="flex gap-2 flex-wrap">
-                  {job.promotedSystem && (
-                    <Badge variant="destructive" className="bg-red-100 text-red-600 text-xs">
-                      Featured
-                    </Badge>
-                  )}
-                  {job.jobType && (
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-600 text-xs">
-                      {job.jobType}
-                    </Badge>
-                  )}
-                </div>
-              </div>
+                  {/* Content and Buttons Container */}
+                  <div className="flex-1 min-w-0">
+                    {/* Job Details */}
+                    <div className="mb-3">
+                      <div className="flex flex-col-reverse gap-1 items-start mb-2">
+                        <h3 className="font-semibold text-[#18191C] text-sm">{job.title}</h3>
+                        <div className="flex gap-2 flex-wrap">
+                          {job.promotedSystem && (
+                            <Badge variant="destructive" className="bg-red-100 text-red-600 text-xs">
+                              Featured
+                            </Badge>
+                          )}
+                          {job.jobType && (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-600 text-xs">
+                              {job.jobType}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
 
-              <div className="flex flex-col gap-1 text-gray-500 text-xs">
-                <div className="flex items-center gap-1">
-                  <MapPin size={14} />
-                  <span>{job.location}</span>
-                </div>
-                <div className="flex text-[#5E6670] items-center gap-1">
-                  <DollarSign size={14} />
-                  <span>
-                    ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar size={14} />
-                  <span>
-                    {job.expireDate
-                      ? `${Math.max(
-                          0,
-                          Math.ceil(
-                            (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
-                          ),
-                        )} Days Remaining`
-                      : "N/A"}
-                  </span>
-                </div>
-              </div>
-            </div>
+                      <div className="flex flex-col gap-1 text-gray-500 text-xs">
+                        <div className="flex items-center gap-1">
+                          <MapPin size={14} />
+                          <span>{job.location}</span>
+                        </div>
+                        <div className="flex text-[#5E6670] items-center gap-1">
+                          <DollarSign size={14} />
+                          <span>
+                            ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar size={14} />
+                          <span>
+                            {job.expireDate
+                              ? `${Math.max(
+                                0,
+                                Math.ceil(
+                                  (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+                                ),
+                              )} Days Remaining`
+                              : "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-            {/* Buttons aligned with content */}
-            <div className="flex items-center gap-2">
-              <BookMarkButton jobData={job} />
-              <Link href={`/find-job/${job._id}`}>
-                <Button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-3 py-1.5 rounded-sm text-sm">
-                  Apply Now →
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
+                    {/* Buttons aligned with content */}
+                    <div className="flex items-center gap-2">
+                      <BookMarkButton jobData={job} />
+                      <Link href={`/find-job/${job._id}`}>
+                        <Button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-3 py-1.5 rounded-sm text-sm">
+                          Apply Now →
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Desktop Layout */}
-        <div className="hidden lg:flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Image
-              src={job.logo || "/default-logo.png"}
-              alt={job.jobRole}
-              width={55}
-              height={55}
-              className="rounded-md"
-            />
-            <div>
-              <div className="flex flex-row gap-3 items-center mb-2">
-                <h3 className="font-semibold text-[#18191C] text-lg">{job.title}</h3>
-                <div className="flex gap-2">
-                  {job.promotedSystem && (
-                    <Badge variant="destructive" className="bg-red-100 text-red-600">
-                      Featured
-                    </Badge>
-                  )}
-                  {job.jobType && (
-                    <Badge variant="secondary" className="bg-blue-100 text-blue-600">
-                      {job.jobType}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 text-gray-500 text-sm flex-wrap">
-                <div className="flex items-center gap-1">
-                  <MapPin size={16} />
-                  <span>{job.location}</span>
-                </div>
-                <div className="flex text-[#5E6670] items-center gap-1">
-                  <DollarSign size={16} />
-                  <span>
-                    ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar size={16} />
-                  <span>
-                    {job.expireDate
-                      ? `${Math.max(
-                          0,
-                          Math.ceil(
-                            (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
-                          ),
-                        )} Days Remaining`
-                      : "N/A"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+                {/* Desktop Layout */}
+                <div className="hidden lg:flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={job.logo || "/default-logo.png"}
+                      alt={job.jobRole}
+                      width={55}
+                      height={55}
+                      className="rounded-md"
+                    />
+                    <div>
+                      <div className="flex flex-row gap-3 items-center mb-2">
+                        <h3 className="font-semibold text-[#18191C] text-lg">{job.title}</h3>
+                        <div className="flex gap-2">
+                          {job.promotedSystem && (
+                            <Badge variant="destructive" className="bg-red-100 text-red-600">
+                              Featured
+                            </Badge>
+                          )}
+                          {job.jobType && (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-600">
+                              {job.jobType}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 text-gray-500 text-sm flex-wrap">
+                        <div className="flex items-center gap-1">
+                          <MapPin size={16} />
+                          <span>{job.location}</span>
+                        </div>
+                        <div className="flex text-[#5E6670] items-center gap-1">
+                          <DollarSign size={16} />
+                          <span>
+                            ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar size={16} />
+                          <span>
+                            {job.expireDate
+                              ? `${Math.max(
+                                0,
+                                Math.ceil(
+                                  (new Date(job.expireDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+                                ),
+                              )} Days Remaining`
+                              : "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-          <div className="flex items-center gap-4">
-            <BookMarkButton jobData={job} />
-            <Link href={`/find-job/${job._id}`}>
-              <button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-2 lg:px-4 py-1 font-semibold lg:py-2 rounded-sm">
-                Apply Now →
-              </button>
-            </Link>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+                  <div className="flex items-center gap-4">
+                    <BookMarkButton jobData={job} />
+                    <Link href={`/find-job/${job._id}`}>
+                      <button className="bg-[#D6E7FB] cursor-pointer hover:bg-[#084899] text-[#0A65CC] hover:text-white px-2 lg:px-4 py-1 font-semibold lg:py-2 rounded-sm">
+                        Apply Now →
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

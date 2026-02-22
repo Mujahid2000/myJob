@@ -17,21 +17,21 @@ interface UserId {
 }
 
 export async function generateMetadata(
-  { params }: {params: Promise<UserId>},
+  { params }: { params: Promise<UserId> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const id = (await params).id
- 
+
   // fetch post information
-  const post = await fetch(`https://job-server-1.onrender.com/jobs/getSingleCompanyData/${id}`).then((res) =>
+  const post = await fetch(`https://job-server-fqvf.onrender.com/jobs/getSingleCompanyData/${id}`).then((res) =>
     res.json()
   )
 
   console.log(post.data.companyName)
- 
+
   return {
     title: post.data.companyName,
-    description: ""+post.data.companyName+" - "+post.data.industryTypes+" Hiring For Various Position",
+    description: "" + post.data.companyName + " - " + post.data.industryTypes + " Hiring For Various Position",
   }
 }
 
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
   // Fetch company data
   let singleCompany = null;
   try {
-    const response = await fetch(`https://job-server-1.onrender.com/jobs/getSingleCompanyData/${resolveId.id}`, {
+    const response = await fetch(`https://job-server-fqvf.onrender.com/jobs/getSingleCompanyData/${resolveId.id}`, {
       cache: 'no-store',
     });
 
@@ -139,67 +139,67 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
       <div>
         {/* company header section */}
         <div
-  className="h-[312px] w-full flex items-center justify-center p-4 bg-cover bg-center"
-  style={{
-    backgroundImage: `url(${singleCompany?.banner || '/default-banner.jpg'})`,
-  }}
->
-  <div className="w-full max-w-full sm:max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto">
-    <Card className="w-full border-gray-200 bg-white rounded-lg shadow-sm mt-75 px-0">
-      <CardContent className="flex flex-col sm:flex-row items-center justify-between px-0 lg:px-6">
-        <div className="flex items-center gap-4">
-          <img
-            src={singleCompany?.logo || "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png"}
-            alt={singleCompany?.companyName || "company logo"}
-            
-            className="rounded-lg border-2 w-20 lg:w-24 h-20 lg:h-24 border-white"
-          />
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">{singleCompany?.companyName || "N/A"}</h2>
-            <p className="text-sm text-gray-500">{singleCompany?.industryTypes || "N/A"}</p>
-          </div>
-        </div>
-        <div className="flex items-center mt-4 sm:mt-0">
-          {/* <Button className="hover:bg-[#D6E7FB] hover:text-[#0A65CC] bg-[#084899] text-white px-6 py-6 rounded-sm transition-colors duration-200">
+          className="h-[312px] w-full flex items-center justify-center p-4 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${singleCompany?.banner || '/default-banner.jpg'})`,
+          }}
+        >
+          <div className="w-full max-w-full sm:max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto">
+            <Card className="w-full border-gray-200 bg-white rounded-lg shadow-sm mt-75 px-0">
+              <CardContent className="flex flex-col sm:flex-row items-center justify-between px-0 lg:px-6">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={singleCompany?.logo || "https://res.cloudinary.com/diez3alve/image/upload/v1740679929/Screenshot_2025-02-28_001041_u60rks.png"}
+                    alt={singleCompany?.companyName || "company logo"}
+
+                    className="rounded-lg border-2 w-20 lg:w-24 h-20 lg:h-24 border-white"
+                  />
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">{singleCompany?.companyName || "N/A"}</h2>
+                    <p className="text-sm text-gray-500">{singleCompany?.industryTypes || "N/A"}</p>
+                  </div>
+                </div>
+                <div className="flex items-center mt-4 sm:mt-0">
+                  {/* <Button className="hover:bg-[#D6E7FB] hover:text-[#0A65CC] bg-[#084899] text-white px-6 py-6 rounded-sm transition-colors duration-200">
             View Open Position →
           </Button> */}
-          <OpenPositionButton companyId={resolveId.id} companyindustry={singleCompany.industryTypes} logo={singleCompany.logo} companyname={singleCompany.companyName}/>
+                  <OpenPositionButton companyId={resolveId.id} companyindustry={singleCompany.industryTypes} logo={singleCompany.logo} companyname={singleCompany.companyName} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </CardContent>
-    </Card>
-  </div>
-</div>
-{/* end of company header section */}
+        {/* end of company header section */}
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-9 pb-5 pt-30 justify-between max-w-7xl mx-auto">
           <div className="max-w-[45.875rem]">
-            
+
             <div className="mb-6 px-3">
               <h2 className="py-4 text-xl text-[#18191C] px-3 lg:px-0 font-medium">About Company</h2>
               <SafeResponsibilities html={singleCompany?.biography || "<p>No benefits description available.</p>"} />
-              
+
             </div>
             <div className="mb-6 px-3">
               <CardTitle className="text-xl px-3 lg:px-0 text-[#18191C] font-medium">Company Vision</CardTitle>
               <SafeHtml html={singleCompany?.companyVision || "<p>No vision statement available.</p>"} />
-             
+
             </div>
             <div className="flex flex-col gap-3 lg:flex-row items-start lg:items-center space-x-2 px-4 lg:px-3 ">
               <span className="text-gray-700">Share this job:</span>
               <div className="flex gap-3">
-              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
-                <FaFacebook className="text-blue-600" />
-                <span>Facebook</span>
-              </Button>
-              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
-                <FaTwitter className="text-blue-400" />
-                <span>Twitter</span>
-              </Button>
-              <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
-                <FaPinterest className="text-red-600" />
-                <span>Pinterest</span>
-              </Button>
+                <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
+                  <FaFacebook className="text-blue-600" />
+                  <span>Facebook</span>
+                </Button>
+                <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
+                  <FaTwitter className="text-blue-400" />
+                  <span>Twitter</span>
+                </Button>
+                <Button variant="outline" className="flex items-center space-x-1 lg:space-x-2">
+                  <FaPinterest className="text-red-600" />
+                  <span>Pinterest</span>
+                </Button>
               </div>
-              
+
             </div>
           </div>
 
@@ -295,7 +295,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
         </div>
       </div>
       <SuggestJob />
-      <OpenJobPositionsModal companyId={resolveId.id}/>
+      <OpenJobPositionsModal companyId={resolveId.id} />
     </div>
   );
 }

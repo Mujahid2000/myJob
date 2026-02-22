@@ -25,9 +25,9 @@ import { useForm } from 'react-hook-form';
 import { Admin, useGetAdminMessagesQuery } from '@/RTKQuery/ChatMessage';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface ChatMessage extends Admin {}
+interface ChatMessage extends Admin { }
 
-const socket = io('https://job-server-1.onrender.com', {
+const socket = io('https://job-server-fqvf.onrender.com', {
   withCredentials: false,
   extraHeaders: { 'Content-Type': 'application/json' },
 });
@@ -145,7 +145,7 @@ export default function SupportPage() {
     setChatMessages((prev) => [...prev, newMessage]);
 
     try {
-      await fetch('https://job-server-1.onrender.com/liveNotification/customerMessage', {
+      await fetch('https://job-server-fqvf.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
         body: JSON.stringify(newMessage),
         headers: {
@@ -199,20 +199,20 @@ export default function SupportPage() {
         parseDate(a.dateWithTime).getTime() - parseDate(b.dateWithTime).getTime()
     );
   };
-// authentication logic for chat feature where if the user is not logged in, they cannot start a chat, and if the user is an admin, they cannot start a chat either.
+  // authentication logic for chat feature where if the user is not logged in, they cannot start a chat, and if the user is an admin, they cannot start a chat either.
   const handleChatOpen = () => {
     // if use not available then not open the chat box
-    if(!userid && !userEmail){
+    if (!userid && !userEmail) {
       toast.error('Please log in to start a chat.');
       return;
       // if user is admin then not open the chat box
-    } else if(currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
+    } else if (currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
       toast.error('Admin cannot start a chat.');
       setIsChatOpen(false);
       return;
     }
     // if user is logged in then open the chat box
-    setIsChatOpen(true);  
+    setIsChatOpen(true);
   }
 
   return (
@@ -372,23 +372,21 @@ export default function SupportPage() {
 
           <div className="space-y-4">
             {/* chat message show section */}
-             <ScrollArea className="h-[300px] md:h-[400px] p-4">
+            <ScrollArea className="h-[300px] md:h-[400px] p-4">
               <div className="flex flex-col gap-3">
                 {sortMessagesByTime(chatMessages)
                   .filter((msg) => msg.receiverId === userid || msg.senderId === userid)
                   .map((msg) => (
                     <div
                       key={msg._id}
-                      className={`flex ${
-                        msg.senderId === userid ? 'justify-end' : 'justify-start'
-                      }`}
+                      className={`flex ${msg.senderId === userid ? 'justify-end' : 'justify-start'
+                        }`}
                     >
                       <div
-                        className={`max-w-full text-wrap rounded-lg p-3 ${
-                          msg.senderId === userid
+                        className={`max-w-full text-wrap rounded-lg p-3 ${msg.senderId === userid
                             ? 'bg-blue-500 text-white'
                             : 'bg-gray-200 text-gray-900'
-                        }`}
+                          }`}
                       >
                         <p>{msg.message}</p>
                         <p className="text-xs opacity-70 mt-1 text-right">
