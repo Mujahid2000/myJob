@@ -38,7 +38,7 @@ export default function CompanyInfo() {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-  const id = userEmail?.user?._id;
+  const id = userEmail?.data?._id;
 
   const [updateCompanyInfo, { isLoading, error }] = useUpdateCompanyInfoMutation();
   const [logoFile, setLogoFile] = useState<File | null>(null);

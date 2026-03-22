@@ -26,8 +26,8 @@ const Modal: React.FC = () => {
       const authContext = useContext(AuthContext);
       const currentUser = authContext?.currentUser;
       const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-      const userId = userEmail?.user?._id || '';
-      const email = userEmail?.user?.email || '';
+      const userId = userEmail?.data?._id || '';
+      const email = userEmail?.data?.email || '';
       const [postAppliedJobs, {isLoading: applieLoading}] =usePostJobApplyDataMutation()
      
        const { data: resumes, isLoading: isResumesLoading, error: resumesError } = useGetResumesQuery(email, {

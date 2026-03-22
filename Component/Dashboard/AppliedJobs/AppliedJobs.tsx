@@ -13,7 +13,7 @@ const AppliedJobs: React.FC = () => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail, error: userEmailError, isLoading: isUserLoading } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
   const { data: candidateJObApplyData, error: jobApplyError, isLoading: isJobLoading } = useGetCandidateJObApplyDataQuery(userId);
   const jobData = candidateJObApplyData?.data;
 

@@ -27,8 +27,8 @@ const Personal: React.FC = () => {
   const { addToast } = useToast();
     const currentUser = authContext?.currentUser;
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-    const userId = userEmail?.user?._id;
-    const email = userEmail?.user?.email || ''; // Default to empty string if undefined
+    const userId = userEmail?.data?._id;
+    const email = userEmail?.data?.email || ''; // Default to empty string if undefined
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async data => {
     if (!userId) {

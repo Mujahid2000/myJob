@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 export interface AccountSetUpProfile {
   _id: string
@@ -26,9 +27,7 @@ export interface Social {
 
 export const AccountSetupApi = createApi({
   reducerPath: 'AccountSlice',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['accountSetup'],
   endpoints: (builder) => ({
     accountInfoGet: builder.query<AccountSetUpProfile, string>({

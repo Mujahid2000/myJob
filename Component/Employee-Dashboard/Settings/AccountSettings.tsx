@@ -23,7 +23,7 @@ const Settings: React.FC = () => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail, error: userEmailError, isLoading: isUserLoading } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
   const { data: contactData, isLoading: isContactLoading, error: contactError } = useGetCompanyContactsQuery(userId);
 
   // Form hooks for Contact Info and Password

@@ -14,7 +14,7 @@ import { ReactNode } from 'react';
 import { auth } from './firebase';
 import { usePostUserTokenMutation } from '@/RTKQuery/JWT';
 import { useDispatch } from 'react-redux';
-import { setJwtToken } from '@/Store/JwtToken';
+import { setJwtTokens, clearJwtTokens } from '@/Store/JwtToken';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -42,7 +42,7 @@ interface UserDetails {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<any | null>({name:"mujahid"});
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState('Personal');
   const [tabloading, setTabLoading] = useState(true);
@@ -52,14 +52,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   })
 const dispatch = useDispatch()
 
-  const [postJwt, {isLoading, isError, isSuccess}] =usePostUserTokenMutation()
+  const [postJwt] = usePostUserTokenMutation()
   async function signup(name: string, email: string, password: string): Promise<UserCredential> {
     try {
       if(email && password){
-        setUserDetail((prev) => ({
+        setUserDetail({
           email: email,
           password: password
-        }))
+        })
       }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
@@ -77,10 +77,10 @@ const dispatch = useDispatch()
     
     try {
       if(email && password){
-        setUserDetail((prev) => ({
+        setUserDetail({
           email: email,
           password: password
-        }))
+        })
       }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       return userCredential;
@@ -94,6 +94,7 @@ const dispatch = useDispatch()
     try {
       await signOut(auth);
       setCurrentUser(null);
+      dispatch(clearJwtTokens());
     } catch (error) {
       throw error;
     }
@@ -107,28 +108,28 @@ const dispatch = useDispatch()
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async(user: User | null) => {
       setCurrentUser(user);
-      if(user){
+      if(user && userDetail.email){
         try {
           const response = await postJwt(userDetail).unwrap();
-        if(response.token){
-          dispatch(setJwtToken(response.token))
-          // localStorage.setItem( 'Access_Token', response.token)
-        }else{
-          dispatch(setJwtToken(response.token))
+          if (response?.data?.accessToken && response?.data?.refreshToken) {
+            dispatch(setJwtTokens({
+              accessToken: response.data.accessToken,
+              refreshToken: response.data.refreshToken
+            }))
           }
         } catch (error) {
           console.error('JWT Error:', error);
-          localStorage.removeItem("Access_Token")
+          dispatch(clearJwtTokens());
         }
         
-      } else {
-        localStorage.removeItem("Access_Token")
+      } else if (!user) {
+        dispatch(clearJwtTokens());
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [userDetail, postJwt, dispatch]);
 
   const value: AuthContextType = {
     currentUser,

@@ -1,12 +1,13 @@
 // RTKQuery/foundingInfoSlice.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 interface FoundingInfoRequest {
   userId: string;
   organizationType: string;
   industryTypes: string;
   teamSize: string;
-  yearOfEstablishment: string;
+  yearEstablished: string;
   companyWebsite: string;
   companyVision: string;
 }
@@ -16,14 +17,14 @@ interface FoundingInfoResponse {
   organizationType: string;
   industryTypes: string;
   teamSize: string;
-  yearOfEstablishment: string;
+  yearEstablished: string;
   companyWebsite: string;
   companyVision: string;
 }
 
 export const foundingInfoApi = createApi({
-  reducerPath: 'foundingInfoApi', 
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+  reducerPath: 'foundingInfoApi',
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['FoundingInfo'],
   endpoints: (builder) => ({
     postFounderInfo: builder.mutation<FoundingInfoResponse, FoundingInfoRequest>({

@@ -21,7 +21,7 @@ const Success: React.FC = () => {
   const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '', {
     skip: !currentUser?.email,
   });
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
   const pathName = usePathname();
 
   // Fetch subscription data, skip if userId is undefined

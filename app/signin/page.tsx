@@ -9,7 +9,7 @@ import './signin.css'
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/Authentication/AuthContext";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useSingInMutation } from "@/RTKQuery/authSlice";
 import { useLazyGetNotificationsQuery } from "@/RTKQuery/NotificationApi";
 type Inputs = {
@@ -20,8 +20,9 @@ type Inputs = {
 export default function Page() {
   const { register, handleSubmit } = useForm<Inputs>();
   const [showPassword, setShowpassword] = useState(false);
+  const [role, setRole] = useState('');
   const authContext = useContext(AuthContext);
-
+  const router = useRouter();
   const [singIn, { isLoading: signInLoading }] = useSingInMutation()
   const [triggerNotification] = useLazyGetNotificationsQuery();
   if (!authContext) {
@@ -35,8 +36,14 @@ export default function Page() {
     const singInResponse = await singIn(data).unwrap();
     const singins = await login(data.email, data.password);
     if (singInResponse && singins) {
-      triggerNotification(singInResponse.user._id);
-      redirect('/');
+      setRole(singInResponse.data.user.role);
+      triggerNotification(singInResponse.data.user._id);
+      if (singInResponse.data.user.role === 'Admin') {
+        console.log(singInResponse.data.user.role)
+        router.push('/admin-dashboard');
+      } else {
+        redirect('/');
+      }
     } else {
       console.error("Sign in failed");
     }
@@ -44,7 +51,11 @@ export default function Page() {
 
   useEffect(() => {
     if (currentUser && currentUser.email) {
-      redirect('/');
+      if (currentUser.email && role === 'Admin') {
+        router.push('/admin-dashboard');
+      } else {
+        redirect('/');
+      }
     }
   }, [currentUser]);
 
@@ -77,7 +88,7 @@ export default function Page() {
                 <Checkbox id="remember" required />
                 <label htmlFor="remember">Remember Me</label>
               </div>
-              <a href="#" className="text-[#0A65CC]">Forgot password?</a>
+              <Link href="/forgot-password" title="Forgot password"  className="text-[#0A65CC]">Forgot password?</Link>
             </div>
 
             {

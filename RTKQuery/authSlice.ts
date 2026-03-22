@@ -1,6 +1,7 @@
 import { stat } from 'fs';
 // RTKQuery/apiSlice.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 interface User {
   id: string;
@@ -10,18 +11,18 @@ interface User {
   phoneNumber: number
 }
 interface getUserByIdRequest {
-  message: string,
-  user: {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
     _id: string;
-  name: string;
-  email: string;
-  password: string;
-  number: Number;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
-  }
-  
+    name: string;
+    email: string;
+    role: string;
+    phoneNumber?: number;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 interface SignupRequest {
   name: string;
@@ -37,8 +38,14 @@ interface SinginRequest {
 }
 
 export interface SignInResponse {
-  message: string
-  user: SignInUser
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    user: SignInUser;
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 export interface SignInUser {
@@ -75,9 +82,7 @@ export interface AllUser {
 
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['User'],
   endpoints: (builder) => ({
     signup: builder.mutation<SignupResponse, SignupRequest>({
@@ -104,7 +109,21 @@ export const authApiSlice = createApi({
       query: () => '/user/users',
       providesTags: ['User'],
     }),
+    forgotPassword: builder.mutation<void, { email: string }>({
+      query: (body) => ({
+        url: '/user/forgot-password',
+        method: 'POST',
+        body,
+      }),
+    }),
+    resetPassword: builder.mutation<void, { token: string; password: any }>({
+      query: (body) => ({
+        url: '/user/reset-password',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useSignupMutation, useGetUserByIdQuery,useSingInMutation, useGetUserQuery } = authApiSlice;
+export const { useSignupMutation, useGetUserByIdQuery, useSingInMutation, useGetUserQuery, useForgotPasswordMutation, useResetPasswordMutation } = authApiSlice;

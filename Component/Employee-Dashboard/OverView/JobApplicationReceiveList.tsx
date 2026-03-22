@@ -33,7 +33,7 @@ const JobApplicationReceiveList: React.FC = () => {
   const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', {
     skip: !currentUser?.email,
   });
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
   console.log(userId)
   const { data: jobsData, isLoading: jobsLoading } = useGetJobPostDataQuery(userId);
 const jobDatas = jobsData?.jobs || []

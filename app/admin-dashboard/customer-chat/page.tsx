@@ -30,9 +30,9 @@ export default function CustomerChatPage() {
     skip: !currentUser?.email,
   });
 
-  const company_Name = userEmail?.user.name;
-  const userid = userEmail?.user?._id || '';
-  const email = userEmail?.user?.email || '';
+  const company_Name = userEmail?.data.name;
+  const userid = userEmail?.data?._id || '';
+  const email = userEmail?.data?.email || '';
   const roomId = socket.id || '';
   const [selectedUser, setSelectedUser] = useState<Customer | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);

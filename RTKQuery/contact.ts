@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from './baseQuery';
 
 interface ContactData {
     _id: string;
@@ -22,7 +23,7 @@ interface ContactFormData {
 
 export const contact = createApi({
     reducerPath: "contactApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ["contact"],
     endpoints: (builder) => ({
         postContactInfo: builder.mutation<ContactResponse, ContactFormData>({

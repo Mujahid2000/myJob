@@ -5,7 +5,7 @@ interface FoundingInfoState {
   organizationType: string;
   industryTypes: string;
   teamSize: string;
-  yearOfEstablishment: string;
+  yearEstablished: string;
   companyWebsite: string;
   companyVision: string;
 }
@@ -14,7 +14,7 @@ const initialState: FoundingInfoState = {
   organizationType: '',
   industryTypes: '',
   teamSize: '',
-  yearOfEstablishment: '',
+  yearEstablished: '',
   companyWebsite: '',
   companyVision: '',
 };
@@ -32,8 +32,8 @@ const foundingInfoSlice = createSlice({
     setTeamSize: (state, action: PayloadAction<string>) => {
       state.teamSize = action.payload;
     },
-    setYearOfEstablishment: (state, action: PayloadAction<string>) => {
-      state.yearOfEstablishment = action.payload;
+    setyearEstablished: (state, action: PayloadAction<string>) => {
+      state.yearEstablished = action.payload;
     },
     setCompanyWebsite: (state, action: PayloadAction<string>) => {
       state.companyWebsite = action.payload;
@@ -45,7 +45,7 @@ const foundingInfoSlice = createSlice({
       state.organizationType = '';
       state.industryTypes = '';
       state.teamSize = '';
-      state.yearOfEstablishment = '';
+      state.yearEstablished = '';
       state.companyWebsite = '';
       state.companyVision = '';
     },
@@ -56,7 +56,7 @@ export const {
   setOrganizationType,
   setIndustryTypes,
   setTeamSize,
-  setYearOfEstablishment,
+  setyearEstablished,
   setCompanyWebsite,
   setCompanyVision,
   resetForm,

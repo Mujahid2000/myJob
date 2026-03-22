@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 export interface TagsApiResponse {
   success: boolean
@@ -16,9 +17,7 @@ export interface Daum {
 
 export const TagsApi = createApi({
     reducerPath: 'tagsName',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['Tags'],
     endpoints:(builder)=>({
         getAllTags:builder.query<TagsApiResponse, void>({

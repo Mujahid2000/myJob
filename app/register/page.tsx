@@ -106,6 +106,8 @@ export default function SignUpPage() {
         router.push('/account-setup');
       } else if (role === 'Applicant') {
         router.push('/');
+      } else {
+        router.push('/admin-dashboard');
       }
     } catch (error: any) {
       setFormError({
@@ -259,7 +261,7 @@ export default function SignUpPage() {
               <Checkbox id="remember" required/>
               <label htmlFor="remember">Remember Me</label>
             </div>
-            <a href="#" className="text-[#0A65CC]">Forgot password?</a>
+            <Link href="/forgot-password" title="Forgot password"  className="text-[#0A65CC]">Forgot password?</Link>
           </div>
           {
             loading || isSigningUp ? 

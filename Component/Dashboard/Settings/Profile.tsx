@@ -35,8 +35,8 @@ const Profile = () => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-  const userId = userEmail?.user?._id;
-  const email = userEmail?.user?.email || ''; // Default to empty string if undefined
+  const userId = userEmail?.data?._id;
+  const email = userEmail?.data?.email || ''; // Default to empty string if undefined
 
   const { data: resumes, isLoading: isResumesLoading, error: resumesError } = useGetResumesQuery(email, {
     skip: !email, // Skip query if email is undefined

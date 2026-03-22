@@ -83,7 +83,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
   }
 
   // Format date
-  const yearOfEstablishment = singleCompany.yearEstablished?.split('T')?.[0] || "N/A";
+  const yearEstablished = singleCompany.yearEstablished?.split('T')?.[0] || "N/A";
 
   function formatDateToOrdinal(dateString: string) {
     if (!dateString || dateString === "N/A") return "N/A";
@@ -107,7 +107,7 @@ export default async function Page({ params }: { params: Promise<UserId> }) {
     return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
   }
 
-  const formattedDate = formatDateToOrdinal(yearOfEstablishment);
+  const formattedDate = formatDateToOrdinal(yearEstablished);
 
   return (
     <div className="pt-33">

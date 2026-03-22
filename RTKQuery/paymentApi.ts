@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 
 interface orderApiResponse {
@@ -26,9 +27,7 @@ interface captureOrderData {
 
 export const paymentApi = createApi({
     reducerPath: 'paymentApi',
-    baseQuery: fetchBaseQuery({
-      baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL_PAYMENT
-    }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) =>({
         createOrder: builder.mutation<orderApiResponse ,orderData >({
             query: ({price, userId, packageName, duration}) =>({

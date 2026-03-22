@@ -72,7 +72,7 @@ const page: React.FC = () => {
   const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-    const id = userEmail?.user?._id || '';
+    const id = userEmail?.data?._id || '';
     const {data:modalData, isLoading:paymentCheckLoading} =useGetSubscriptionDataByUserIdQuery(id || '',{
         skip: !id
       })

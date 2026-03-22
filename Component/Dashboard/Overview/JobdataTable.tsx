@@ -32,7 +32,7 @@ const JobTable: React.FC = () => {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
   const {data:candidateJObApplyData} = useGetCandidateJObApplyDataQuery(userId)
   const jobData = candidateJObApplyData?.data
   const {data:profileMessage} = useGetProfileCompleteMessageQuery(userId);

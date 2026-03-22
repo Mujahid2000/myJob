@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface NotificationRequest {
   userId: string;
@@ -50,9 +51,7 @@ interface passwordDataResponse {
 
 export const notificationApi = createApi({
   reducerPath: 'notification',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['notificationApi'],
   endpoints: (builder) => ({
     updateUserNotification: builder.mutation<NotificationResponse, NotificationRequest>({

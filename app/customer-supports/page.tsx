@@ -39,11 +39,11 @@ export default function SupportPage() {
     skip: !currentUser?.email,
   });
 
-  const company_Name = userEmail?.user.name;
-  const userid = userEmail?.user?._id || '';
-  const email = userEmail?.user?.email || '';
+  const company_Name = userEmail?.data.name;
+  const userid = userEmail?.data?._id || '';
+  const email = userEmail?.data?.email || '';
   const roomId = socket.id || '';
-  const name = userEmail?.user.name || '';
+  const name = userEmail?.data.name || '';
   const msgParams = {
     userid: userid,
     adminId: '6825e7123d8cff36ca7afe9b',
@@ -206,7 +206,7 @@ export default function SupportPage() {
       toast.error('Please log in to start a chat.');
       return;
       // if user is admin then not open the chat box
-    } else if (currentUser?.email === "admin1@gmail.com" || userEmail?.user.role === "Admin") {
+    } else if (currentUser?.email === "admin1@gmail.com" || userEmail?.data.role === "Admin") {
       toast.error('Admin cannot start a chat.');
       setIsChatOpen(false);
       return;

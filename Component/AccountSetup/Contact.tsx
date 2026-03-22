@@ -29,7 +29,7 @@ export default function Contact() {
       skip: !currentUser?.email,
     }
   );
-  const userId = userEmail?.user?._id;
+  const userId = userEmail?.data?._id;
 
 
   const [mapLocation, setMapLocation] = useState<string>('');

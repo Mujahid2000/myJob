@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 export interface PostJobRequest {
   userId: string;
@@ -86,9 +87,7 @@ export interface GetCompanyDataResponse {
 
 export const JobPostApi = createApi({
     reducerPath: 'jobpostapi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['jobPost'],
     endpoints: (builder) => ({
         getCompanyData: builder.query<GetCompanyDataResponse, string>({
@@ -100,11 +99,9 @@ export const JobPostApi = createApi({
     method: 'POST',
     body: formData,
   }),
-  transformResponse: (response: PostJobResponse, meta, arg): PostJobResponse => response,
+  transformResponse: (response: PostJobResponse) => response,
   transformErrorResponse: (
-    response: { status: string | number },
-    meta,
-    arg,
+    response: { status: string | number }
   ) => response.status,
   invalidatesTags: ['jobPost'],
 }),

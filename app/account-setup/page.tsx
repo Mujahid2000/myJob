@@ -51,8 +51,8 @@ const AccountSetupPage: React.FC<AccountSetupPageProps> = () => {
     currentUser?.email || '',
     { skip: !currentUser?.email }
   );
-  const role = userEmail?.user.role
-  const userId = userEmail?.user?._id || '';
+  const role = userEmail?.data.role
+  const userId = userEmail?.data?._id || '';
   const { data: setUpProfileData, isLoading: isProfileLoading } = useAccountInfoGetQuery(userId, {
     skip: !userId,
   });

@@ -24,7 +24,7 @@ const DashboardClientLayoutCompany: React.FC<{ children: ReactNode }> = ({ child
     const logOut: (() => Promise<void>) | undefined = authContext?.logout;
     const loadingUser = authContext?.loading
     const { data: userEmail, isLoading , isSuccess, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-    const role = userEmail?.user.role
+    const role = userEmail?.data?.role
 const handleLogout = async () => {
   try {
     if (logOut) {
@@ -40,18 +40,18 @@ const handleLogout = async () => {
 };
 
 useEffect(() =>{
-  if(!currentUser){
+  if(!loadingUser && !currentUser){
     redirect('/signin')
   } 
 
-},[currentUser, role, redirect])
+},[currentUser, loadingUser, redirect])
 
 
 useEffect(() =>{
-  if(isSuccess && role !== 'Company'){
+  if(!isLoading && isSuccess && role !== 'Company'){
     redirect('/')
   }
-},[currentUser, role, redirect])
+},[currentUser, role, isSuccess, isLoading, redirect])
 
 if(loadingUser && isLoading){
   return (

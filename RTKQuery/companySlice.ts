@@ -1,5 +1,6 @@
 // app/apiSlice.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 interface CompanyInfoRequest {
   logo: File | null;
@@ -106,9 +107,7 @@ export interface SpecificJobsData {
 
 export const companyApiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL, // Replace with your API base URL
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Company'],
   endpoints: (builder) => ({
     updateCompanyInfo: builder.mutation<CompanyInfoResponse, FormData>({

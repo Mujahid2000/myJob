@@ -84,8 +84,8 @@ const ApplicationDetails = ({ jobId }: { jobId: string }) => {
     currentUser?.email || '',
     { skip: !currentUser?.email }
   );
-  const userId = userEmail?.user?._id || '';
-  const email = userEmail?.user?.email || '';
+  const userId = userEmail?.data?._id || '';
+  const email = userEmail?.data?.email || '';
   const { data: jobApplicantsList, isLoading: applicantsLoading, isError: applicantsError } =
     useGetJobPostApplicantListByJobIdQuery(jobId);
   const allApplicants = jobApplicantsList?.data || [];

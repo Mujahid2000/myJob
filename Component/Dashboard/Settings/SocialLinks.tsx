@@ -45,7 +45,7 @@ const SocialLinks: React.FC = () => {
   const { data: userEmail } = useGetUserByIdQuery(authContext?.currentUser?.email || '', {
     skip: !authContext?.currentUser?.email,
   });
-  const userId = userEmail?.user?._id;
+  const userId = userEmail?.data?._id;
 
   const defaultValues = useMemo(
     () =>

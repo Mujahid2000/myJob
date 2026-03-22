@@ -13,7 +13,7 @@ import {
   setIndustryTypes,
   setOrganizationType,
   setTeamSize,
-  setYearOfEstablishment,
+  setyearEstablished,
 } from "@/Store/foundingInfoSlice";
 import { RootState } from "@/Store/Store";
 import { useContext, useEffect, useState } from "react";
@@ -29,7 +29,7 @@ interface Inputs {
   organizationType: string;
   industryTypes: string;
   teamSize: string;
-  yearOfEstablishment: string;
+  yearEstablished: string;
   companyWebsite: string;
   companyVision: string;
 }
@@ -40,7 +40,7 @@ export default function FoundingInfo() {
     organizationType,
     industryTypes,
     teamSize,
-    yearOfEstablishment,
+    yearEstablished,
     companyWebsite,
     companyVision,
   } = useSelector((state: RootState) => state.foundingInfo);
@@ -50,7 +50,7 @@ export default function FoundingInfo() {
   const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '', {
     skip: !currentUser?.email,
   });
-  const userId = userEmail?.user?._id;
+  const userId = userEmail?.data?._id;
 
   const [postFounderInfo, { isLoading, error }] = usePostFounderInfoMutation();
 
@@ -64,7 +64,7 @@ export default function FoundingInfo() {
       organizationType,
       industryTypes,
       teamSize,
-      yearOfEstablishment,
+      yearEstablished,
       companyWebsite,
       companyVision,
     },
@@ -87,7 +87,7 @@ export default function FoundingInfo() {
       dispatch(setOrganizationType(data.organizationType));
       dispatch(setIndustryTypes(data.industryTypes));
       dispatch(setTeamSize(data.teamSize));
-      dispatch(setYearOfEstablishment(data.yearOfEstablishment));
+      dispatch(setyearEstablished(data.yearEstablished));
       dispatch(setCompanyWebsite(data.companyWebsite));
       dispatch(setCompanyVision(data.companyVision));
 
@@ -100,7 +100,7 @@ export default function FoundingInfo() {
       dispatch(setRenderState('Social Media Profile'));
     } catch (err) {
       console.error('Failed to update founding info:', err);
-      alert('Failed to update founding info!');
+      // alert('Failed to update founding info!');
     }
   };
 
@@ -168,7 +168,7 @@ export default function FoundingInfo() {
           <label className="block text-sm font-medium text-gray-700">Year of Establishment</label>
           <input
             type="date"
-            {...register('yearOfEstablishment', {
+            {...register('yearEstablished', {
               required: 'Year of Establishment is required',
               validate: (value) => {
                 const selectedDate = new Date(value);
@@ -180,8 +180,8 @@ export default function FoundingInfo() {
             min="1900-01-01"
             max={new Date().toISOString().split('T')[0]}
           />
-          {errors.yearOfEstablishment && (
-            <p className="text-red-500 text-sm mt-1">{errors.yearOfEstablishment.message}</p>
+          {errors.yearEstablished && (
+            <p className="text-red-500 text-sm mt-1">{errors.yearEstablished.message}</p>
           )}
         </div>
         <div>

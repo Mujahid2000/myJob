@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface paymentsDataByUserId {
     id : string;
@@ -16,7 +17,7 @@ interface paymentsDataByUserId {
 
 export const SubscriptionDataByUserId = createApi({
     reducerPath: 'subscriptionApi',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['SubscriptionDataByUserId'],
     endpoints: builder =>({
         getSubscriptionDataByUserId: builder.query<paymentsDataByUserId[], string>({

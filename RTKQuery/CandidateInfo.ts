@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface personalData {
     country: string,
@@ -62,9 +63,7 @@ export interface Social {
 
 export const CandidatePersonalData = createApi({
     reducerPath: 'candidateApi',
-    baseQuery: fetchBaseQuery({ 
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL 
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['candidate'],
     endpoints: builder =>({
         postCandidatePersonalData : builder.mutation<personalDataResponse['data'], personalData>({
@@ -73,14 +72,14 @@ export const CandidatePersonalData = createApi({
                 method: 'POST',
                 body: formData
             }),
-            transformResponse: (response) => (response as personalDataResponse).data
+            transformResponse: (response: unknown) => (response as personalDataResponse).data
         }),
         getProfileCompleteMessage: builder.query<ProfileMessage, string>({
             query: (userId) => ({
                 url: `/applicantData/profileComplete/${userId}`,
                 method: 'GET'
             }),
-            transformResponse: (response) => (response as ProfileMessage)
+            transformResponse: (response: unknown) => (response as ProfileMessage)
         })
     })
 })

@@ -16,7 +16,8 @@ const ResponsiveDashboard: React.FC<{ children: ReactNode }> = ({ children }) =>
     const logOut: (() => Promise<void>) | undefined = authContext?.logout;
     const loadingUser = authContext?.loading
     const { data: userEmail,isLoading, isSuccess, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-    const role = userEmail?.user.role
+    const role = userEmail?.data?.role
+    const userId = userEmail?.data?._id || '';
 const handleLogout = async () => {
   try {
     if (logOut) {
@@ -32,16 +33,16 @@ const handleLogout = async () => {
 };
 
 useEffect(() =>{
-  if(!currentUser){
+  if(!loadingUser && !currentUser){
     redirect('/signin')
   } 
-},[currentUser, router])
+},[currentUser, loadingUser, router])
 
 useEffect(() =>{
-  if(isSuccess && role !== 'Applicant'){
+  if(!isLoading && isSuccess && role !== 'Applicant'){
     redirect('/')
   }
-},[currentUser, role, redirect])
+},[currentUser, role, isSuccess, isLoading, redirect])
 
 if(loadingUser && isLoading){
   return (

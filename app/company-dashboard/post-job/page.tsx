@@ -53,7 +53,7 @@ const PostAJob: React.FC = () => {
   const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '', {
     skip: !currentUser?.email,
   });
-  const id = userEmail?.user?._id;
+  const id = userEmail?.data?._id;
   const { data: companyData, isLoading: isCompanyDataLoading } = useGetCompanyDataQuery(id || '', {
     skip: !id,
   });
@@ -71,7 +71,7 @@ const PostAJob: React.FC = () => {
   
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (userEmail?.user?.role !== 'Company' || !id || !companyId || !location) {
+    if (userEmail?.data?.role !== 'Company' || !id || !companyId || !location) {
       // console.log('User role is not Company or missing ID/companyId/location');
       alert('User is not authorized or missing required data.');
       return;

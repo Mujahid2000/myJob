@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 
 export interface CustomerProfile {
@@ -41,7 +42,7 @@ export interface Admin {
 
 export const chatApi = createApi({
     reducerPath: 'chatApi',
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getMessages: builder.query<CustomerProfile, string>({
             query: (userid) => ({

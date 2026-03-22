@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface PostJobApiResponse {
     title: string;
@@ -40,9 +41,7 @@ interface PostJobRequest {
 
 export const postJobApi = createApi({
     reducerPath: "postJob",
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    }),
+    baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         postJob: builder.mutation<PostJobApiResponse, PostJobRequest>({
             query: (jobData) => ({

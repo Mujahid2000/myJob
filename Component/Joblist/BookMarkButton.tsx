@@ -43,7 +43,7 @@ const BookMarkButton = ({ jobData }: { jobData: JobData }) => {
   } = useGetUserByIdQuery(currentUser?.email || "", {
     skip: !currentUser?.email,
   });
-  const usersEmail = userEmail?.user?.email || "";
+  const usersEmail = userEmail?.data?.email || "";
   const [isLoading, setIsLoading] = useState(false);
   const [postBookMark] = useBookMarkDataPostMutation();
   const handleOnclick = async (data: JobData) => {

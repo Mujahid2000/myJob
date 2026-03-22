@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface postJobAppliedDataRequest{
     userId: string,
@@ -117,9 +118,7 @@ export interface Daum {
 
 export const jobApply = createApi({
     reducerPath: 'jobApply',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['jobSlice'],
     endpoints: (builder) =>({
        postJobApplyData: builder.mutation<postJobAppliedDataResponse, postJobAppliedDataRequest>({

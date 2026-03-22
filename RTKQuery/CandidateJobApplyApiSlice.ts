@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 export interface candidateApply {
   success: boolean
@@ -41,9 +42,7 @@ export interface Favortite {
 
 export const candidateJObApplyData = createApi({
     reducerPath: 'candidateJobApply',
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL
-    }),
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['candidateJob'],
     endpoints: (builder) =>({
         getCandidateJObApplyData: builder.query<candidateApply, string>({

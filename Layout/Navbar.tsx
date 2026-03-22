@@ -79,8 +79,8 @@ export default function Navbar() {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userData } = useGetUserByIdQuery(currentUser?.email || '');
-  const role = userData?.user?.role;
-  const userId = userData?.user?._id || '';
+  const role = userData?.data?.role;
+  const userId = userData?.data?._id || '';
   const logOut = authContext?.logout;
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -88,7 +88,7 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [triggerNotification, { data: notificationData }] = useLazyGetNotificationsQuery();
   const notData = notificationData?.data;
-
+  console.log(role)
   // Combine notifications
   const sumArray = [...notifications, ...newNotification];
 

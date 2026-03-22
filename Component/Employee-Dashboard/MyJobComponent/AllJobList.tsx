@@ -40,8 +40,8 @@ const AllJobList: React.FC = () => {
     currentUser?.email || '',
     { skip: !currentUser?.email }
   );
-  const userId = userEmail?.user?._id || '';
-  const email = userEmail?.user?.email || '';
+  const userId = userEmail?.data?._id || '';
+  const email = userEmail?.data?.email || '';
 
   // Handle job data fetching
   const { data: jobsData, error: jobsError, isLoading: jobsLoading } = useGetJobPostDataQuery(userId);

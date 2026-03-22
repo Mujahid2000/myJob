@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "./baseQuery";
 
 interface bookmarkTypesRequest {
     userId: string,
@@ -33,11 +33,11 @@ interface BookmarkResponse {
 }
 export const bookMarkApiSlice = createApi({
   reducerPath: 'bookmark',
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['bookMarkApi'],
   endpoints: builder => ({
     bookMarkDataPost: builder.mutation<bookmarkTypesResponse, bookmarkTypesRequest>({
-      query: data => ({
+      query: (data) => ({
         url: '/jobs/bookMarkPost',
         method: 'POST',
         body: data

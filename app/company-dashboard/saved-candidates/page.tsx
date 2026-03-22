@@ -37,7 +37,7 @@ const Page: React.FC = () => {
     { skip: !currentUser?.email }
   );
 
-  const userId = userEmail?.user?._id || '';
+  const userId = userEmail?.data?._id || '';
 
   const {
     data: saveCandidate,

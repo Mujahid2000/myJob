@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { secureUrl } from './JwtHeader';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQuery';
 
 export interface NotificationResponse {
   message: string
@@ -22,7 +22,7 @@ export interface Notification {
 //notification data get
 export const notificationApiSlice = createApi({
   reducerPath: 'notificationApi',
-  baseQuery: secureUrl,
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getNotifications: builder.query<NotificationResponse, string>({
       query: (userId) => ({

@@ -15,8 +15,8 @@ const ApplicantShortlistDetailsModal = ({ newopen, setnewopen, userId, resume_Id
     const authContext = useContext(AuthContext);
     const currentUser = authContext?.currentUser;
     const { data: userEmail, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
-    const currentUserid = userEmail?.user?._id || '';
-    const email = userEmail?.user?.email || '';
+    const currentUserid = userEmail?.data?._id || '';
+    const email = userEmail?.data?.email || '';
     const applicantDetailsData = {userId, resumeId: resume_Id};
     const [sendShortList, {isLoading: shortLoading}]= usePostShortListedDataMutation()
 
