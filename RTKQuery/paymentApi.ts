@@ -31,18 +31,19 @@ export const paymentApi = createApi({
     endpoints: (builder) =>({
         createOrder: builder.mutation<orderApiResponse ,orderData >({
             query: ({price, userId, packageName, duration}) =>({
-                url: '/create-order',
+                url: '/api/paypal/create-order',
                 method: 'POST',
-                body: {price, userId, packageName, duration}
+                body: {price: Number(price), userId, packageName, duration}
             }),
+            transformResponse: (response: { data: orderApiResponse }) => response.data,
         }),
-        captureOrder: builder.mutation<orderApiResponse,captureOrderData>({
+        captureOrder: builder.mutation<any, captureOrderData>({
             query: ({orderID, userId, packageName, duration, price}) =>({
-                url:'/capture-order',
+                url:'/api/paypal/capture-order',
                 method: 'POST',
-                body: {orderID, userId, packageName, duration, price}
-
-            })
+                body: {orderID, userId, packageName, duration, price: Number(price)}
+            }),
+            transformResponse: (response: { data: any }) => response.data,
         }) 
     })
 })

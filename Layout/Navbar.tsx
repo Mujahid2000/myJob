@@ -88,7 +88,7 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [triggerNotification, { data: notificationData }] = useLazyGetNotificationsQuery();
   const notData = notificationData?.data;
-  console.log(role)
+  // console.log(role)
   // Combine notifications
   const sumArray = [...notifications, ...newNotification];
 

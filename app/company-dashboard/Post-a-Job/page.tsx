@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { ArrowRight, Check, MoveRight } from 'lucide-react';
+import { AlertCircle, ArrowRight, Check, MoveRight } from 'lucide-react';
 import CheckoutModal from '@/Component/Employee-Dashboard/postajob/CheckoutModal';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -70,13 +70,13 @@ const page: React.FC = () => {
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const authContext = useContext(AuthContext);
-    const currentUser = authContext?.currentUser;
-    const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
-    const id = userEmail?.data?._id || '';
-    const {data:modalData, isLoading:paymentCheckLoading} =useGetSubscriptionDataByUserIdQuery(id || '',{
-        skip: !id
-      })
-    
+  const currentUser = authContext?.currentUser;
+  const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
+  const id = userEmail?.data?._id || '';
+  const {data:modalData, isLoading:paymentCheckLoading, isError:paymentCheckError} =useGetSubscriptionDataByUserIdQuery(id || '',{
+      skip: !id
+    })
+  
     useEffect(() => {
         if (!paymentCheckLoading && modalData) {
           // Redirect to a different route, e.g., a subscription page, instead of the same route
@@ -95,11 +95,28 @@ const page: React.FC = () => {
         );
       }
     
-      // If paymentCheckLoading is false and modalData exists, render the form
-      // If modalData is undefined, the useEffect will handle the redirect
-      if (!modalData) {
-        return null; // Prevent rendering the form until redirect happens
+      // Render error state if API fails
+      if (paymentCheckError) {
+        return (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 text-center px-4">
+            <div className="text-red-500 bg-red-50 p-4 rounded-full">
+              <AlertCircle className="w-12 h-12" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Subscription check failed</h2>
+            <p className="text-gray-600 max-w-md">
+              We couldn't verify your subscription status. You can still browse our plans below or refresh the page to try again.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-[#0A65CC] text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        );
       }
+
+      
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen);
     }

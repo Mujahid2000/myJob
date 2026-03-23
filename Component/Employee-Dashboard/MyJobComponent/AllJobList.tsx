@@ -24,7 +24,7 @@ interface Job {
   maxSalary: number;
   jobType: string;
   location: string;
-  logo: string;
+  logo?: string;
   applicationCount: number;
   status: string;
 }
@@ -45,7 +45,7 @@ const AllJobList: React.FC = () => {
 
   // Handle job data fetching
   const { data: jobsData, error: jobsError, isLoading: jobsLoading } = useGetJobPostDataQuery(userId);
-
+  console.log(jobsData)
   // Handle 3-dot menu toggle
   const handle3Dot = (id: string) => {
     setOpenModalId((prevId) => (prevId === id ? null : id));
@@ -66,14 +66,14 @@ const AllJobList: React.FC = () => {
   }
 
   // Check if jobsData is valid
-  if (!jobsData || !Array.isArray(jobsData.jobs)) {
+  if (!jobsData || !Array.isArray(jobsData.data)) {
     return <div className="text-center text-gray-600">No jobs available</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-sm lg:text-lg font-semibold">My Jobs ({jobsData.jobs.length})</h2>
+        <h2 className="text-sm lg:text-lg font-semibold">My Jobs ({jobsData.data.length})</h2>
         <div className="flex items-center gap-5">
           <p className='text-sm lg:text-base'>Job status</p>
           <Select>
@@ -101,14 +101,14 @@ const AllJobList: React.FC = () => {
         )}
 
         {/* Empty State */}
-        {!jobsLoading && (!jobsData?.jobs || jobsData.jobs.length === 0) && (
+        {!jobsLoading && (!jobsData?.data || jobsData.data.length === 0) && (
           <div className="text-center p-4 text-sm sm:text-base text-gray-600 bg-white rounded-lg shadow-md">
             No jobs posted yet.
           </div>
         )}
 
         {/* Table */}
-        {!jobsLoading && jobsData.jobs?.length > 0 && (
+        {!jobsLoading && jobsData.data?.length > 0 && (
           <Card className="p-0">
             <CardContent className="p-0">
               <div className="bg-white shadow-md rounded-lg overflow-x-auto">
@@ -122,7 +122,7 @@ const AllJobList: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {jobsData.jobs.map((job: Job) => (
+                    {jobsData.data.map((job: Job) => (
                       <tr
                         key={job._id}
                         className="border-b border-gray-200 hover:bg-gray-50"

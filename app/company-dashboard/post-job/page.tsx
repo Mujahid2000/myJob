@@ -54,12 +54,13 @@ const PostAJob: React.FC = () => {
     skip: !currentUser?.email,
   });
   const id = userEmail?.data?._id;
+  
   const { data: companyData, isLoading: isCompanyDataLoading } = useGetCompanyDataQuery(id || '', {
     skip: !id,
   });
   const [promotedJobs, { isLoading: isPromotedLoading }] = useJobPostPromotedMutation();
-  const companyId = companyData?._id;
-  const location = companyData?.mapLocation;
+  const companyId = companyData?.data?._id;
+  const location = companyData?.data?.mapLocation;
   const [postData, { isLoading: isPostJobLoading }] = usePostAJobMutation();
   const [filteredTags, setFilteredTags] = useState<tagsType[]>([]);
   const { data: tagsList } = useGetAllTagsQuery();

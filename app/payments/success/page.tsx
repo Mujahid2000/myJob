@@ -25,10 +25,10 @@ const Success: React.FC = () => {
   const pathName = usePathname();
 
   // Fetch subscription data, skip if userId is undefined
-  const { data: subscriptionData, isLoading, error: subscriptionError } = useGetSubscriptionDataByUserIdQuery(userId, {
+  const { data: subscriptionData, isLoading:subscriptionLoading, error: subscriptionError } = useGetSubscriptionDataByUserIdQuery(userId, {
     skip: !userId,
   });
-console.log(subscriptionData)
+
   useEffect(() => {
     if (pathName === '/company-dashboard/Post-a-Job/success') {
       dispatch(setDisableSideBar({ isDisabled: true }));
@@ -36,15 +36,15 @@ console.log(subscriptionData)
   }, [pathName, dispatch]);
 
   // Get the latest subscription record (last index after sorting by createdAt)
-  const latestSubscription = subscriptionData && subscriptionData?.length > 0
-    ? [...subscriptionData].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+  const latestSubscription = subscriptionData && subscriptionData?.data?.length > 0
+    ? [...subscriptionData.data].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
     : null;
 
   // Fallback payment details if subscriptionData is unavailable
   const paymentDetails = latestSubscription;
 
   // Handle loading state
-  if (isLoading) {
+  if (subscriptionLoading) {
     return (
       <div className="bg-gray-100 flex items-center justify-center min-h-screen">
         <div className="text-gray-600">Loading...</div>
@@ -76,7 +76,7 @@ console.log(subscriptionData)
   }
 
   // Handle case where paymentDetails is null
-  if (!paymentDetails) {
+  if (subscriptionData?.data.length === 0) {
     return (
       <div className="bg-gray-100 flex items-center justify-center min-h-screen">
         <div className="text-gray-600">No subscription data available.</div>
@@ -85,7 +85,7 @@ console.log(subscriptionData)
   }
 
 
-  const converterPrice = parseFloat(paymentDetails.price)
+  const converterPrice = paymentDetails?.price
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -106,13 +106,13 @@ console.log(subscriptionData)
         <div className="bg-gray-50 p-4 rounded-md mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-2">Payment Details</h2>
           <p className="text-gray-600">
-            <span className="font-medium">Package:</span> {paymentDetails.packageName || 'N/A'}
+            <span className="font-medium">Package:</span> {latestSubscription?.packageName || 'N/A'}
           </p>
           <p className="text-gray-600">
-            <span className="font-medium">Duration:</span> {paymentDetails.duration || 'N/A'}
+            <span className="font-medium">Duration:</span> {latestSubscription?.duration || 'N/A'}
           </p>
           <p className="text-gray-600">
-            <span className="font-medium">Amount:</span> ${converterPrice ? converterPrice.toFixed(2) : 'N/A'}
+            <span className="font-medium">Amount:</span> ${converterPrice ? converterPrice : 'N/A'}
           </p>
         </div>
 

@@ -14,11 +14,14 @@ interface postJobAppliedDataResponse {
     result: postJobAppliedDataRequest
 }
 
-export interface Root {
-  jobs: Job[]
+export interface GetCompanyJobListResponse {
+  statusCode: number
+  data: Daum[]
+  message: string
+  success: boolean
 }
 
-export interface Job {
+export interface CompanyJobPostList {
   _id: string
   userId: string
   title: string
@@ -33,8 +36,12 @@ export interface Job {
 }
 
 
+
 export interface ApplicantListByJobPost {
+  statusCode: number
   data: Applicant[]
+  message: string
+  success: boolean
 }
 
 export interface Applicant {
@@ -129,7 +136,7 @@ export const jobApply = createApi({
         })
        }),
     // এখানে একটা জব পোস্ট প্রতি কতজন আবেদন করেছে তার মোট সংখ্যা দেখানো হয়েছে।
-       getJobPostData: builder.query<Root, string>({
+       getJobPostData: builder.query<GetCompanyJobListResponse, string>({
         query: (userId) =>({
             url: `appliedJobs/getUserJobPostData/${userId}`
         })

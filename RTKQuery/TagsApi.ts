@@ -21,7 +21,7 @@ export const TagsApi = createApi({
     tagTypes: ['Tags'],
     endpoints:(builder)=>({
         getAllTags:builder.query<TagsApiResponse, void>({
-            query:()=>('/tags/tagsName'),
+            query:()=>('/tags/getTags'),
             providesTags:['Tags']
         })
     })
