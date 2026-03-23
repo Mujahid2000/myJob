@@ -17,7 +17,7 @@ import { BsThreeDots } from 'react-icons/bs';
 interface Job {
   _id: string;
   title: string;
-  logo: string;
+  logo?: string;
   jobType: string;
   location: string;
   minSalary: number;
@@ -36,7 +36,7 @@ const JobApplicationReceiveList: React.FC = () => {
   const userId = userEmail?.data?._id || '';
   console.log(userId)
   const { data: jobsData, isLoading: jobsLoading } = useGetJobPostDataQuery(userId);
-const jobDatas = jobsData?.jobs || []
+const jobDatas = jobsData?.data || []
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-6 space-y-6">
       {/* Header */}
@@ -49,7 +49,7 @@ const jobDatas = jobsData?.jobs || []
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="flex items-center justify-between gap-4 p-4 rounded-md bg-[#E7F0FA] shadow-sm">
           <div>
-            <h2 className="text-lg sm:text-xl font-medium">{jobsData?.jobs?.length || 0}</h2>
+            <h2 className="text-lg sm:text-xl font-medium">{jobsData?.data?.length || 0}</h2>
             <p className="text-sm text-gray-600">Total Jobs</p>
           </div>
           <div className="bg-white p-3 rounded-md">
@@ -106,7 +106,7 @@ const jobDatas = jobsData?.jobs || []
         </div>
         <div className="flex items-center justify-between gap-4 p-4 rounded-md bg-[#FFF6E6] shadow-sm">
           <div>
-            <h2 className="text-lg sm:text-xl font-medium">{jobsData?.jobs?.length || 0}</h2>
+            <h2 className="text-lg sm:text-xl font-medium">{jobsData?.data?.length || 0}</h2>
             <p className="text-sm text-gray-600">Active Jobs</p>
           </div>
           <div className="bg-white p-3 rounded-md">
@@ -134,7 +134,7 @@ const jobDatas = jobsData?.jobs || []
         )}
 
         {/* Empty State */}
-        {!jobsLoading && (!jobsData?.jobs || jobsData.jobs.length === 0) && (
+        {!jobsLoading && (!jobsData?.data || jobsData.data.length === 0) && (
           <div className="text-center p-4 text-sm sm:text-base text-gray-600 bg-white rounded-lg shadow-md">
             No jobs posted yet.
           </div>

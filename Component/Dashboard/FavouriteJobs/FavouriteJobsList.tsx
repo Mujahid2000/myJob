@@ -39,7 +39,7 @@ const FavoriteJobsList: React.FC = () => {
     skip: !currentUser?.email,
   });
 
-  const email = userEmail?.user?.email || '';
+  const email = userEmail?.data?.email || '';
 
   const {
     data: favoriteJobsData,
