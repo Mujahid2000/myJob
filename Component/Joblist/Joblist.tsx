@@ -81,7 +81,7 @@ const filterJobListings = (jobListings: JobListing[], params: SearchParams): Job
 
     const matchesSalary =
       minSalaryParam !== null && maxSalaryParam !== null
-        ? job.minSalary >= minSalaryParam && job.maxSalary <= maxSalaryParam
+        ? job.minSalary >= minSalaryParam && job.maxSalary >= maxSalaryParam
         : true;
 
     const matchesExperience = params.experience
@@ -158,12 +158,13 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
         "Content-Type": "application/json",
       },
     });
-    console.log(res);
+    // console.log(res);
     if (!res.ok) {
       throw new Error(`Fetch failed with status: ${res.status}`);
     }
 
     const data = await res.json();
+    console.log(data)
     jobListings = Array.isArray(data) ? data : data.data || [];
   } catch (error) {
     console.error("Fetch error:", error);

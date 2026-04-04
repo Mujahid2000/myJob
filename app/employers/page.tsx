@@ -81,12 +81,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   let jobListings: JobApiResponse;
   try {
     const response = await fetch('https://job-server-fqvf.onrender.com/jobs/getCompanyData', {
-      cache: 'no-store', // Disable caching for fresh data
+      cache: 'default', // Disable caching for fresh data
     });
     if (!response.ok) {
       throw new Error('Failed to fetch job data');
     }
     jobListings = await response.json();
+
   } catch (error) {
     console.error('Error fetching job data:', error);
     return (
@@ -133,6 +134,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedJobs = filteredJobs.slice(startIndex, endIndex);
+  // console.log(paginatedJobs)
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
 
   return (
@@ -183,7 +185,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
           ) : (
             <div className="grid grid-cols-1 gap-4 px-2 lg:px-0">
               {paginatedJobs.map((job) => (
-                <Card key={job._id} className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white transition-all duration-200 hover:shadow-md">
+                <Card key={job?._id} className="border hover:bg-gradient-to-r hover:from-[#FFF6E6] hover:to-[#FFF] bg-white transition-all duration-200 hover:shadow-md">
                   <CardContent className="p-4 sm:p-5 lg:p-6">
                     {/* Mobile & Tablet Layout (< lg) */}
                     <div className="lg:hidden">
@@ -192,8 +194,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pag
                         <div className="flex items-center gap-3 flex-1">
                           <img
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-md object-cover flex-shrink-0"
-                            src={job.logo || "/placeholder.svg"}
-                            alt={job.companyName}
+                            src={job?.logo || "/placeholder.svg"}
+                            alt={job?.companyName}
                           />
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-[#18191C] text-base sm:text-lg truncate">{job.companyName}</h3>

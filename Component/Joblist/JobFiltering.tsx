@@ -114,13 +114,13 @@ const JobFiltering = () => {
                 {/* advanced search filte section */}
                 {
                   arrow && (
-                    <div className={`max-w-7xl  mx-auto  `}>
-                <div className=' bg-white  shadow-lg rounded-lg'>
-                <div className='grid grid-cols-1 w-full lg:w-auto xl:grid-cols-5 absolute z-40 bg-white -mt-8'>
+                    <div className={`max-w-7xl mx-auto px-3`}>
+                <div className='bg-white shadow-lg rounded-lg relative'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 w-full lg:w-auto xl:absolute z-40 bg-white mt-0 xl:-mt-8 gap-4'>
                 
                 
                 {/* Experience */}
-<div className="border p-4 w-full xl:w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64">
       <h2 className="text-[1.25rem] font-semibold mb-2">Experience</h2>
       <div className="space-y-2">
         {[
@@ -184,7 +184,7 @@ const JobFiltering = () => {
 
 
 {/* Salary */}
-<div className="border p-4 w-full xl:w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64">
       <h2 className="text-[1.25rem] font-semibold mb-2">Salary</h2>
       <div className="space-y-2">
         {[
@@ -247,7 +247,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Job Type */}
-<div className="border p-4 w-full xl:w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64">
       <label className="font-semibold text-lg">Job Type</label>
       <div className="flex flex-col gap-2 mt-2">
         {[
@@ -311,7 +311,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Education */}
-<div className="border p-4 w-full xl:w-64 mx-auto">
+<div className="border p-4 w-full xl:w-64">
       <h2 className="text-[1.25rem] font-semibold mb-2">Education</h2>
       <div className="flex flex-col gap-2">
         {[
@@ -374,7 +374,7 @@ const JobFiltering = () => {
     </div>
 
 {/* Job Level */}
-<div className="border p-4 w-full xl:w-64  mx-auto">
+<div className="border p-4 w-full xl:w-64">
       <h2 className="text-[1.25rem] font-semibold mb-2">Job Level</h2>
       <div className="flex flex-col gap-2">
         {["Entry Level", "Mid Level", "Expert Level"].map((level, index) => (
