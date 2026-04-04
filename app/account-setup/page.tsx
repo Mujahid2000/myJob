@@ -76,8 +76,16 @@ const AccountSetupPage: React.FC<AccountSetupPageProps> = () => {
 
   // Update active tab and progress based on redux state
   useEffect(() => {
-    if (renderState) {
-      const newTab = TABS.find((tab) => tab.name === renderState)?.name || TABS[0].name;
+    if (!renderState) return;
+
+    if (renderState === 'success') {
+      setActiveTab('success');
+      setProgress(100);
+      return;
+    }
+
+    const newTab = TABS.find((tab) => tab.name === renderState)?.name;
+    if (newTab) {
       setActiveTab(newTab);
       setProgress(TABS.findIndex((tab) => tab.name === newTab) * PROGRESS_STEP);
     }

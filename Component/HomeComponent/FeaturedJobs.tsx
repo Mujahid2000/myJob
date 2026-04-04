@@ -12,86 +12,6 @@ import Link from "next/link"
 export default function FeaturedJobs() {
   const {data:jobData} = useGetJobPostDataForHomeQuery('');
   const featuredJobData: Daum[] = jobData?.data ?? [];
-  const featuredJobs = [
-    {
-      id: 1,
-      title: "Senior Product Designer",
-      company: "Spotify",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "New York, NY",
-      type: "Full-time",
-      salary: "$120k - $150k",
-      tags: ["UI/UX", "Figma", "Design Systems"],
-      featured: true,
-      postedTime: "2 days ago",
-      applicants: 24,
-    },
-    {
-      id: 2,
-      title: "Frontend Developer",
-      company: "Airbnb",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "San Francisco, CA",
-      type: "Full-time",
-      salary: "$100k - $130k",
-      tags: ["React", "TypeScript", "Next.js"],
-      featured: true,
-      postedTime: "1 day ago",
-      applicants: 18,
-    },
-    {
-      id: 3,
-      title: "Data Scientist",
-      company: "Netflix",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "Los Angeles, CA",
-      type: "Full-time",
-      salary: "$140k - $180k",
-      tags: ["Python", "ML", "Analytics"],
-      featured: true,
-      postedTime: "3 days ago",
-      applicants: 31,
-    },
-    {
-      id: 4,
-      title: "DevOps Engineer",
-      company: "Uber",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "Austin, TX",
-      type: "Full-time",
-      salary: "$110k - $140k",
-      tags: ["AWS", "Docker", "Kubernetes"],
-      featured: false,
-      postedTime: "1 day ago",
-      applicants: 12,
-    },
-    {
-      id: 5,
-      title: "Mobile Developer",
-      company: "Instagram",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "Remote",
-      type: "Contract",
-      salary: "$90k - $120k",
-      tags: ["React Native", "iOS", "Android"],
-      featured: false,
-      postedTime: "4 days ago",
-      applicants: 27,
-    },
-    {
-      id: 6,
-      title: "Backend Engineer",
-      company: "Slack",
-      companyLogo: "/placeholder.svg?height=48&width=48",
-      location: "Seattle, WA",
-      type: "Full-time",
-      salary: "$130k - $160k",
-      tags: ["Node.js", "PostgreSQL", "GraphQL"],
-      featured: false,
-      postedTime: "2 days ago",
-      applicants: 19,
-    },
-  ]
 
   return (
     <section className="py-0 lg:py-5 bg-white px-4 lg:px-0">
@@ -115,7 +35,7 @@ export default function FeaturedJobs() {
           {featuredJobData.map((job) => (
             <Card
               key={job._id}
-              className="group hover:shadow-lg transition-all duration-300  border-0 shadow-sm hover:-translate-y-1"
+              className="group rounded-md hover:shadow-lg transition-all duration-300  border-0 shadow-sm hover:-translate-y-1"
             >
               <CardContent className="p-6">
                 {/* Header with Company Info */}
@@ -184,7 +104,7 @@ export default function FeaturedJobs() {
                     )}
                   </div>
                   <Link href={`/find-job/${job._id}`}>
-                  <Button size="sm" className="bg-[#0A65CC] cursor-pointer hover:bg-blue-700">
+                  <Button size="sm" className="bg-[#0A65CC] cursor-pointer rounded-md hover:bg-blue-700">
                     Apply 
                   </Button>
                   </Link>
