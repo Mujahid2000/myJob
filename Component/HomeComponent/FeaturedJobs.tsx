@@ -12,6 +12,7 @@ import Link from "next/link"
 export default function FeaturedJobs() {
   const {data:jobData} = useGetJobPostDataForHomeQuery('');
   const featuredJobData: Daum[] = jobData?.data ?? [];
+  const filteredFeaturedJobs = featuredJobData.filter((job) => job.Featured);
 
   return (
     <section className="py-0 lg:py-5 bg-white px-4 lg:px-0">
@@ -32,7 +33,7 @@ export default function FeaturedJobs() {
 
         {/* Jobs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {featuredJobData.map((job) => (
+          {filteredFeaturedJobs.map((job) => (
             <Card
               key={job._id}
               className="group rounded-md hover:shadow-lg transition-all duration-300  border-0 shadow-sm hover:-translate-y-1"
