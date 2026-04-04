@@ -164,7 +164,7 @@ export default async function JobListings({ searchParams = {} }: { searchParams?
     }
 
     const data = await res.json();
-    console.log(data)
+
     jobListings = Array.isArray(data) ? data : data.data || [];
   } catch (error) {
     console.error("Fetch error:", error);
