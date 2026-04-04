@@ -32,14 +32,12 @@ export default function Page() {
 
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    console.log(data)
     const singInResponse = await singIn(data).unwrap();
     const singins = await login(data.email, data.password);
     if (singInResponse && singins) {
       setRole(singInResponse.data.user.role);
       triggerNotification(singInResponse.data.user._id);
       if (singInResponse.data.user.role === 'Admin') {
-        console.log(singInResponse.data.user.role)
         router.push('/admin-dashboard');
       } else {
         redirect('/');

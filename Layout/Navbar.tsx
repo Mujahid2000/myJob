@@ -79,6 +79,7 @@ export default function Navbar() {
   const authContext = useContext(AuthContext);
   const currentUser = authContext?.currentUser;
   const { data: userData } = useGetUserByIdQuery(currentUser?.email || '');
+
   const role = userData?.data?.role;
   const userId = userData?.data?._id || '';
   const logOut = authContext?.logout;
@@ -97,7 +98,8 @@ export default function Navbar() {
     if (!userId) return;
 
     socket.emit('join', userId);
-    console.log(`User ${userId} joined their room`);
+    // join user to their room to receive real-time notifications specific to them
+    // console.log(`User ${userId} joined their room`);
 
     return () => {
       socket.emit('leave', userId);

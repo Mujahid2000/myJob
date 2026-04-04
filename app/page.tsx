@@ -7,7 +7,7 @@ import TopCompany from "@/Component/HomeComponent/TopCompany";
 import RegisterCards from "@/Component/HomeComponent/RegisterCards";
 import ClientsTestimonials from "@/Component/HomeComponent/ClientsTestimonials";
 import {ReactLenis} from '@/lib/lenis'
-import JobCard from "@/Component/HomeComponent/JobCard";
+
 
 
 export default function Home() {

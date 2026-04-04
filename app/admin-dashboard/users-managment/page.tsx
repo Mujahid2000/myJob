@@ -66,9 +66,8 @@ const users = [
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const {data:userData} = useGetUserQuery();
-console.log(userData)
   // ---Filter function for users based on search term---
-  const filterUser = userData?.filter((user) =>
+  const filterUser = userData?.data.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -67,7 +67,12 @@ interface SignupResponse {
 }
 
 
-
+export interface UserResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: AllUser[];
+}
 
 export interface AllUser {
   _id: string
@@ -105,7 +110,7 @@ export const authApiSlice = createApi({
       query: (email) => `/user/users/${email}`,
       providesTags: (result, error, email) => [{ type: 'User', email }],
     }),
-    getUser: builder.query<AllUser[], void>({
+    getUser: builder.query<UserResponse, void>({
       query: () => '/user/users',
       providesTags: ['User'],
     }),
