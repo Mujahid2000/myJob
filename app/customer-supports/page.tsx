@@ -143,7 +143,7 @@ export default function SupportPage() {
 
     // Add the new message to chatMessages
     setChatMessages((prev) => [...prev, newMessage]);
-
+    console.log(newMessage)
     try {
       await fetch('https://job-server-fqvf.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
