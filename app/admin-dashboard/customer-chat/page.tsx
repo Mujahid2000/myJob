@@ -154,6 +154,7 @@ export default function CustomerChatPage() {
         body: JSON.stringify(newMessage),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
+          "token": localStorage.getItem('Access_Token') || '',
         },
       });
 
