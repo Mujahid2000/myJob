@@ -5,6 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Store/Store";
 
  
 export default function DashboardClientAdminLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +16,7 @@ export default function DashboardClientAdminLayout({ children }: { children: Rea
     const currentUser = authContext?.currentUser;
     const logOut: (() => Promise<void>) | undefined = authContext?.logout;
     const loadingUser = authContext?.loading
+    const jwtAccessToken = useSelector((state: RootState) => state.jwtSet.accessToken);
     const { data: userEmail, isLoading , isSuccess, error: userEmailError } = useGetUserByIdQuery(currentUser?.email || '', { skip: !currentUser?.email });
     const role = userEmail?.data?.role
 const handleLogout = async () => {
@@ -33,9 +36,12 @@ const handleLogout = async () => {
 useEffect(() =>{
   if(!loadingUser && !currentUser){
     redirect('/signin')
-  } 
+  }
+  if(!loadingUser && currentUser && !jwtAccessToken){
+    redirect('/signin')
+  }
 
-},[currentUser, loadingUser, redirect])
+},[currentUser, loadingUser, jwtAccessToken, redirect])
 
 
 useEffect(() =>{

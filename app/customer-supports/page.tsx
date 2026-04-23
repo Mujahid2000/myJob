@@ -117,6 +117,12 @@ export default function SupportPage() {
 
   // Send message to backend
   const onSubmit = async (data: any) => {
+    const accessToken = localStorage.getItem('Access_Token') || '';
+    if (!accessToken) {
+      toast.error('Please sign in again to send a message.');
+      return;
+    }
+
     const newMessage: ChatMessage = {
       _id: `client-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for client message
       senderId: userid,
@@ -140,21 +146,30 @@ export default function SupportPage() {
       updatedAt: '',
       __v: 0,
     };
+    const { _id, ...outboundMessage } = newMessage;
 
-    // Add the new message to chatMessages
-    setChatMessages((prev) => [...prev, newMessage]);
-    console.log(newMessage)
     try {
-      await fetch('https://job-server-fqvf.onrender.com/liveNotification/customerMessage', {
+      const response = await fetch('https://job-server-fqvf.onrender.com/liveNotification/customerMessage', {
         method: 'POST',
-        body: JSON.stringify(newMessage),
+        body: JSON.stringify(outboundMessage),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
+          authorization: `Bearer ${accessToken}`,
+          token: accessToken,
         },
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || 'Message failed to send');
+      }
+
+      setChatMessages((prev) => [...prev, newMessage]);
       reset();
+      toast.success('Message sent successfully');
     } catch (err) {
-      toast.error('Message failed to send');
+      const errorMessage = err instanceof Error ? err.message : 'Message failed to send';
+      toast.error(errorMessage);
     }
   };
 

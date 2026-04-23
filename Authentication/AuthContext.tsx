@@ -8,13 +8,14 @@ import {
   UserCredential,
   User,
 } from 'firebase/auth';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useRef, useState } from 'react';
 
 import { ReactNode } from 'react';
 import { auth } from './firebase';
 import { usePostUserTokenMutation } from '@/RTKQuery/JWT';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setJwtTokens, clearJwtTokens } from '@/Store/JwtToken';
+import { RootState } from '@/Store/Store';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -51,6 +52,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     password: ''
   })
 const dispatch = useDispatch()
+const jwtAccessToken = useSelector((state: RootState) => state.jwtSet.accessToken);
+const jwtAccessTokenRef = useRef(jwtAccessToken);
+jwtAccessTokenRef.current = jwtAccessToken;
 
   const [postJwt] = usePostUserTokenMutation()
   async function signup(name: string, email: string, password: string): Promise<UserCredential> {
@@ -121,7 +125,12 @@ const dispatch = useDispatch()
           console.error('JWT Error:', error);
           dispatch(clearJwtTokens());
         }
-        
+
+      } else if (user && !userDetail.email && !jwtAccessTokenRef.current) {
+        // Firebase user exists but no credentials to fetch new JWT and no existing token.
+        // This happens after page reload when tokens expired and were cleared by baseQueryWithReauth.
+        await signOut(auth);
+        dispatch(clearJwtTokens());
       } else if (!user) {
         dispatch(clearJwtTokens());
       }
