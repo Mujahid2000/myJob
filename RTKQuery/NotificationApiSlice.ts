@@ -12,7 +12,7 @@ interface NotificationRequest {
 
 interface NotificationResponse {
   message: string;
-  result: any; // ব্যাকএন্ড থেকে যেহেতু result আসছে, তাই data এর পরিবর্তে result
+  data: any;
 }
 
 interface jobAlertsRequest {

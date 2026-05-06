@@ -42,13 +42,15 @@ const Profile = () => {
     skip: !email, // Skip query if email is undefined
   });
 
-  const { data: candidateInfo, isLoading: inCandidateLoading } = useGetProfileDataQuery(email, {
+  const { data: candidateInfoRaw, isLoading: inCandidateLoading } = useGetProfileDataQuery(email, {
     skip: !email, // Skip query if email is undefined
   });
+  const candidateInfo = (candidateInfoRaw as any)?.data || candidateInfoRaw;
   const { addToast } = useToast();
   const getAllResume = resumes?.data || []; // Default to empty array if data is undefined
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [removeProfilePicture, setRemoveProfilePicture] = useState(false);
   const [isCvUploading, setIsCvUploading] = useState(false);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -64,6 +66,20 @@ const Profile = () => {
     },
   });
 
+  // Reset form when profile data loads
+  useEffect(() => {
+    if (candidateInfo && !inCandidateLoading) {
+      resetBasicInfo({
+        fullName: candidateInfo.fullName || '',
+        title: candidateInfo.title || '',
+        experience: candidateInfo.experience || '',
+        education: candidateInfo.education || '',
+        personalWebsite: candidateInfo.portfolio || '',
+        profilePicture: undefined,
+      });
+    }
+  }, [candidateInfo, inCandidateLoading, resetBasicInfo]);
+
   // CV Upload Form (Modal)
   const { control: cvControl, handleSubmit: handleCvSubmit, reset: resetCv, formState: { errors: cvErrors } } = useForm<CvFormData>({
     defaultValues: {
@@ -75,7 +91,13 @@ const Profile = () => {
 
 
   const onBasicInfoSubmit = async (data: BasicInfoFormData) => {
-    const profilePicture = data.profilePicture?.[0];
+    const newFile = data.profilePicture?.[0];
+    let profilePicture: File | string | undefined;
+    if (newFile) {
+      profilePicture = newFile;
+    } else if (!removeProfilePicture && candidateInfo?.profilePicture) {
+      profilePicture = candidateInfo.profilePicture;
+    }
     try {
       await updateProfileMutation({
         fullName: data.fullName,
@@ -83,13 +105,14 @@ const Profile = () => {
         experience: data.experience,
         education: data.education,
         portfolio: data.personalWebsite,
-        profilePicture: profilePicture || undefined,
+        profilePicture,
         userId: userId || '',
         email: email || '',
       }).unwrap();
       addToast('Profile updated successfully!', 'success');
       resetBasicInfo();
       setImagePreview(null);
+      setRemoveProfilePicture(false);
     } catch (err) {
       console.error(err);
       addToast('Failed to update profile.', 'error');
@@ -123,7 +146,7 @@ const Profile = () => {
           <h1 className="py-2">Profile Picture</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             <div className="flex relative max-h-[230px] flex-col border-2 border-dashed border-gray-300 rounded-lg items-center relative">
-              {imagePreview || candidateInfo?.profilePicture ? (
+              {(imagePreview || (candidateInfo?.profilePicture && !removeProfilePicture)) ? (
                 <>
                   <img
                     id="image-preview"
@@ -131,20 +154,18 @@ const Profile = () => {
                     alt="Preview"
                     className="w-full h-full rounded-lg flex md:absolute"
                   />
-                  {
-                    !candidateInfo?.profilePicture ?  <button
+                  <button
                     id="remove-image"
                     type="button"
-                    className="absolute cursor-pointer top-0 right-0 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs"
+                    className="absolute cursor-pointer top-0 right-0 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs z-10"
                     onClick={() => {
                       setImagePreview(null);
+                      setRemoveProfilePicture(true);
                       basicInfoControl._formValues.profilePicture = undefined;
                     }}
                   >
                     ✕
-                  </button> : ''
-                  }
-                 
+                  </button>
                 </>
               ) : (
                 <>

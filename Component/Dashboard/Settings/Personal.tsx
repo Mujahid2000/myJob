@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useForm, SubmitHandler } from "react-hook-form";
 import './custom.css'
-import { usePostCandidatePersonalDataMutation } from "@/RTKQuery/CandidateInfo";
+import { usePostCandidatePersonalDataMutation, useGetProfileCompleteMessageQuery } from "@/RTKQuery/CandidateInfo";
 import { AuthContext } from "@/Authentication/AuthContext";
 import { useGetUserByIdQuery } from "@/RTKQuery/authSlice";
 import { useToast } from "@/Component/Toast/ToastNotification";
@@ -29,7 +29,26 @@ const Personal: React.FC = () => {
     const { data: userEmail } = useGetUserByIdQuery(currentUser?.email || '');
     const userId = userEmail?.data?._id;
     const email = userEmail?.data?.email || ''; // Default to empty string if undefined
+    const { data: profileCompleteData, isLoading: isProfileCompleteLoading } = useGetProfileCompleteMessageQuery(userId || '', {
+      skip: !userId,
+    });
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Inputs>();
+
+  // Pre-populate form when existing data loads
+  useEffect(() => {
+    if (profileCompleteData?.data && !isProfileCompleteLoading) {
+      reset({
+        country: profileCompleteData.data.country || '',
+        dateOfBirth: profileCompleteData.data.dateOfBirth?.split('T')[0] || '',
+        gender: profileCompleteData.data.gender || '',
+        maritalStatus: profileCompleteData.data.maritalStatus || '',
+        education: profileCompleteData.data.education || '',
+        experience: profileCompleteData.data.experience || '',
+      });
+      setBiography(profileCompleteData.data.biography || '');
+    }
+  }, [profileCompleteData, isProfileCompleteLoading, reset]);
+
   const onSubmit: SubmitHandler<Inputs> = async data => {
     if (!userId) {
       alert("User ID is missing. Please try again later.");

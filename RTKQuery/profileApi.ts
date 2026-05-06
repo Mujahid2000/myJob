@@ -38,7 +38,7 @@ interface ProfileData {
   experience: string;
   education: string;
   portfolio: string;
-  profilePicture?: File;
+  profilePicture?: File | string;
   userId: string;
   email: string;
 }

@@ -19,6 +19,7 @@ interface ContactFormData {
     userId: string;
     mapLocation: string;
     email: string;
+    phoneNumber: string;
 }
 
 export const contact = createApi({

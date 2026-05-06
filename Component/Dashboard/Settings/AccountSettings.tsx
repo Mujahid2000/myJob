@@ -2,7 +2,8 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, MapPin, Mail } from 'lucide-react';
 import { RxCross2 } from 'react-icons/rx';
-import { useGetUserContactDataQuery } from '@/RTKQuery/contact';
+import { useGetUserContactDataQuery, usePostContactInfoMutation } from '@/RTKQuery/contact';
+import { useGetProfileCompleteMessageQuery } from '@/RTKQuery/CandidateInfo';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { AuthContext } from '@/Authentication/AuthContext';
 import { useGetUserByIdQuery } from '@/RTKQuery/authSlice';
@@ -31,18 +32,20 @@ const Settings = () => {
   const email = userEmail?.data?.email || '';
   const { data: userContactData, error: contactError } = useGetUserContactDataQuery(email, { skip: !email });
   const userDataContact = userContactData?.data;
+  const { data: profileCompleteData } = useGetProfileCompleteMessageQuery(userId, { skip: !userId });
   const { addToast } = useToast();
   const { data: privacyProfile, isLoading: isPrivacyLoading, error: privacyError } = useGetProfilePrivacyDataQuery(userId, { skip: !userId });
   const { data: jobAlerts, isLoading: jobAlertLoading, error: jobAlertError } = useGetJobAlertsDataQuery(userId, { skip: !userId });
   const alertsJobsData = jobAlerts?.data;
 
   const { data: notification, isLoading: isNotificationLoading, error: notificationError } = useGetUserNotificationQuery(userId, { skip: !userId });
-  const notificationData = notification?.result;
+  const notificationData = notification?.data;
 
   const [updateNotification, { isLoading: notificationLoading }] = useUpdateUserNotificationMutation();
   const [updateJobAlerts, { isLoading: jobAlertsLoading }] = useUpdateJobAlertsMutation();
   const [updateProfilePrivacy, { isLoading: privacyLoading }] = useUpdateProfilePrivacyMutation();
   const [updatePassword, {isLoading:passwordChangeLoading}] =useUpdatePasswordMutation()
+  const [postContactInfo, { isLoading: isContactSaving }] = usePostContactInfoMutation();
   // form validation
   const contactForm = useForm<ContactInputs>({
     defaultValues: { email: '', phoneNumber: '', mapLocation: '' },
@@ -64,14 +67,15 @@ const Settings = () => {
 
   // form reset after loaded data
   useEffect(() => {
-    if (userDataContact) {
-      contactForm.reset({
-        email: userDataContact.email || '',
-        phoneNumber: userDataContact.phoneNumber !== undefined ? String(userDataContact.phoneNumber) : '',
-        mapLocation: userDataContact.mapLocation || '',
-      });
+    if (userDataContact || profileCompleteData?.data) {
+      const email = userDataContact?.email || profileCompleteData?.data?.email || '';
+      const phoneNumber = userDataContact?.phoneNumber !== undefined
+        ? String(userDataContact.phoneNumber)
+        : profileCompleteData?.data?.phoneNumber || '';
+      const mapLocation = userDataContact?.mapLocation || profileCompleteData?.data?.location || '';
+      contactForm.reset({ email, phoneNumber, mapLocation });
     }
-  }, [userDataContact, contactForm]);
+  }, [userDataContact, profileCompleteData, contactForm]);
 
   useEffect(() => {
     if (notificationData && !isNotificationLoading) {
@@ -134,14 +138,14 @@ const Settings = () => {
         addToast('Email or user ID not found', 'error')
         return;
       }
-      console.log('Contact Info:', data);
+      const payload = { userId, email: data.email, mapLocation: data.mapLocation, phoneNumber: data.phoneNumber };
+      await postContactInfo(payload).unwrap();
       addToast('Contact data updated successfully', 'success');
-      contactForm.reset();
-    } catch (error) {
-      addToast('Failed to update contact info', 'error');
+    } catch (error: any) {
+      addToast(error?.data?.message || 'Failed to update contact info', 'error');
       console.error('Contact update error:', error);
     }
-  }, [email, userId, contactForm]);
+  }, [email, userId, postContactInfo]);
 
   const onSubmitNotification: SubmitHandler<NotificationInputs> = useCallback(async (data) => {
     try {
@@ -257,7 +261,7 @@ const Settings = () => {
               <input
                 {...contactForm.register('mapLocation', { required: 'Map location is required' })}
                 type="text"
-                placeholder={userDataContact?.mapLocation || 'City, state, country name'}
+                placeholder={userDataContact?.mapLocation || profileCompleteData?.data?.location || 'City, state, country name'}
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {contactForm.formState.errors.mapLocation && (
@@ -276,7 +280,7 @@ const Settings = () => {
                 <input
                   {...contactForm.register('phoneNumber', { required: 'Phone number is required' })}
                   type="text"
-                  placeholder={userDataContact?.phoneNumber !== undefined ? String(userDataContact.phoneNumber) : 'Phone number...'}
+                  placeholder={userDataContact?.phoneNumber !== undefined ? String(userDataContact.phoneNumber) : profileCompleteData?.data?.phoneNumber || 'Phone number...'}
                   className="w-full border-none rounded-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -290,7 +294,7 @@ const Settings = () => {
                 <input
                   {...contactForm.register('email', { required: 'Email is required' })}
                   type="email"
-                  placeholder={userDataContact?.email || 'Email address'}
+                  placeholder={userDataContact?.email || profileCompleteData?.data?.email || 'Email address'}
                   className="w-full border border-gray-300 rounded-md py-2 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <Mail size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -301,9 +305,10 @@ const Settings = () => {
             </div>
             <button
               type="submit"
-              className="text-base bg-[#0A65CC] text-white px-5 py-3 rounded-xs hover:bg-gray-100 hover:text-[#0A65CC] font-medium cursor-pointer transition-colors"
+              disabled={isContactSaving}
+              className="text-base bg-[#0A65CC] text-white px-5 py-3 rounded-xs hover:bg-gray-100 hover:text-[#0A65CC] font-medium cursor-pointer transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              SAVE CHANGES
+              {isContactSaving ? 'Saving...' : 'SAVE CHANGES'}
             </button>
           </form>
         </FormProvider>

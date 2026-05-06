@@ -1,12 +1,13 @@
 
 'use client'
-import React, { JSX, useCallback, useContext, useMemo } from 'react';
+import React, { JSX, useCallback, useContext, useEffect, useMemo } from 'react';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRenderState } from '@/Store/accountSetupTabs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { usePostSocialMediaInfoMutation } from '@/RTKQuery/socialMediaApiSlice';
+import { useGetProfileCompleteMessageQuery } from '@/RTKQuery/CandidateInfo';
 import { setSocialLinks, updateSocialLinks, resetSocialLinks } from '@/Store/socialMediaSlice';
 import { RootState } from '@/Store/Store';
 import { AuthContext } from '@/Authentication/AuthContext';
@@ -46,6 +47,9 @@ const SocialLinks: React.FC = () => {
     skip: !authContext?.currentUser?.email,
   });
   const userId = userEmail?.data?._id;
+  const { data: profileCompleteData, isLoading: isProfileCompleteLoading } = useGetProfileCompleteMessageQuery(userId || '', {
+    skip: !userId,
+  });
 
   const defaultValues = useMemo(
     () =>
@@ -55,6 +59,19 @@ const SocialLinks: React.FC = () => {
       }, {} as Inputs),
     [socialLinks]
   );
+
+  // Pre-populate social links from API when data loads
+  useEffect(() => {
+    const socialLinksData = profileCompleteData?.data?.social;
+    if (socialLinksData && socialLinksData.length > 0 && !isProfileCompleteLoading) {
+      const existingLinks = socialLinksData.map((link, index) => ({
+        id: index + 1,
+        platform: link.platform,
+        url: link.url || '',
+      }));
+      dispatch(setSocialLinks(existingLinks));
+    }
+  }, [profileCompleteData, isProfileCompleteLoading, dispatch]);
 
   const {
     register,
@@ -70,10 +87,12 @@ const SocialLinks: React.FC = () => {
         return;
       }
 
-      const updatedLinks = socialLinks.map((link) => ({
-        ...link,
-        url: data[link.platform.toLowerCase()] || '',
-      }));
+      const updatedLinks = socialLinks
+        .map((link) => ({
+          ...link,
+          url: data[link.platform.toLowerCase()] || '',
+        }))
+        .filter((link) => link.url.trim() !== '');
 
       try {
         dispatch(setSocialLinks(updatedLinks));
@@ -135,7 +154,6 @@ const SocialLinks: React.FC = () => {
               <input
                 type="url"
                 {...register(link.platform.toLowerCase(), {
-                  required: `${link.platform} URL is required`,
                   pattern: {
                     value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
                     message: `Please enter a valid ${link.platform} URL`,
